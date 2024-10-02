@@ -1,0 +1,44 @@
+{
+  "name": "skill-swap",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "nx run-many -t build",
+    "dev": "concurrently -n \"client,server\" -c \"cyan,green\" \"pnpm run client:dev\" \"pnpm run server:dev\"",
+    "client:dev": "nx run client:dev",
+    "server:dev": "nx run server:dev",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prepare": "husky"
+  },
+  "engines": {
+    "node": ">= 20.x.x"
+  },
+  "lint-staged": {
+    "**/*.{js,ts,tsx}": [
+      "eslint --fix"
+    ],
+    "**/*": "prettier --write --ignore-unknown"
+  },
+  "author": {
+    "name": "Kyrylo Savieliv",
+    "email": "k_savieliev@icloud.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@eslint/js": "^9.10.0",
+    "concurrently": "^9.0.1",
+    "eslint": "^9.10.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.9.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "nx": "^19.7.3",
+    "prettier": "^3.3.3",
+    "typescript-eslint": "^8.5.0"
+  },
+  "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a"
+}
