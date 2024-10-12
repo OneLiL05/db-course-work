@@ -16,6 +16,7 @@ import type http from 'node:http'
 import { AppInstanse } from 'types/index.js'
 import { registerDependenies } from './infrastructure/parentDiConfig.js'
 import { getRoutes } from './modules/routes.js'
+import fastifyRateLimit from '@fastify/rate-limit'
 
 export const getApp = async (): Promise<AppInstanse> => {
   const app = fastify<http.Server, http.IncomingMessage, http.ServerResponse>({
@@ -68,6 +69,13 @@ export const getApp = async (): Promise<AppInstanse> => {
   })
 
   await app.register(fastifyAuth)
+
+  await app.register(fastifyRateLimit, {
+    max: 10,
+    ban: 25,
+    timeWindow: 15 * 1000,
+    allowList: ['127.0.0.1'],
+  })
 
   registerDependenies(diContainer, { app })
 

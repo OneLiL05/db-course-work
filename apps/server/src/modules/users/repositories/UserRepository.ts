@@ -39,8 +39,6 @@ export class UserRepository implements IUserRepository {
       returning users.id, users.username, users.email, users.first_name, users.last_name, users.img
     `
 
-    console.log(users)
-
     const user = users.at(0) as ReturnedUser
 
     await this.sql`
