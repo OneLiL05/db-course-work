@@ -1,11 +1,15 @@
+import 'dotenv/config'
 import { getApp } from './app.js'
+import { env } from './env.js'
+import { JWT } from '@fastify/jwt'
+import { JwtPayload } from 'modules/auth/interfaces/index.js'
 
 const bootstrap = async () => {
   try {
     const app = await getApp()
 
     app.listen({
-      port: 8080,
+      port: env.PORT,
     })
   } catch (error: unknown) {
     console.warn(error)
@@ -14,3 +18,20 @@ const bootstrap = async () => {
 }
 
 void bootstrap()
+
+declare module 'fastify' {
+  interface FastifyRequest {
+    jwt: JWT
+  }
+
+  export interface FastifyInstance {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    authentificate: any
+  }
+}
+
+declare module '@fastify/jwt' {
+  interface FastifyJWT {
+    user: JwtPayload
+  }
+}

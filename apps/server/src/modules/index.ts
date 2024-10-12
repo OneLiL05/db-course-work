@@ -1,12 +1,12 @@
-import { Routes } from './routes.js'
+import { Routes } from 'interfaces/config.js'
 
-export const getBaseRoutes = (): { routes: Routes } => {
+export const getBaseRoutes = (): Routes => {
   return {
     routes: [
       {
         method: 'GET',
         url: '/ping',
-        handler: (req, reply) => {
+        handler: async (req, reply) => {
           reply.code(200).send({ message: 'pong' })
         },
       },

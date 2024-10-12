@@ -1,19 +1,21 @@
-import fastify, { FastifyInstance } from 'fastify'
-import type http from 'node:http'
-import {
-  validatorCompiler,
-  serializerCompiler,
-  ZodTypeProvider,
-} from 'fastify-type-provider-zod'
+import { fastifyAuth } from '@fastify/auth'
+import { diContainer, fastifyAwilixPlugin } from '@fastify/awilix'
+import fastifyCookie from '@fastify/cookie'
 import fastifyCors from '@fastify/cors'
 import fastifyHelmet from '@fastify/helmet'
+import fastifyJwt from '@fastify/jwt'
+import { env } from 'env.js'
+import fastify from 'fastify'
+import {
+  ZodTypeProvider,
+  serializerCompiler,
+  validatorCompiler,
+} from 'fastify-type-provider-zod'
+import { tokenGuard } from 'guards/token.js'
+import type http from 'node:http'
+import { AppInstanse } from 'types/index.js'
+import { registerDependenies } from './infrastructure/parentDiConfig.js'
 import { getRoutes } from './modules/routes.js'
-
-type AppInstanse = FastifyInstance<
-  http.Server,
-  http.IncomingMessage,
-  http.ServerResponse
->
 
 export const getApp = async (): Promise<AppInstanse> => {
   const app = fastify<http.Server, http.IncomingMessage, http.ServerResponse>({
@@ -43,8 +45,34 @@ export const getApp = async (): Promise<AppInstanse> => {
 
   await app.register(fastifyHelmet)
 
+  await app.register(fastifyJwt, { secret: env.JWT_SECRET })
+
+  await app.register(fastifyCookie, {
+    secret: env.COOKIE_SECRET,
+    hook: 'preHandler',
+  })
+
+  await app.register(fastifyAwilixPlugin, {
+    disposeOnClose: true,
+    asyncDispose: true,
+    asyncInit: true,
+    eagerInject: true,
+    disposeOnResponse: true,
+  })
+
+  app.decorate('authentificate', tokenGuard)
+
+  app.addHook('preHandler', (req, res, next) => {
+    req.jwt = app.jwt
+    return next()
+  })
+
+  await app.register(fastifyAuth)
+
+  registerDependenies(diContainer, { app })
+
   app.after(() => {
-    const { routes } = getRoutes()
+    const { routes } = getRoutes(app)
 
     for (const route of routes) {
       app.withTypeProvider<ZodTypeProvider>().route(route)
