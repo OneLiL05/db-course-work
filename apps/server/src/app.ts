@@ -20,7 +20,14 @@ import fastifyRateLimit from '@fastify/rate-limit'
 
 export const getApp = async (): Promise<AppInstanse> => {
   const app = fastify<http.Server, http.IncomingMessage, http.ServerResponse>({
-    logger: true,
+    logger: {
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+        },
+      },
+    },
   })
 
   app.setValidatorCompiler(validatorCompiler)
