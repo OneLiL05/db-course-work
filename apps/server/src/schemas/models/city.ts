@@ -1,11 +1,7 @@
 import { z } from 'zod'
+import { BASE_MODEL } from './common.js'
 
-const CITY_MODEL = z.object({
-  id: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
-  name: z.string(),
-})
+const CITY_MODEL = BASE_MODEL
 
 type City = z.infer<typeof CITY_MODEL>
 

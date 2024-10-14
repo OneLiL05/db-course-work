@@ -8,8 +8,9 @@ import {
 import { CITY_MODEL } from 'schemas/models/city.js'
 import { CREATE_CITY_SCHEMA } from '../schemas/index.js'
 import { GET_BY_ID_SCHEMA, MESSAGE_SCHEMA } from 'schemas/common.js'
+import { AppInstanse } from 'types/index.js'
 
-export const getCitiesRoutes = (): Routes => ({
+export const getCitiesRoutes = (app: AppInstanse): Routes => ({
   routes: [
     {
       method: 'GET',
@@ -32,6 +33,7 @@ export const getCitiesRoutes = (): Routes => ({
           500: MESSAGE_SCHEMA,
         },
       },
+      preHandler: [app.authentificate, app.isAdmin],
     },
     {
       method: 'DELETE',
@@ -45,6 +47,7 @@ export const getCitiesRoutes = (): Routes => ({
           500: MESSAGE_SCHEMA,
         },
       },
+      preHandler: [app.authentificate, app.isAdmin],
     },
     {
       method: 'PUT',
@@ -59,6 +62,7 @@ export const getCitiesRoutes = (): Routes => ({
           500: MESSAGE_SCHEMA,
         },
       },
+      preHandler: [app.authentificate, app.isAdmin],
     },
   ],
 })
