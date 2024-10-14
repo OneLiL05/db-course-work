@@ -44,7 +44,8 @@ export class CityRepository implements ICityRepository {
       update cities
       set name=${name}
       where id=${id}
-      returning *`
+      returning *
+    `
 
     const city = cities.at(0)
 

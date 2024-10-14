@@ -1,5 +1,10 @@
 import { Routes } from 'interfaces/index.js'
-import { login, logout, signup } from '../controllers/AuthController.js'
+import {
+  authorize,
+  login,
+  logout,
+  signup,
+} from '../controllers/AuthController.js'
 import { LOGIN_SCHEMA } from '../schema/index.js'
 import { AppInstanse } from 'types/index.js'
 import { CREATE_USER_SCHEMA } from 'modules/users/schemas/index.js'
@@ -26,6 +31,12 @@ export const getAuthRoutes = (app: AppInstanse): Routes => ({
       method: 'POST',
       url: '/logout',
       handler: logout,
+      preHandler: [app.authentificate],
+    },
+    {
+      method: 'GET',
+      url: '/authorize',
+      handler: authorize,
       preHandler: [app.authentificate],
     },
   ],

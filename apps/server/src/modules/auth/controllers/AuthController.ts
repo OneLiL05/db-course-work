@@ -30,7 +30,7 @@ export const login = async (
     id: user.id,
     email: user.email,
     username: user.username,
-    role: user.roles,
+    roles: user.roles,
   }
 
   const token = request.jwt.sign(payload)
@@ -76,4 +76,17 @@ export const logout = async (
   reply.clearCookie(ACCESS_TOKEN)
 
   return reply.send({ message: 'Logout successful' })
+}
+
+export const authorize = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> => {
+  const user = request.user
+
+  if (!user) {
+    reply.status(401)
+  }
+
+  reply.status(200).send(user)
 }

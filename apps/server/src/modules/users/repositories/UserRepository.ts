@@ -12,7 +12,30 @@ export class UserRepository implements IUserRepository {
   }
 
   async findOne(id: number): Promise<User | null> {
-    const [user]: [User?] = await this.sql`select * from users where id = ${id}`
+    const [user]: [User?] = await this.sql`
+      select
+        u.id,
+        u.username,
+        u.email,
+        u.first_name,
+        u.last_name,
+        u.password,
+        u.img,
+        u.created_at,
+        u.updated_at,
+        u.employer_id,
+        array_agg(r.name) AS roles
+      from
+        users u
+      left join
+        user_roles ur on u.id=ur.user_id
+      left join
+        roles r ON ur.role_id=r.id
+      where
+        u.id=${id}
+      group by
+        u.id;
+    `
 
     if (!user) return null
 
@@ -20,8 +43,30 @@ export class UserRepository implements IUserRepository {
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    const [user]: [User?] = await this
-      .sql`select * from users where email = ${email}`
+    const [user]: [User?] = await this.sql`
+      select
+        u.id,
+        u.username,
+        u.email,
+        u.first_name,
+        u.last_name,
+        u.password,
+        u.img,
+        u.created_at,
+        u.updated_at,
+        u.employer_id,
+        array_agg(r.name) AS roles
+      from
+        users u
+      left join
+        user_roles ur on u.id=ur.user_id
+      left join
+        roles r ON ur.role_id=r.id
+      where
+        u.email=${email}
+      group by
+        u.id;
+      `
 
     if (!user) return null
 
@@ -29,13 +74,13 @@ export class UserRepository implements IUserRepository {
   }
 
   async createOne(data: CreateUser): Promise<ReturnedUser> {
-    const { username, email, password, first_name, last_name, img } = data
+    const { username, email, password, firstName, lastName, img } = data
 
     const users = await this.sql<ReturnedUser[]>`
       insert into users
         (username, email, password, first_name, last_name, img)
       values
-        (${username}, ${email}, ${password}, ${first_name}, ${last_name}, ${img})
+        (${username}, ${email}, ${password}, ${firstName}, ${lastName}, ${img})
       returning users.id, users.username, users.email, users.first_name, users.last_name, users.img
     `
 
