@@ -4,12 +4,14 @@ import { getAuthRoutes } from './auth/routes/index.js'
 import { getCategoriesRoutes } from './categories/routes/index.js'
 import { getCitiesRoutes } from './cities/routes/index.js'
 import { getBaseRoutes } from './index.js'
+import { getEmployersRoutes } from './employers/routes/index.js'
 
 export const getRoutes = (app: AppInstanse): Routes => {
   const { routes: baseRoutes } = getBaseRoutes()
   const { routes: authRoutes } = getAuthRoutes(app)
   const { routes: citiesRoutes } = getCitiesRoutes(app)
   const { routes: categoriesRoutes } = getCategoriesRoutes(app)
+  const { routes: employersRoutes } = getEmployersRoutes(app)
 
   return {
     routes: [
@@ -17,6 +19,7 @@ export const getRoutes = (app: AppInstanse): Routes => {
       ...authRoutes,
       ...citiesRoutes,
       ...categoriesRoutes,
+      ...employersRoutes,
     ],
   }
 }

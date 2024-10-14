@@ -1,8 +1,9 @@
-import { SqlClient } from 'types/index.js'
+import { Role, SqlClient } from 'types/index.js'
 import { IUserRepository } from '../interfaces/index.js'
 import { CreateUser } from '../schemas/index.js'
 import { ReturnedUser, UserInjectableDependencies } from '../types/index.js'
 import { User } from 'schemas/models/user.js'
+import { ROLES } from 'constants/roles.js'
 
 export class UserRepository implements IUserRepository {
   private readonly sql: SqlClient
@@ -95,5 +96,22 @@ export class UserRepository implements IUserRepository {
     `
 
     return user
+  }
+
+  async addRole(id: number, role: Role): Promise<void> {
+    await this.sql`
+      insert into user_roles
+       (user_id, role_id)
+      values
+        (${id}, ${ROLES.get(role) as number})
+    `
+  }
+
+  async addEmployer(id: number, employerId: number): Promise<void> {
+    await this.sql`
+      update users
+      set employer_id=${employerId}
+      where id=${id}
+    `
   }
 }
