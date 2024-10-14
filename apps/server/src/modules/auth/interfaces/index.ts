@@ -13,7 +13,7 @@ interface JwtPayload {
   id: number
   email: string
   username: string
-  role: Role[]
+  roles: Role[]
 }
 
 export type { IAuthService, AuthModuleDependecies, JwtPayload }

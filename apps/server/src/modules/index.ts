@@ -1,4 +1,4 @@
-import { Routes } from 'interfaces/config.js'
+import { Routes } from 'interfaces/index.js'
 
 export const getBaseRoutes = (): Routes => {
   return {

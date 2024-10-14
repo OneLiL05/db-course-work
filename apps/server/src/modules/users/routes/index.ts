@@ -1,5 +1,5 @@
 import { Routes } from 'interfaces/index.js'
 
-export const getUserRoutes = (): Routes => ({
+export const getUsersRoutes = (): Routes => ({
   routes: [],
 })

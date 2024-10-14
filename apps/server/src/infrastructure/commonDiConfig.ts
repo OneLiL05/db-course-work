@@ -12,7 +12,7 @@ export const resolveCommonDiConfig = (
 ): NameAndRegistrationPair<CommonDependencies> => ({
   sql: asFunction(
     ({ config }: CommonDependencies) => {
-      return postgres(config.db.dbUrl)
+      return postgres(config.db.dbUrl, { transform: postgres.toCamel })
     },
     {
       dispose: (sql) => {

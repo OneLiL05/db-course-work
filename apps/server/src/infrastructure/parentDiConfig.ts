@@ -7,11 +7,14 @@ import { resolveCommonDiConfig } from './commonDiConfig.js'
 import { resolveAuthModule } from 'modules/auth/index.js'
 import { resolveUsersModule } from 'modules/users/index.js'
 import type { AuthModuleDependecies } from 'modules/auth/interfaces/index.js'
-import type { UserModuleDependencies } from 'modules/users/interfaces/index.js'
+import type { UsersModuleDependencies } from 'modules/users/interfaces/index.js'
+import { resolveCitiesModule } from 'modules/cities/index.js'
+import { CitiesModuleDependencies } from 'modules/cities/interfaces/index.js'
 
 type Dependencies = CommonDependencies &
   AuthModuleDependecies &
-  UserModuleDependencies
+  UsersModuleDependencies &
+  CitiesModuleDependencies
 
 type DiCOnfig = NameAndRegistrationPair<Dependencies>
 
@@ -23,6 +26,7 @@ export const registerDependenies = (
     ...resolveCommonDiConfig(dependencies),
     ...resolveAuthModule(),
     ...resolveUsersModule(),
+    ...resolveCitiesModule(),
   }
 
   diContainer.register(diConfig)

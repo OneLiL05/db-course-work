@@ -1,8 +1,8 @@
 import { SqlClient } from 'types/index.js'
-import { User } from 'types/models/user.js'
 import { IUserRepository } from '../interfaces/index.js'
 import { CreateUser } from '../schemas/index.js'
 import { ReturnedUser, UserInjectableDependencies } from '../types/index.js'
+import { User } from 'schemas/models/user.js'
 
 export class UserRepository implements IUserRepository {
   private readonly sql: SqlClient

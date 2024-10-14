@@ -10,6 +10,7 @@ const bootstrap = async () => {
 
     app.listen({
       port: env.PORT,
+      host: '0.0.0.0',
     })
   } catch (error: unknown) {
     console.warn(error)
@@ -27,6 +28,12 @@ declare module 'fastify' {
   export interface FastifyInstance {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     authentificate: any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    isAdmin: any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    isEmployer: any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    nonUser: any
   }
 }
 

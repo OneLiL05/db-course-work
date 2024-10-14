@@ -11,12 +11,20 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
-import { tokenGuard } from 'guards/token.js'
 import type http from 'node:http'
 import { AppInstanse } from 'types/index.js'
 import { registerDependenies } from './infrastructure/parentDiConfig.js'
 import { getRoutes } from './modules/routes.js'
 import fastifyRateLimit from '@fastify/rate-limit'
+import {
+  adminGuard,
+  tokenGuard,
+  employerGuard,
+  nonUserGuard,
+} from 'guards/index.js'
+import fastifySwaggerUi from '@fastify/swagger-ui'
+import fastifySwagger from '@fastify/swagger'
+import { createJsonSchemaTransform } from 'fastify-type-provider-zod'
 
 export const getApp = async (): Promise<AppInstanse> => {
   const app = fastify<http.Server, http.IncomingMessage, http.ServerResponse>({
@@ -51,6 +59,32 @@ export const getApp = async (): Promise<AppInstanse> => {
     ],
   })
 
+  await app.register(fastifySwagger, {
+    transform: createJsonSchemaTransform({
+      skipList: [
+        '/documentation',
+        '/documentation/initOAuth',
+        '/documentation/json',
+        '/documentation/uiConfig',
+        '/documentation/yaml',
+        '/documentation/*',
+        '/documentation/static/*',
+        '*',
+      ],
+    }),
+    openapi: {
+      info: {
+        title: 'SkillSwap Backend',
+        description: 'Sample backend',
+        version: '0.0.0',
+      },
+    },
+  })
+
+  await app.register(fastifySwaggerUi, {
+    routePrefix: '/documentation',
+  })
+
   await app.register(fastifyHelmet)
 
   await app.register(fastifyJwt, { secret: env.JWT_SECRET })
@@ -69,6 +103,9 @@ export const getApp = async (): Promise<AppInstanse> => {
   })
 
   app.decorate('authentificate', tokenGuard)
+  app.decorate('isAdmin', adminGuard)
+  app.decorate('isEmployer', employerGuard)
+  app.decorate('nonUser', nonUserGuard)
 
   app.addHook('preHandler', (req, res, next) => {
     req.jwt = app.jwt

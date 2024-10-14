@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const USER_SCHEMA = z.object({
+const USER_SCHEMA = z.object({
   id: z.number(),
   created_at: z.date(),
   updated_at: z.date(),
@@ -13,3 +13,8 @@ export const USER_SCHEMA = z.object({
   employer_id: z.number().optional(),
   roles: z.enum(['admin', 'employer', 'user']).array(),
 })
+
+type User = z.infer<typeof USER_SCHEMA>
+
+export { USER_SCHEMA }
+export type { User }

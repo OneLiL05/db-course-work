@@ -8,8 +8,8 @@ interface IUserRepository {
   createOne: (data: CreateUser) => Promise<ReturnedUser>
 }
 
-interface UserModuleDependencies {
+interface UsersModuleDependencies {
   userRepository: IUserRepository
 }
 
-export type { IUserRepository, UserModuleDependencies }
+export type { IUserRepository, UsersModuleDependencies }
