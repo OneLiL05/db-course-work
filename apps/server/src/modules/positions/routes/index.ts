@@ -32,7 +32,7 @@ export const getPositionsRoutes = (app: AppInstanse): Routes => ({
       schema: {
         body: CREATE_POSITION_SCHEMA,
       },
-      preHandler: [app.authentificate, app.isAdmin],
+      // preHandler: [app.authentificate, app.isAdmin],
     },
     {
       method: 'PUT',

@@ -1,6 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
+  extends: [
+    './core',
+    './layers/admin',
+    './layers/auth',
+    './layers/users',
+    './layers/cities',
+    './layers/site',
+  ],
   devtools: { enabled: true },
   app: {
     head: {
@@ -19,9 +26,13 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@nuxtjs/seo',
     'shadcn-nuxt',
+    'nuxt-multi-cache',
   ],
+  imports: {
+    dirs: ['**/types'],
+  },
   tailwindcss: {
-    cssPath: ['~/assets/css/tailwind.css', { injectPosition: 'first' }],
+    cssPath: ['./core/assets/css/tailwind.css', { injectPosition: 'first' }],
   },
   icon: {
     provider: 'iconify',
@@ -50,5 +61,15 @@ export default defineNuxtConfig({
     description: '',
     defaultLocale: 'en',
   },
-  shadcn: { componentDir: './components/ui' },
+  shadcn: { componentDir: './core/components/ui', prefix: '' },
+  multiCache: {
+    data: {
+      enabled: true,
+    },
+  },
+  runtimeConfig: {
+    public: {
+      apiUrl: process.env.API_URL,
+    },
+  },
 })

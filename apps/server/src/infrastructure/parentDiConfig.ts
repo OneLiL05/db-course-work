@@ -16,6 +16,8 @@ import {
   ExternalDependencies,
 } from '../interfaces/index.js'
 import { resolveCommonDiConfig } from './commonDiConfig.js'
+import { JobsModuleDependencies } from 'modules/jobs/interfaces/index.js'
+import { resolveJobsModule } from 'modules/jobs/index.js'
 
 type Dependencies = CommonDependencies &
   AuthModuleDependecies &
@@ -23,7 +25,8 @@ type Dependencies = CommonDependencies &
   CitiesModuleDependencies &
   CategoriesModuleDependencies &
   PositionsModuleDependencies &
-  EmployersModuleDependencies
+  EmployersModuleDependencies &
+  JobsModuleDependencies
 
 type DiCOnfig = NameAndRegistrationPair<Dependencies>
 
@@ -39,6 +42,7 @@ export const registerDependenies = (
     ...resolveCategoriesModule(),
     ...resolvePositionsModule(),
     ...resolveEmployersModule(),
+    ...resolveJobsModule(),
   }
 
   diContainer.register(diConfig)

@@ -42,21 +42,9 @@ export const getApp = async (): Promise<AppInstanse> => {
   app.setSerializerCompiler(serializerCompiler)
 
   await app.register(fastifyCors, {
-    origin: '*',
+    origin: 'http://localhost:3000',
     credentials: true,
     methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: [
-      'Origin',
-      'X-Requested-With',
-      'Accept',
-      'Content-Type',
-      'Authorization',
-    ],
-    exposedHeaders: [
-      'Access-Control-Allow-Origin',
-      'Access-Control-Allow-Methods',
-      'Access-Control-Allow-Headers',
-    ],
   })
 
   await app.register(fastifySwagger, {

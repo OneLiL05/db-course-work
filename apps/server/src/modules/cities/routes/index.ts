@@ -33,7 +33,7 @@ export const getCitiesRoutes = (app: AppInstanse): Routes => ({
           500: MESSAGE_SCHEMA,
         },
       },
-      preHandler: [app.authentificate, app.isAdmin],
+      // preHandler: [app.authentificate, app.isAdmin],
     },
     {
       method: 'DELETE',

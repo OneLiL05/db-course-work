@@ -7,7 +7,7 @@ import {
 } from '../controllers/AuthController.js'
 import { LOGIN_SCHEMA } from '../schema/index.js'
 import { AppInstanse } from 'types/index.js'
-import { CREATE_USER_SCHEMA } from 'modules/users/schemas/index.js'
+import { CREATE_USER_SCHEMA } from '@skill-swap/shared'
 
 export const getAuthRoutes = (app: AppInstanse): Routes => ({
   routes: [
@@ -35,7 +35,7 @@ export const getAuthRoutes = (app: AppInstanse): Routes => ({
     },
     {
       method: 'GET',
-      url: '/authorize',
+      url: '/me',
       handler: authorize,
       preHandler: [app.authentificate],
     },

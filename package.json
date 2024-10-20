@@ -5,7 +5,8 @@
   "scripts": {
     "build": "nx run-many -t build",
     "dev": "concurrently -n \"client,server\" -c \"cyan,green\" \"pnpm run client:dev\" \"pnpm run server:dev\"",
-    "client:dev": "nx run client:dev",
+    "client:dev": "nx run client:dev -o",
+    "server:start": "nx run server:start",
     "server:dev": "nx run server:dev",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -23,6 +24,13 @@
   "author": {
     "name": "Kyrylo Savieliv",
     "email": "k_savieliev@icloud.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:OneLiL05/db-course-work.git"
+  },
+  "bugs": {
+    "url": "https://github.com/OneLiL05/db-course-work/issues"
   },
   "license": "MIT",
   "devDependencies": {
