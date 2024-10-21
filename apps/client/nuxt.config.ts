@@ -8,7 +8,9 @@ export default defineNuxtConfig({
     './layers/cities',
     './layers/site',
   ],
+
   devtools: { enabled: true },
+
   app: {
     head: {
       templateParams: {
@@ -16,6 +18,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/fonts',
@@ -29,21 +32,26 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
   ],
+
   imports: {
     dirs: ['./core/types', './layers/**/types'],
   },
+
   pinia: {
     storesDirs: ['./core/stores/**', './layers/**/stores/**'],
   },
+
   tailwindcss: {
     cssPath: ['./core/assets/css/tailwind.css', { injectPosition: 'first' }],
   },
+
   icon: {
     provider: 'iconify',
     serverBundle: {
       collections: ['mynaui'],
     },
   },
+
   fonts: {
     defaults: {
       weights: [400],
@@ -54,21 +62,27 @@ export default defineNuxtConfig({
       },
     },
   },
+
   colorMode: {
     preference: 'system',
     fallback: 'light',
     classSuffix: '',
     storageKey: 'nuxt-color-mode',
   },
+
   site: {
     name: 'SkillSwap',
     description: '',
     defaultLocale: 'en',
   },
+
   shadcn: { componentDir: './core/components/ui', prefix: '' },
+
   runtimeConfig: {
     public: {
       apiUrl: process.env.API_URL,
     },
   },
+
+  compatibilityDate: '2024-10-21',
 })

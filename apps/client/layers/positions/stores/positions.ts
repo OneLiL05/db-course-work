@@ -9,7 +9,19 @@ export const usePositionsStore = defineStore(
       positions.value.push(position)
     }
 
-    return { positions, addPosition }
+    const deletePosition = (id: number) => {
+      positions.value = positions.value.filter((position) => position.id !== id)
+    }
+
+    const updatePosition = ({ id, name }: Position) => {
+      const position = positions.value.find((p) => p.id === id)
+
+      if (position) {
+        position.name = name
+      }
+    }
+
+    return { positions, addPosition, deletePosition, updatePosition }
   },
   {
     persist: true,

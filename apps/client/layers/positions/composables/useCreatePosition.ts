@@ -1,3 +1,4 @@
+import type { CREATE_POSITION_SCHEMA_TYPE } from '@skill-swap/shared'
 import { useMutation } from '@tanstack/vue-query'
 import { axiosClient } from '~/core/lib/axios'
 
@@ -6,7 +7,7 @@ export const useCreatePosition = () => {
 
   return useMutation({
     mutationKey: ['create-position'],
-    mutationFn: async (data: { name: string }) => {
+    mutationFn: async (data: CREATE_POSITION_SCHEMA_TYPE) => {
       const position = await axiosClient.post('/positions', data)
 
       return position.data

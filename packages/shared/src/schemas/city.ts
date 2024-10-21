@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { BASE_MODEL } from './common.js'
+import { ID_SCHEMA } from './index.js'
 
 const CITY_MODEL = BASE_MODEL
 
@@ -11,5 +12,12 @@ const CREATE_CITY_SCHEMA = z.object({
 
 type CREATE_CITY_SCHEMA_TYPE = z.infer<typeof CREATE_CITY_SCHEMA>
 
-export { CITY_MODEL, CREATE_CITY_SCHEMA }
-export type { City, CREATE_CITY_SCHEMA_TYPE }
+const UPDATE_CITY_SCHEMA = z.object({
+  id: ID_SCHEMA,
+  name: z.string({ required_error: 'City name is required' }).min(4).max(128),
+})
+
+type UPDATE_CITY_SCHEMA_TYPE = z.infer<typeof UPDATE_CITY_SCHEMA>
+
+export { CITY_MODEL, CREATE_CITY_SCHEMA, UPDATE_CITY_SCHEMA }
+export type { City, CREATE_CITY_SCHEMA_TYPE, UPDATE_CITY_SCHEMA_TYPE }
