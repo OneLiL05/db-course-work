@@ -26,10 +26,14 @@ export default defineNuxtConfig({
     '@vee-validate/nuxt',
     '@nuxtjs/seo',
     'shadcn-nuxt',
-    'nuxt-multi-cache',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
   ],
   imports: {
-    dirs: ['**/types'],
+    dirs: ['./core/types', './layers/**/types'],
+  },
+  pinia: {
+    storesDirs: ['./core/stores/**', './layers/**/stores/**'],
   },
   tailwindcss: {
     cssPath: ['./core/assets/css/tailwind.css', { injectPosition: 'first' }],
@@ -62,11 +66,6 @@ export default defineNuxtConfig({
     defaultLocale: 'en',
   },
   shadcn: { componentDir: './core/components/ui', prefix: '' },
-  multiCache: {
-    data: {
-      enabled: true,
-    },
-  },
   runtimeConfig: {
     public: {
       apiUrl: process.env.API_URL,

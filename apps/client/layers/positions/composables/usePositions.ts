@@ -4,17 +4,17 @@ export const usePositions = () => {
   const config = useRuntimeConfig()
 
   return useAsyncData('positions', async () => {
-    const { value, addToCache } = await useDataCache<Position[]>('positions')
+    const store = usePositionsStore()
 
-    if (value) {
-      return value
+    if (store.positions.length) {
+      return store.positions
     }
 
     const url = `${config.public.apiUrl}/positions`
 
     const positions = await $fetch<Position[]>(url)
 
-    await addToCache(positions)
+    store.positions = positions
 
     return positions
   })

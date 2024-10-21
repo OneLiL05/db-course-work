@@ -1,62 +1,11 @@
 <script lang="ts" setup>
-import { vAutoAnimate } from '@formkit/auto-animate/vue'
-import { useMutation } from '@tanstack/vue-query'
-import { z } from 'zod'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '~/core/components/ui/dialog'
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '~/core/components/ui/table'
-import { axiosClient } from '~/core/lib/axios'
-
 definePageMeta({
   layout: 'admin',
 })
 
-// const cities = ref<City[]>([])
 const query = ref('')
-const router = useRouter()
 
 const { data: cities } = useCities()
-
-const createFormSchema = toTypedSchema(
-  z.object({
-    name: z.string({ required_error: 'City name is required' }).min(4).max(128),
-  }),
-)
-
-const {
-  handleSubmit: createHandleSubmit,
-  values: createValues,
-  isSubmitting: isCreationSubmitting,
-} = useForm({
-  validationSchema: createFormSchema,
-})
-
-const { mutateAsync, status: creationStatus } = useMutation({
-  mutationKey: ['create-city'],
-  mutationFn: async (data: { name: string }) => {
-    await axiosClient.post('/cities', data)
-  },
-})
-
-const onCreateSubmit = createHandleSubmit(async (values) => {
-  await mutateAsync(values)
-})
-
-const isCreateDisabled = computed(() => !createValues.name?.trim().length)
 
 const filteredCities = computed(() => {
   if (!cities.value) return []
@@ -88,43 +37,7 @@ const filteredCities = computed(() => {
         <Icon class="size-5" name="mynaui:search" />
       </span>
     </div>
-    <Dialog>
-      <DialogTrigger>
-        <Button class="gap-2">
-          <Icon class="size-5" name="mynaui:plus-circle" />
-          New
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create city</DialogTitle>
-        </DialogHeader>
-        <form @submit="onCreateSubmit" class="space-y-3">
-          <FormField v-slot="{ componentField }" name="name">
-            <FormItem v-auto-animate>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Write city name..."
-                  v-bind="componentField"
-                  autofocus
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-          <DialogFooter>
-            <Button
-              type="submit"
-              :disabled="isCreateDisabled || isCreationSubmitting"
-            >
-              {{ creationStatus === 'pending' ? 'Creating...' : 'Create' }}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <CreateCityDialog />
   </div>
   <Table>
     <TableCaption>A list of all cities.</TableCaption>

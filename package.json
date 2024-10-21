@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nx run-many -t build",
     "dev": "concurrently -n \"client,server\" -c \"cyan,green\" \"pnpm run client:dev\" \"pnpm run server:dev\"",
+    "start": "nx run-many -t start",
     "client:dev": "nx run client:dev -o",
     "server:start": "nx run server:start",
     "server:dev": "nx run server:dev",

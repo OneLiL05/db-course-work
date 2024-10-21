@@ -68,6 +68,9 @@ importers:
       '@nuxtjs/seo':
         specifier: 2.0.0-rc.23
         version: 2.0.0-rc.23(h3@1.12.0)(magicast@0.3.5)(rollup@4.21.3)(vite@5.4.5(@types/node@22.5.5)(terser@5.34.1))(vue@3.5.12(typescript@5.6.3))
+      '@pinia/nuxt':
+        specifier: ^0.5.5
+        version: 0.5.5(magicast@0.3.5)(rollup@4.21.3)(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3))
       '@skill-swap/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -101,9 +104,12 @@ importers:
       nuxt:
         specifier: ^3.13.0
         version: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.5)(@upstash/redis@1.34.3)(eslint@9.10.0(jiti@2.1.0))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.21.3)(terser@5.34.1)(typescript@5.6.3)(vite@5.4.5(@types/node@22.5.5)(terser@5.34.1))(vue-tsc@2.1.6(typescript@5.6.3))
-      nuxt-multi-cache:
-        specifier: ^3.3.3
-        version: 3.3.3(magicast@0.3.5)(rollup@4.21.3)
+      pinia:
+        specifier: ^2.2.4
+        version: 2.2.4(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3))
+      pinia-plugin-persistedstate:
+        specifier: ^4.1.1
+        version: 4.1.1(@pinia/nuxt@0.5.5(magicast@0.3.5)(rollup@4.21.3)(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3)))(magicast@0.3.5)(pinia@2.2.4(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3)))(rollup@4.21.3)
       radix-vue:
         specifier: ^1.9.6
         version: 1.9.6(vue@3.5.12(typescript@5.6.3))
@@ -1560,6 +1566,9 @@ packages:
     resolution: {integrity: sha512-HNjmfLQEVRZmHRET336f20H/8kOozUGwk7yajvsonjNxbj2wBTK1WsQuHkD5yYh9RxFGL2EyDHryOihOwUoKDA==}
     engines: {node: '>= 10.0.0'}
 
+  '@pinia/nuxt@0.5.5':
+    resolution: {integrity: sha512-wjxS7YqIesh4OLK+qE3ZjhdOJ5pYZQ+VlEmZNtTwzQn1Kavei/khovx7mzXVXNA/mvSPXVhb9xBzhyS3XMURtw==}
+
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
@@ -1856,9 +1865,6 @@ packages:
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
-
-  '@tusbar/cache-control@1.0.2':
-    resolution: {integrity: sha512-PXfjYTYBVvMPYCLDWj+xIOA9ITFbbhWCHzLcqUCJ5TPGm4JO4cxpGb7x3K8Q1K1ADgNgfBxLsDcTMVRydtZB9A==}
 
   '@tybys/wasm-util@0.9.0':
     resolution: {integrity: sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw==}
@@ -2894,6 +2900,9 @@ packages:
 
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
+
+  deep-pick-omit@1.2.1:
+    resolution: {integrity: sha512-2J6Kc/m3irCeqVG42T+SaUMesaK7oGWaedGnQQK/+O0gYc+2SP5bKh/KKTE7d7SJ+GCA9UUE1GRzh6oDe0EnGw==}
 
   deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
@@ -4379,9 +4388,6 @@ packages:
   nuxt-link-checker@3.1.2:
     resolution: {integrity: sha512-Uvs1l257h9e4CFxzSHjoVKYvtaWJWfpD1bdMLQxFKJ32W6MkkdK2n2yAL47pmink7NOf5YsHPLFDS3m7R8l45w==}
 
-  nuxt-multi-cache@3.3.3:
-    resolution: {integrity: sha512-/pZY7WHY9X18QC0TOrI8RuwkpMxmNUC45mSB+PZOB3FZGPCp3onwb4CqGu2MOHLx8qif8mR7KD2XKCXJPz5POA==}
-
   nuxt-og-image@3.0.4:
     resolution: {integrity: sha512-Gw0u1SzjEhWOgj2INzfb6hhEDgnXSnHHVCNviMWWgNMXd1peTpFN9F5Qnnp1pvaRc/7IF5yy/vbM6LCOkHFIYw==}
     engines: {node: '>=18.0.0'}
@@ -4630,6 +4636,29 @@ packages:
   pify@2.3.0:
     resolution: {integrity: sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==}
     engines: {node: '>=0.10.0'}
+
+  pinia-plugin-persistedstate@4.1.1:
+    resolution: {integrity: sha512-fUiUsbfBetGUZzX28z+ImAZw7FDXzwRrk+fN+ljF5OhQMhsSYfYeUzI9FLLtpjekYbfFHWvJiECkLI60RIuiPA==}
+    peerDependencies:
+      '@pinia/nuxt': '>=0.5.0'
+      pinia: '>=2.0.0'
+    peerDependenciesMeta:
+      '@pinia/nuxt':
+        optional: true
+      pinia:
+        optional: true
+
+  pinia@2.2.4:
+    resolution: {integrity: sha512-K7ZhpMY9iJ9ShTC0cR2+PnxdQRuwVIsXDO/WIEV/RnMC/vmSoKDTKW/exNQYPI+4ij10UjXqdNiEHwn47McANQ==}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.0
+      typescript: '>=4.4.4'
+      vue: ^2.6.14 || ^3.3.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      typescript:
+        optional: true
 
   pino-abstract-transport@1.2.0:
     resolution: {integrity: sha512-Guhh8EZfPCfH+PMXAb6rKOjGQEoy0xlAIn+irODG5kgfYV+BQ0rGYYWTIel3P5mmyXqkYkPmdIkywsn6QKUR1Q==}
@@ -7572,6 +7601,19 @@ snapshots:
       '@parcel/watcher-win32-ia32': 2.4.1
       '@parcel/watcher-win32-x64': 2.4.1
 
+  '@pinia/nuxt@0.5.5(magicast@0.3.5)(rollup@4.21.3)(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3))':
+    dependencies:
+      '@nuxt/kit': 3.13.2(magicast@0.3.5)(rollup@4.21.3)
+      pinia: 2.2.4(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - magicast
+      - rollup
+      - supports-color
+      - typescript
+      - vue
+      - webpack-sources
+
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -7786,8 +7828,6 @@ snapshots:
       vue: 3.5.12(typescript@5.6.3)
 
   '@trysound/sax@0.2.0': {}
-
-  '@tusbar/cache-control@1.0.2': {}
 
   '@tybys/wasm-util@0.9.0':
     dependencies:
@@ -9061,6 +9101,8 @@ snapshots:
     optional: true
 
   deep-is@0.1.4: {}
+
+  deep-pick-omit@1.2.1: {}
 
   deepmerge@4.3.1: {}
 
@@ -10774,16 +10816,6 @@ snapshots:
       - vue
       - webpack-sources
 
-  nuxt-multi-cache@3.3.3(magicast@0.3.5)(rollup@4.21.3):
-    dependencies:
-      '@nuxt/kit': 3.13.2(magicast@0.3.5)(rollup@4.21.3)
-      '@tusbar/cache-control': 1.0.2
-    transitivePeerDependencies:
-      - magicast
-      - rollup
-      - supports-color
-      - webpack-sources
-
   nuxt-og-image@3.0.4(magicast@0.3.5)(rollup@4.21.3)(vite@5.4.5(@types/node@22.5.5)(terser@5.34.1))(vue@3.5.12(typescript@5.6.3)):
     dependencies:
       '@nuxt/devtools-kit': 1.5.1(magicast@0.3.5)(rollup@4.21.3)(vite@5.4.5(@types/node@22.5.5)(terser@5.34.1))
@@ -11269,6 +11301,29 @@ snapshots:
   pidtree@0.6.0: {}
 
   pify@2.3.0: {}
+
+  pinia-plugin-persistedstate@4.1.1(@pinia/nuxt@0.5.5(magicast@0.3.5)(rollup@4.21.3)(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3)))(magicast@0.3.5)(pinia@2.2.4(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3)))(rollup@4.21.3):
+    dependencies:
+      '@nuxt/kit': 3.13.2(magicast@0.3.5)(rollup@4.21.3)
+      deep-pick-omit: 1.2.1
+      defu: 6.1.4
+      destr: 2.0.3
+    optionalDependencies:
+      '@pinia/nuxt': 0.5.5(magicast@0.3.5)(rollup@4.21.3)(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3))
+      pinia: 2.2.4(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3))
+    transitivePeerDependencies:
+      - magicast
+      - rollup
+      - supports-color
+      - webpack-sources
+
+  pinia@2.2.4(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3)):
+    dependencies:
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.12(typescript@5.6.3)
+      vue-demi: 0.14.10(vue@3.5.12(typescript@5.6.3))
+    optionalDependencies:
+      typescript: 5.6.3
 
   pino-abstract-transport@1.2.0:
     dependencies:
