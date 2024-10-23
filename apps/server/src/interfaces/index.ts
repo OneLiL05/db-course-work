@@ -1,4 +1,4 @@
-import { AppInstanse, Route, SqlClient } from 'types/index.js'
+import { AppInstanse, Route, SqlClient } from '@/types/index.js'
 import type { Config } from './config.js'
 import type { Redis } from '@upstash/redis'
 

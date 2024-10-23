@@ -1,13 +1,12 @@
-import { Routes } from 'interfaces/index.js'
 import {
   authorize,
   login,
   logout,
   signup,
 } from '../controllers/AuthController.js'
-import { LOGIN_SCHEMA } from '../schema/index.js'
-import { AppInstanse } from 'types/index.js'
-import { CREATE_USER_SCHEMA } from '@skill-swap/shared'
+import { CREATE_USER_SCHEMA, LOGIN_SCHEMA } from '@skill-swap/shared'
+import { AppInstanse } from '@/types/index.js'
+import { Routes } from '@/interfaces/index.js'
 
 export const getAuthRoutes = (app: AppInstanse): Routes => ({
   routes: [

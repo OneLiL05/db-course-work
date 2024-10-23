@@ -1,9 +1,11 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { GET_BY_ID_SCHEMA_TYPE } from 'schemas/common.js'
 import { CreateEmployer } from '../schemas/index.js'
-import { JwtPayload } from 'modules/auth/interfaces/index.js'
-import { ACCESS_TOKEN } from 'constants/auth.js'
-import { User } from 'schemas/models/user.js'
+import {
+  ACCESS_TOKEN,
+  GET_BY_ID_SCHEMA_TYPE,
+  JwtPayload,
+  User,
+} from '@skill-swap/shared'
 
 export const getEmployers = async (
   request: FastifyRequest,

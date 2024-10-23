@@ -1,4 +1,4 @@
-import { Routes } from 'interfaces/index.js'
+import { AppInstanse } from '@/types/index.js'
 import {
   createPosition,
   deletePosition,
@@ -7,8 +7,8 @@ import {
   updatePosition,
 } from '../controllers/PositionController.js'
 import { CREATE_POSITION_SCHEMA } from '../schemas/index.js'
-import { AppInstanse } from 'types/index.js'
-import { GET_BY_ID_SCHEMA } from 'schemas/common.js'
+import { Routes } from '@/interfaces/index.js'
+import { GET_BY_ID_SCHEMA } from '@skill-swap/shared'
 
 export const getPositionsRoutes = (app: AppInstanse): Routes => ({
   routes: [

@@ -1,5 +1,5 @@
+import { Role } from '@skill-swap/shared'
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { Role } from 'types/index.js'
 
 export const createRoleGuard = (roles: Role[]) => {
   return async (

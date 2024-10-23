@@ -1,4 +1,4 @@
-import { Role } from 'types/index.js'
+import { Role } from '@skill-swap/shared'
 
 export const ROLES = new Map<Role, number>([
   ['admin', 1],

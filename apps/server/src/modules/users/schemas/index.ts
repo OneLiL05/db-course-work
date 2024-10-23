@@ -1,12 +1,12 @@
-import { USER_SCHEMA } from 'schemas/models/user.js'
+import { USER_SCHEMA } from '@skill-swap/shared'
 import { z } from 'zod'
 
 const CREATE_USER_SCHEMA = USER_SCHEMA.pick({
   username: true,
   email: true,
   password: true,
-  first_name: true,
-  last_name: true,
+  firstName: true,
+  lastName: true,
   img: true,
 })
 

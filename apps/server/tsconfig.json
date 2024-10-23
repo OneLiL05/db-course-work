@@ -13,7 +13,10 @@
     "module": "NodeNext",
     "outDir": "dist",
     "sourceMap": true,
-    "baseUrl": "src"
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }

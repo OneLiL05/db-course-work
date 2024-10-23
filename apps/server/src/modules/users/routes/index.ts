@@ -1,6 +1,6 @@
-import { Routes } from 'interfaces/index.js'
+import { Routes } from '@/interfaces/index.js'
 import { getUser } from '../controllers/UserController.js'
-import { GET_BY_ID_SCHEMA } from 'schemas/common.js'
+import { GET_BY_ID_SCHEMA } from '@skill-swap/shared'
 
 export const getUsersRoutes = (): Routes => ({
   routes: [

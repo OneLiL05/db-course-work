@@ -1,8 +1,8 @@
-import { SqlClient } from 'types/index.js'
 import { IPositionRepository } from '../interfaces/index.js'
 import { PositionsInjectableDependencies } from '../types/index.js'
-import { Position } from 'schemas/models/position.js'
 import { CreatePosition } from '../schemas/index.js'
+import { SqlClient } from '@/types/index.js'
+import { Position } from '@skill-swap/shared'
 
 export class PositionRepository implements IPositionRepository {
   private readonly sql: SqlClient

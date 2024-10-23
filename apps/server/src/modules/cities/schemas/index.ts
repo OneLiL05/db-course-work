@@ -1,4 +1,4 @@
-import { BASE_MODEL } from 'schemas/models/common.js'
+import { BASE_MODEL } from '@/schemas/models/common.js'
 import { z } from 'zod'
 
 const CREATE_CITY_SCHEMA = BASE_MODEL.pick({ name: true })

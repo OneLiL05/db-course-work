@@ -1,4 +1,4 @@
-import { City } from 'schemas/models/city.js'
+import { City } from '@skill-swap/shared'
 import { CreateCity } from '../schemas/index.js'
 
 interface ICityRepository {

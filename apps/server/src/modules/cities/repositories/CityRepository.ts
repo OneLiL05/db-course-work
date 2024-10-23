@@ -1,8 +1,8 @@
-import { SqlClient } from 'types/index.js'
 import { ICityRepository } from '../interfaces/index.js'
 import { CitiesInjectableDependencies } from '../types/index.js'
-import { City } from 'schemas/models/city.js'
 import { CreateCity } from '../schemas/index.js'
+import { SqlClient } from '@/types/index.js'
+import { City } from '@skill-swap/shared'
 
 export class CityRepository implements ICityRepository {
   private readonly sql: SqlClient

@@ -1,14 +1,17 @@
-import { Routes } from 'interfaces/index.js'
+import { AppInstanse } from '@/types/index.js'
 import {
   createCity,
   deleteCity,
   getCities,
   updateCity,
 } from '../controllers/CityController.js'
-import { CITY_MODEL } from 'schemas/models/city.js'
 import { CREATE_CITY_SCHEMA } from '../schemas/index.js'
-import { GET_BY_ID_SCHEMA, MESSAGE_SCHEMA } from 'schemas/common.js'
-import { AppInstanse } from 'types/index.js'
+import {
+  CITY_MODEL,
+  GET_BY_ID_SCHEMA,
+  MESSAGE_SCHEMA,
+} from '@skill-swap/shared'
+import { Routes } from '@/interfaces/index.js'
 
 export const getCitiesRoutes = (app: AppInstanse): Routes => ({
   routes: [

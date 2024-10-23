@@ -1,4 +1,4 @@
-import { Position } from 'schemas/models/position.js'
+import { Position } from '@skill-swap/shared'
 import { CreatePosition } from '../schemas/index.js'
 
 interface IPositionRepository {

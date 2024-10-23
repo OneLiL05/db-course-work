@@ -1,6 +1,9 @@
-import { BaseDiConfig, InjectableDependencies } from 'types/index.js'
+import {
+  BaseDiConfig,
+  InjectableDependencies,
+  UserWithout,
+} from '@/types/index.js'
 import { UsersModuleDependencies } from '../interfaces/index.js'
-import { UserWithout } from 'types/models/user.js'
 
 type UserInjectableDependencies =
   InjectableDependencies<UsersModuleDependencies>
@@ -8,10 +11,12 @@ type UserInjectableDependencies =
 type UserDiConfig = BaseDiConfig<UsersModuleDependencies>
 
 type ReturnedUser = UserWithout<
-  'created_at' | 'updated_at' | 'password' | 'employer_id' | 'roles'
+  'createdAt' | 'updatedAt' | 'password' | 'employerId' | 'roles'
 >
 
-type PasswordlessUser = UserWithout<'password'>
+type NewType = UserWithout<'password'>
+
+type PasswordlessUser = NewType
 
 export type {
   UserInjectableDependencies,

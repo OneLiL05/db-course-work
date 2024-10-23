@@ -1,4 +1,4 @@
-import { Routes } from 'interfaces/index.js'
+import { Routes } from '@/interfaces/index.js'
 import { createJob, getJobs } from '../controllers/JobController.js'
 import { CREATE_JOB_SCHEMA } from '../schemas/index.js'
 

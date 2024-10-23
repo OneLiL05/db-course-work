@@ -1,9 +1,9 @@
-import { Role, SqlClient } from 'types/index.js'
+import { Role, User } from '@skill-swap/shared'
 import { IUserRepository } from '../interfaces/index.js'
 import { CreateUser } from '../schemas/index.js'
 import { ReturnedUser, UserInjectableDependencies } from '../types/index.js'
-import { User } from 'schemas/models/user.js'
-import { ROLES } from 'constants/roles.js'
+import { SqlClient } from '@/types/index.js'
+import { ROLES } from '@/constants/index.js'
 
 export class UserRepository implements IUserRepository {
   private readonly sql: SqlClient

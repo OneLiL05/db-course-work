@@ -1,7 +1,6 @@
-import { User } from 'schemas/models/user.js'
+import { Role, User } from '@skill-swap/shared'
 import { CreateUser } from '../schemas/index.js'
 import { ReturnedUser } from '../types/index.js'
-import { Role } from 'types/index.js'
 
 interface IUserRepository {
   findOne: (id: number) => Promise<User | null>

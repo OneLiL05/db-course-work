@@ -1,12 +1,12 @@
-import { Routes } from 'interfaces/index.js'
-import { AppInstanse } from 'types/index.js'
 import { getAuthRoutes } from './auth/routes/index.js'
 import { getCategoriesRoutes } from './categories/routes/index.js'
 import { getCitiesRoutes } from './cities/routes/index.js'
-import { getBaseRoutes } from './index.js'
+import { getBaseRoutes } from './getBaseRoutes.js'
 import { getEmployersRoutes } from './employers/routes/index.js'
 import { getPositionsRoutes } from './positions/routes/index.js'
 import { getJobsRoutes } from './jobs/routes/index.js'
+import { AppInstanse } from '@/types/index.js'
+import { Routes } from '@/interfaces/index.js'
 
 export const getRoutes = (app: AppInstanse): Routes => {
   const { routes: baseRoutes } = getBaseRoutes()

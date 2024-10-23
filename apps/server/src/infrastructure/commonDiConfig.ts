@@ -2,9 +2,9 @@ import type { NameAndRegistrationPair } from 'awilix'
 import { asFunction, Lifetime } from 'awilix'
 import { getConfig } from './config.js'
 import postgres from 'postgres'
-import { CommonDependencies, ExternalDependencies } from 'interfaces/index.js'
 import { Redis } from '@upstash/redis'
-import { SINGLETON_CONFIG } from 'constants/config.js'
+import { CommonDependencies, ExternalDependencies } from '@/interfaces/index.js'
+import { SINGLETON_CONFIG } from '@/constants/config.js'
 
 export const resolveCommonDiConfig = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

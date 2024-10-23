@@ -1,12 +1,12 @@
-import { Routes } from 'interfaces/index.js'
-import { AppInstanse } from 'types/index.js'
+import { AppInstanse } from '@/types/index.js'
 import {
   createEmployer,
   getEmployer,
   getEmployers,
 } from '../controllers/EmployerController.js'
-import { GET_BY_ID_SCHEMA } from 'schemas/common.js'
 import { CREATE_EMPLOYER_SCHEMA } from '../schemas/index.js'
+import { Routes } from '@/interfaces/index.js'
+import { GET_BY_ID_SCHEMA } from '@skill-swap/shared'
 
 export const getEmployersRoutes = (app: AppInstanse): Routes => ({
   routes: [

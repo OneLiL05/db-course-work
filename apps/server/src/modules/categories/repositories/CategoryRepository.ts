@@ -1,9 +1,8 @@
-import { SqlClient } from 'types/index.js'
+import { SqlClient } from '@/types/index.js'
+import { Category } from '@skill-swap/shared'
 import { ICategoryRepository } from '../interfaces/index.js'
-import { CategoriesInjectableDependencies } from '../types/index.js'
-import { Category } from 'schemas/models/category.js'
-import { City } from 'schemas/models/city.js'
 import { CreateCategory } from '../schemas/index.js'
+import { CategoriesInjectableDependencies } from '../types/index.js'
 
 export class CategoryRepository implements ICategoryRepository {
   private readonly sql: SqlClient
@@ -13,13 +12,13 @@ export class CategoryRepository implements ICategoryRepository {
   }
 
   async findOne(id: number): Promise<Category | null> {
-    const [city]: [City?] = await this.sql`
+    const [category]: [Category?] = await this.sql`
       select * from categories where id=${id}
     `
 
-    if (!city) return null
+    if (!category) return null
 
-    return city
+    return category
   }
 
   async findMany(): Promise<Category[]> {

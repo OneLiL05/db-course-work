@@ -1,4 +1,4 @@
-import { JOB_SCHEMA } from 'schemas/models/job.js'
+import { JOB_SCHEMA } from '@/schemas/models/job.js'
 import { z } from 'zod'
 
 const CREATE_JOB_SCHEMA = JOB_SCHEMA.omit({

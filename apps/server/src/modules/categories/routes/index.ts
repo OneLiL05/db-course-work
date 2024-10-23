@@ -1,4 +1,4 @@
-import { Routes } from 'interfaces/index.js'
+import { Routes } from '@/interfaces/index.js'
 import {
   createCategory,
   deleteCategory,
@@ -6,9 +6,9 @@ import {
   getCategory,
   updateCategory,
 } from '../controllers/CategoryController.js'
-import { GET_BY_ID_SCHEMA } from 'schemas/common.js'
 import { CREATE_CATEGORY_SCHEMA } from '../schemas/index.js'
-import { AppInstanse } from 'types/index.js'
+import { AppInstanse } from '@/types/index.js'
+import { GET_BY_ID_SCHEMA } from '@skill-swap/shared'
 
 export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
   routes: [

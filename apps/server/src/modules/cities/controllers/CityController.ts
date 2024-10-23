@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { CreateCity } from '../schemas/index.js'
-import { GET_BY_ID_SCHEMA_TYPE } from 'schemas/common.js'
+import { GET_BY_ID_SCHEMA_TYPE } from '@skill-swap/shared'
 
 export const getCities = async (
   request: FastifyRequest,

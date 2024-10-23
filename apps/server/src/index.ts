@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { getApp } from './app.js'
 import { env } from './env.js'
 import { JWT } from '@fastify/jwt'
-import { JwtPayload } from 'modules/auth/interfaces/index.js'
+import { JwtPayload } from '@skill-swap/shared'
 
 const bootstrap = async () => {
   try {

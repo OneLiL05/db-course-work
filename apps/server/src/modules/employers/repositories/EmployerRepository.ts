@@ -1,8 +1,8 @@
-import { SqlClient } from 'types/index.js'
 import { IEmployerRepository } from '../interfaces/index.js'
 import { EmployersInjectableDependencies } from '../types/index.js'
-import { Employer } from 'schemas/models/employer.js'
 import { CreateEmployer } from '../schemas/index.js'
+import { Employer } from '@/schemas/models/employer.js'
+import { SqlClient } from '@/types/index.js'
 
 export class EmployerRepository implements IEmployerRepository {
   private readonly sql: SqlClient

@@ -1,4 +1,4 @@
-import { BaseDiConfig, InjectableDependencies } from 'types/index.js'
+import { BaseDiConfig, InjectableDependencies } from '@/types/index.js'
 import { JobsModuleDependencies } from '../interfaces/index.js'
 
 type JobsInjectableDependencies = InjectableDependencies<JobsModuleDependencies>

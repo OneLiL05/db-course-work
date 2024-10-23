@@ -1,4 +1,4 @@
-import { Category } from 'schemas/models/category.js'
+import { Category } from '@skill-swap/shared'
 import { CreateCategory } from '../schemas/index.js'
 
 interface ICategoryRepository {

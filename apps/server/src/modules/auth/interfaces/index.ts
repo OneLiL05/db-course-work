@@ -1,4 +1,4 @@
-import { Role } from 'types/index.js'
+import { Role } from '@skill-swap/shared'
 
 interface IAuthService {
   generateHash: (password: string) => Promise<string>

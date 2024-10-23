@@ -1,7 +1,7 @@
 import { AuthInjectableDependecies } from '../types/index.js'
 import { hash, verify } from '@node-rs/argon2'
-import { AuthConfig } from 'interfaces/config.js'
 import { IAuthService } from '../interfaces/index.js'
+import { AuthConfig } from '@/interfaces/config.js'
 
 export class AuthService implements IAuthService {
   private readonly config: AuthConfig

@@ -1,4 +1,4 @@
-import { EMPLOYER_MODEL } from 'schemas/models/employer.js'
+import { EMPLOYER_MODEL } from '@/schemas/models/employer.js'
 import { z } from 'zod'
 
 const CREATE_EMPLOYER_SCHEMA = EMPLOYER_MODEL.pick({

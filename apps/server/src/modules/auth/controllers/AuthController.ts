@@ -1,8 +1,10 @@
+import {
+  ACCESS_TOKEN,
+  CREATE_USER_SCHEMA_TYPE,
+  JwtPayload,
+  LOGIN_SCHEMA_TYPE,
+} from '@skill-swap/shared'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { LOGIN_SCHEMA_TYPE } from '../schema/index.js'
-import { CreateUser } from 'modules/users/schemas/index.js'
-import { JwtPayload } from '../interfaces/index.js'
-import { ACCESS_TOKEN } from 'constants/auth.js'
 
 export const login = async (
   request: FastifyRequest<{ Body: LOGIN_SCHEMA_TYPE }>,
@@ -45,7 +47,7 @@ export const login = async (
 }
 
 export const signup = async (
-  request: FastifyRequest<{ Body: CreateUser }>,
+  request: FastifyRequest<{ Body: CREATE_USER_SCHEMA_TYPE }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { email, password } = request.body

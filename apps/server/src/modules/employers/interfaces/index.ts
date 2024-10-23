@@ -1,4 +1,4 @@
-import { Employer } from 'schemas/models/employer.js'
+import { Employer } from '@/schemas/models/employer.js'
 import { CreateEmployer } from '../schemas/index.js'
 
 interface IEmployerRepository {

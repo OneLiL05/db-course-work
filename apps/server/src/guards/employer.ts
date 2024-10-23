@@ -1,3 +1,3 @@
-import { createRoleGuard } from 'factories/index.js'
+import { createRoleGuard } from '@/factories/createRoleGuard.js'
 
 export const employerGuard = createRoleGuard(['employer'])

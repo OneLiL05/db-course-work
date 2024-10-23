@@ -1,5 +1,5 @@
+import { GET_BY_ID_SCHEMA_TYPE } from '@skill-swap/shared'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { GET_BY_ID_SCHEMA_TYPE } from 'schemas/common.js'
 
 export const getUser = async (
   request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
