@@ -54,12 +54,8 @@ const filteredCities = computed(() => {
           <TableCell class="font-medium">{{ city.id }}</TableCell>
           <TableCell>{{ city.name }}</TableCell>
           <TableCell class="text-right [&_button]:size-8">
-            <Button variant="outline" size="icon" class="mr-2">
-              <Icon class="size-4" name="mynaui:pencil" />
-            </Button>
-            <Button variant="destructive" size="icon">
-              <Icon class="size-4" name="mynaui:trash" />
-            </Button>
+            <EditCityDialog :city />
+            <DeleteCityDialog :city />
           </TableCell>
         </TableRow>
       </template>

@@ -11,12 +11,9 @@ export const useUpdateCity = () => {
     mutationKey: ['update-city'],
     async mutationFn({ id, name }: UPDATE_CITY_SCHEMA_TYPE) {
       const city = await axiosClient.put<City>(
-        '/cities',
+        `/cities/${id}`,
         { name },
         {
-          params: {
-            id,
-          },
           headers,
         },
       )

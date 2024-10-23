@@ -43,7 +43,7 @@ const filteredCities = computed(() => {
     <TableCaption>A list of all positions.</TableCaption>
     <TableHeader>
       <TableRow>
-        <TableHead class="w-[100px]">Id</TableHead>
+        <TableHead class="w-[100px]">#</TableHead>
         <TableHead>Name</TableHead>
         <TableHead class="text-right">Actions</TableHead>
       </TableRow>
@@ -51,15 +51,11 @@ const filteredCities = computed(() => {
     <TableBody>
       <template v-if="positions">
         <TableRow v-for="(position, index) in filteredCities" :key="index">
-          <TableCell class="font-medium">{{ position.id }}</TableCell>
+          <TableCell class="font-medium">{{ index + 1 }}</TableCell>
           <TableCell>{{ position.name }}</TableCell>
           <TableCell class="text-right [&_button]:size-8">
-            <Button variant="outline" size="icon" class="mr-2">
-              <Icon class="size-4" name="mynaui:pencil" />
-            </Button>
-            <Button variant="destructive" size="icon">
-              <Icon class="size-4" name="mynaui:trash" />
-            </Button>
+            <EditPositionDialog :position />
+            <DeletePositionDialog :position />
           </TableCell>
         </TableRow>
       </template>

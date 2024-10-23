@@ -10,12 +10,9 @@ export const useUpdatePosition = () => {
     mutationKey: ['update-position'],
     async mutationFn({ id, name }: UPDATE_POSITION_SCHEMA_TYPE) {
       const position = await axiosClient.put<Position>(
-        '/positions',
+        `/positions/${id}`,
         { name },
         {
-          params: {
-            id,
-          },
           headers,
         },
       )

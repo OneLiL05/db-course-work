@@ -9,10 +9,7 @@ export const useDeletePosition = () => {
   return useMutation({
     mutationKey: ['delete-position'],
     async mutationFn({ id }: GET_BY_ID_SCHEMA_TYPE) {
-      const city = await axiosClient.delete<Position>('/positions', {
-        params: {
-          id,
-        },
+      const city = await axiosClient.delete<Position>(`/positions/${id}`, {
         headers,
       })
 
