@@ -5,6 +5,7 @@ import {
   isStringEmpty,
   type Position,
 } from '@skill-swap/shared'
+import { vAutoAnimate } from '@formkit/auto-animate'
 
 const props = defineProps<{ position: Position }>()
 
@@ -27,7 +28,7 @@ const isDisabled = computed(
 
 <template>
   <Dialog>
-    <DialogTrigger>
+    <DialogTrigger as-child>
       <Button class="ml-4" variant="destructive" size="icon">
         <Icon class="size-4" name="mynaui:trash" />
       </Button>

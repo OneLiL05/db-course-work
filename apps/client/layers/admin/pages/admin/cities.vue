@@ -43,15 +43,15 @@ const filteredCities = computed(() => {
     <TableCaption>A list of all cities.</TableCaption>
     <TableHeader>
       <TableRow>
-        <TableHead class="w-[100px]">Id</TableHead>
+        <TableHead class="w-[100px]">#</TableHead>
         <TableHead>Name</TableHead>
         <TableHead class="text-right">Actions</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
       <template v-if="cities">
-        <TableRow v-for="(city, index) in filteredCities" :key="index">
-          <TableCell class="font-medium">{{ city.id }}</TableCell>
+        <TableRow v-for="(city, index) in filteredCities" :key="city.id">
+          <TableCell class="font-medium">{{ index + 1 }}</TableCell>
           <TableCell>{{ city.name }}</TableCell>
           <TableCell class="text-right [&_button]:size-8">
             <EditCityDialog :city />

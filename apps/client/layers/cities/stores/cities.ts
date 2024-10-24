@@ -10,11 +10,13 @@ export const useCitiesStore = defineStore(
     }
 
     const updateCity = ({ id, name }: City) => {
-      const city = cities.value.find((c) => c.id === id)
+      cities.value = cities.value.map((city) => {
+        if (city.id === id) {
+          city.name = name
+        }
 
-      if (city) {
-        city.name = name
-      }
+        return city
+      })
     }
 
     const deleteCity = (id: number) => {

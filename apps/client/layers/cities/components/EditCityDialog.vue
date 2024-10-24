@@ -5,6 +5,7 @@ import {
   isStringEmpty,
   type City,
 } from '@skill-swap/shared'
+import { vAutoAnimate } from '@formkit/auto-animate'
 
 const props = defineProps<{ city: City }>()
 
@@ -29,7 +30,7 @@ const isDisabled = computed(
 
 <template>
   <Dialog>
-    <DialogTrigger>
+    <DialogTrigger as-child>
       <Button variant="outline" size="icon" class="mr-2">
         <Icon class="size-4" name="mynaui:pencil" />
       </Button>

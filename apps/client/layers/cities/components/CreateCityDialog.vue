@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CREATE_CITY_SCHEMA } from '@skill-swap/shared'
+import { vAutoAnimate } from '@formkit/auto-animate'
 
 const { handleSubmit, values, isSubmitting } = useForm({
   validationSchema: toTypedSchema(CREATE_CITY_SCHEMA),
@@ -18,7 +19,7 @@ const onSubmit = handleSubmit((data) => {
 
 <template>
   <Dialog>
-    <DialogTrigger>
+    <DialogTrigger as-child>
       <Button class="gap-2">
         <Icon class="size-5" name="mynaui:plus-circle" />
         New

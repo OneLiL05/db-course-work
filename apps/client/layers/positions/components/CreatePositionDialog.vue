@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CREATE_POSITION_SCHEMA } from '@skill-swap/shared'
+import { vAutoAnimate } from '@formkit/auto-animate'
 
 const { mutateAsync, status, isError, error, isPending } = useCreatePosition()
 
@@ -18,7 +19,7 @@ const formError = getFormError({ isError, error })
 
 <template>
   <Dialog>
-    <DialogTrigger>
+    <DialogTrigger as-child>
       <Button class="gap-2">
         <Icon class="size-5" name="mynaui:plus-circle" />
         New
