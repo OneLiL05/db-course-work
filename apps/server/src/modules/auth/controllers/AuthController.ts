@@ -43,7 +43,7 @@ export const login = async (
     secure: true,
   })
 
-  return reply.status(200).send({ [ACCESS_TOKEN]: token })
+  return reply.status(200).send({ [ACCESS_TOKEN]: token, user: payload })
 }
 
 export const signup = async (
