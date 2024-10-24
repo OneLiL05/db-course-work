@@ -1,7 +1,6 @@
-import { ACCESS_TOKEN } from '@skill-swap/shared'
-
 export const useAuthHeaders = () => {
-  const cookie = useCookie(ACCESS_TOKEN)
+  const authStore = useAuthStore()
+  const { token } = toRefs(authStore)
 
-  return { Authorization: toBearer(cookie.value) }
+  return { Authorization: toBearer(token.value) }
 }

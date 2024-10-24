@@ -9,5 +9,9 @@
     "baseColor": "gray",
     "cssVariables": true
   },
+  "aliases": {
+    "components": "@/core",
+    "utils": "@/lib/utils"
+  },
   "framework": "nuxt"
 }

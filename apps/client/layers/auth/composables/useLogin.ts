@@ -1,26 +1,28 @@
 import {
-  ACCESS_TOKEN,
   type AuthTokens,
+  type JwtPayload,
   type LOGIN_SCHEMA_TYPE,
 } from '@skill-swap/shared'
 import { useMutation } from '@tanstack/vue-query'
 import { axiosClient } from '~/core/lib/axios'
+import { useAuthStore } from '../stores/auth'
 
 export const useLogin = () => {
   const router = useRouter()
-  const cookie = useCookie(ACCESS_TOKEN)
+  const store = useAuthStore()
 
   return useMutation({
     mutationKey: ['login'],
-    async mutationFn(data: LOGIN_SCHEMA_TYPE) {
-      const token = await axiosClient
-        .post<AuthTokens>('/login', data)
+    async mutationFn(values: LOGIN_SCHEMA_TYPE) {
+      const data = await axiosClient
+        .post<AuthTokens & { user: JwtPayload }>('/login', values)
         .then((result) => result.data)
 
-      return token
+      return data
     },
     onSuccess(data) {
-      cookie.value = data.access_token
+      store.token = data.access_token
+      store.user = data.user
       router.push({ path: '/' })
     },
   })

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { Text, textVariants } from '~/components/ui/text'
-import { ThemeSwitcher } from '~/components/theme-switcher'
+import { buttonVariants } from './ui/button'
+import { textVariants } from './ui/text'
 
 const links = [
   {
@@ -16,6 +16,9 @@ const links = [
     to: '/',
   },
 ]
+
+const authStore = useAuthStore()
+const { isAuthentificated } = toRefs(authStore)
 </script>
 
 <template>
@@ -35,8 +38,20 @@ const links = [
     </div>
     <div class="justify-end">
       <!-- <ThemeSwitcher /> -->
-      <Button variant="outline">Login</Button>
-      <Button variant="default">Sign up</Button>
+      <template v-if="!isAuthentificated">
+        <NuxtLink to="/login" :class="buttonVariants({ variant: 'outline' })">
+          Login
+        </NuxtLink>
+        <NuxtLink to="/signup" :class="buttonVariants({ variant: 'default' })">
+          Sign up
+        </NuxtLink>
+      </template>
+      <template v-else>
+        <Button variant="outline" size="icon">
+          <Icon name="lucide:inbox" class="size-5" />
+        </Button>
+        <ProfileSheet />
+      </template>
     </div>
   </header>
 </template>

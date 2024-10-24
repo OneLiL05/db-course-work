@@ -1,6 +1,4 @@
-<script lang="ts" setup>
-import { Navbar } from '~/core/components/navbar'
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <Navbar />

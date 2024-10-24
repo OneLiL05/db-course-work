@@ -39,7 +39,10 @@ const links = [
           :class="buttonVariants({ variant: 'ghost' })"
           class="!justify-start gap-3"
         >
-          <Icon class="size-5" name="mynaui:activity-square" />
+          <Icon
+            class="size-5 text-muted-foreground"
+            name="mynaui:activity-square"
+          />
           Dashboard
         </NuxtLink>
       </div>
@@ -52,7 +55,7 @@ const links = [
           :class="buttonVariants({ variant: 'ghost' })"
           class="!justify-start gap-3"
         >
-          <Icon class="size-5" :name="icon" />
+          <Icon class="size-5 text-muted-foreground" :name="icon" />
           {{ name }}
         </NuxtLink>
       </div>
@@ -62,7 +65,7 @@ const links = [
           :class="buttonVariants({ variant: 'ghost' })"
           class="!justify-start gap-3 w-full"
         >
-          <Icon class="size-5" name="mynaui:arrow-left" />
+          <Icon class="size-5 text-muted-foreground" name="mynaui:arrow-left" />
           Back to website
         </NuxtLink>
       </div>
