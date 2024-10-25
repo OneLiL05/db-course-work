@@ -29,7 +29,7 @@ const items = [
   {
     name: 'Your companies',
     icon: 'lucide:building-2',
-    to: '/',
+    to: `/${user.value?.id}/companies`,
   },
 ]
 </script>
@@ -42,10 +42,7 @@ const items = [
       </Avatar>
     </SheetTrigger>
     <SheetContent>
-      <div class="inline-flex w-full">
-        <p>{{ user?.username }}</p>
-      </div>
-      <div class="flex flex-col w-full gap-2">
+      <div class="flex flex-col w-full gap-2 mt-4">
         <NuxtLink
           v-for="({ name, icon, to }, index) in items"
           :key="index"
@@ -58,10 +55,12 @@ const items = [
         </NuxtLink>
         <div class="border-b border-muted" />
         <NuxtLink
+          v-if="user?.roles.includes('admin')"
           to="/admin"
           :class="buttonVariants({ variant: 'ghost' })"
           class="w-full !justify-start gap-3"
         >
+          <Icon class="size-5 text-muted-foreground" name="lucide:crown" />
           Admin panel
         </NuxtLink>
       </div>
