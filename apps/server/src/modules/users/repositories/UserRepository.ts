@@ -24,7 +24,6 @@ export class UserRepository implements IUserRepository {
         u.img,
         u.created_at,
         u.updated_at,
-        u.employer_id,
         array_agg(r.name) AS roles
       from
         users u
@@ -55,7 +54,6 @@ export class UserRepository implements IUserRepository {
         u.img,
         u.created_at,
         u.updated_at,
-        u.employer_id,
         array_agg(r.name) AS roles
       from
         users u
@@ -104,14 +102,6 @@ export class UserRepository implements IUserRepository {
        (user_id, role_id)
       values
         (${id}, ${ROLES.get(role) as number})
-    `
-  }
-
-  async addEmployer(id: number, employerId: number): Promise<void> {
-    await this.sql`
-      update users
-      set employer_id=${employerId}
-      where id=${id}
     `
   }
 }

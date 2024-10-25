@@ -16,3 +16,19 @@ export const getUser = async (
 
   return reply.status(200).send(user)
 }
+
+export const getUserCompanies = async (
+  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id, roles } = request.user
+  const { companyRepository } = request.diScope.cradle
+
+  if (!roles.includes('employer')) {
+    return reply.status(200).send([])
+  }
+
+  const companies = await companyRepository.findUserCompanies(id)
+
+  return reply.status(200).send(companies)
+}

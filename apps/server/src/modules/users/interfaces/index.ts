@@ -7,7 +7,6 @@ interface IUserRepository {
   findOneByEmail: (email: string) => Promise<User | null>
   createOne: (data: CreateUser) => Promise<ReturnedUser>
   addRole: (id: number, role: Role) => Promise<void>
-  addEmployer: (id: number, employerId: number) => Promise<void>
 }
 
 interface UsersModuleDependencies {

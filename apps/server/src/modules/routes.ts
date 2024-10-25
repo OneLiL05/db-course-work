@@ -2,7 +2,7 @@ import { getAuthRoutes } from './auth/routes/index.js'
 import { getCategoriesRoutes } from './categories/routes/index.js'
 import { getCitiesRoutes } from './cities/routes/index.js'
 import { getBaseRoutes } from './getBaseRoutes.js'
-import { getEmployersRoutes } from './employers/routes/index.js'
+import { getCompaniesRoutes } from './companies/routes/index.js'
 import { getPositionsRoutes } from './positions/routes/index.js'
 import { getJobsRoutes } from './jobs/routes/index.js'
 import { AppInstanse } from '@/types/index.js'
@@ -14,7 +14,7 @@ export const getRoutes = (app: AppInstanse): Routes => {
   const { routes: authRoutes } = getAuthRoutes(app)
   const { routes: citiesRoutes } = getCitiesRoutes(app)
   const { routes: categoriesRoutes } = getCategoriesRoutes(app)
-  const { routes: employersRoutes } = getEmployersRoutes(app)
+  const { routes: companiesRoutes } = getCompaniesRoutes(app)
   const { routes: positionsRoutes } = getPositionsRoutes(app)
   const { routes: jobsRoutes } = getJobsRoutes()
   const { routes: userRoutes } = getUsersRoutes()
@@ -25,7 +25,7 @@ export const getRoutes = (app: AppInstanse): Routes => {
       ...authRoutes,
       ...citiesRoutes,
       ...categoriesRoutes,
-      ...employersRoutes,
+      ...companiesRoutes,
       ...positionsRoutes,
       ...jobsRoutes,
       ...userRoutes,

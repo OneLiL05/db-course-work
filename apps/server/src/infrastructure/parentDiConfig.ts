@@ -11,13 +11,13 @@ import { resolveCategoriesModule } from '@/modules/categories/index.js'
 import { CategoriesModuleDependencies } from '@/modules/categories/interfaces/index.js'
 import { resolveCitiesModule } from '@/modules/cities/index.js'
 import { CitiesModuleDependencies } from '@/modules/cities/interfaces/index.js'
-import { resolveEmployersModule } from '@/modules/employers/index.js'
-import { EmployersModuleDependencies } from '@/modules/employers/interfaces/index.js'
 import { resolveJobsModule } from '@/modules/jobs/index.js'
 import { JobsModuleDependencies } from '@/modules/jobs/interfaces/index.js'
 import { resolvePositionsModule } from '@/modules/positions/index.js'
 import { PositionsModuleDependencies } from '@/modules/positions/interfaces/index.js'
 import { UsersModuleDependencies } from '@/modules/users/interfaces/index.js'
+import { CompaniesModuleDependencies } from '@/modules/companies/interfaces/index.js'
+import { resolveCompaniesModule } from '@/modules/companies/index.js'
 
 type Dependencies = CommonDependencies &
   AuthModuleDependecies &
@@ -25,7 +25,7 @@ type Dependencies = CommonDependencies &
   CitiesModuleDependencies &
   CategoriesModuleDependencies &
   PositionsModuleDependencies &
-  EmployersModuleDependencies &
+  CompaniesModuleDependencies &
   JobsModuleDependencies
 
 type DiCOnfig = NameAndRegistrationPair<Dependencies>
@@ -41,7 +41,7 @@ export const registerDependenies = (
     ...resolveCitiesModule(),
     ...resolveCategoriesModule(),
     ...resolvePositionsModule(),
-    ...resolveEmployersModule(),
+    ...resolveCompaniesModule(),
     ...resolveJobsModule(),
   }
 

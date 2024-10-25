@@ -20,7 +20,7 @@ export class CityRepository implements ICityRepository {
   }
 
   async findMany(): Promise<City[]> {
-    return this.sql<City[]>`select * from cities`
+    return this.sql<City[]>`select * from cities order by updated_at desc`
   }
 
   async createOne({ name }: CreateCity): Promise<City | null> {
