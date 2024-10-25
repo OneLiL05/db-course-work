@@ -10,7 +10,6 @@ const USER_SCHEMA = z.object({
   password: z.string().min(8),
   firstName: z.string().min(2),
   lastName: z.string().min(2),
-  employerId: z.number().optional(),
   roles: z.enum(['admin', 'employer', 'user']).array(),
 })
 
@@ -32,7 +31,6 @@ const CREATED_USER_SCHEMA = USER_SCHEMA.omit({
   createdAt: true,
   updatedAt: true,
   roles: true,
-  employerId: true,
 })
 
 type CreatedUser = z.infer<typeof CREATED_USER_SCHEMA>
