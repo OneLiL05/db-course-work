@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+definePageMeta({
+  layout: 'employer',
+})
+
 const route = useRoute()
 </script>
 

@@ -9,6 +9,8 @@ const query = ref('')
 
 const { user } = useAuthStore()
 const { data: companies } = useUserCompanies()
+
+console.log(companies.value)
 </script>
 
 <template>
@@ -38,8 +40,8 @@ const { data: companies } = useUserCompanies()
     </div>
     <template v-if="companies">
       <div
-        v-for="{ id, name } in companies"
-        :key="id"
+        v-for="company in companies"
+        :key="company.id"
         class="inline-flex w-full items-center justify-between bg-transparent border border-muted rounded-xl p-4"
       >
         <div class="inline-flex justify-start items-center gap-4">
@@ -48,10 +50,10 @@ const { data: companies } = useUserCompanies()
           >
             <Icon name="lucide:building-2" class="text-muted-foreground" />
           </div>
-          <p>{{ name }}</p>
+          <p>{{ company.name }}</p>
         </div>
         <NuxtLink
-          :to="`/companies/${id}/settings`"
+          :to="`/companies/${company.id}/settings`"
           class="!size-8"
           :class="buttonVariants({ variant: 'outline', size: 'icon' })"
         >

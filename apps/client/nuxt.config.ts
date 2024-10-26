@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     './layers/auth',
     './layers/users',
     './layers/cities',
+    './layers/companies',
     './layers/site',
   ],
 

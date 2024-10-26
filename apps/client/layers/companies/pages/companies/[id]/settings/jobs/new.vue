@@ -1,58 +1,30 @@
 <script lang="ts" setup>
-import { useMutation, useQuery } from '@tanstack/vue-query'
-import { axiosClient } from '~/core/lib/axios'
-import { Textarea } from '~/core/components/ui/textarea'
 import { vAutoAnimate } from '@formkit/auto-animate/vue'
-import { Checkbox } from '~/core/components/ui/checkbox'
+import { CREATE_JOB_SCHEMA, isStringEmpty } from '@skill-swap/shared'
+import { useQuery } from '@tanstack/vue-query'
 import { buttonVariants } from '~/core/components/ui/button'
-import { z } from 'zod'
+import { axiosClient } from '~/core/lib/axios'
 
 definePageMeta({
-  layout: 'admin',
+  layout: 'employer',
 })
 
-const router = useRouter()
+const route = useRoute()
 
-const formSchema = toTypedSchema(
-  z.object({
-    name: z.string(),
-    description: z.string().min(15).max(256),
-    isCvRequired: z.boolean().default(false),
-    isFulltime: z.boolean().default(false),
-    areStudentsAllowed: z.boolean().default(false),
-    areRetireesAllowed: z.boolean().default(false),
-    areDisabledAllowed: z.boolean().default(false),
-    categoryId: z.coerce.number().min(1),
-    positionId: z.coerce.number().min(1),
-    employerId: z.coerce.number().min(1),
-    cityId: z.coerce.number(),
-    salary: z.object({
-      amount: z.number().min(100),
-      currency: z.enum(['USD', 'UAH', 'EUR']),
-    }),
-  }),
-)
+const { mutateAsync, isPending } = useCreateJob(+route.params.id)
 
-const {
-  handleSubmit: createHandleSubmit,
-  values: createValues,
-  isSubmitting: isCreationSubmitting,
-} = useForm({
-  validationSchema: formSchema,
-})
-
-const { mutateAsync, status: creationStatus } = useMutation({
-  mutationKey: ['create-city'],
-  mutationFn: async (data: { name: string }) => {
-    await axiosClient.post('/jobs', data)
-  },
-  onSuccess: () => {
-    router.push({ path: '/admin/jobs' })
+const { handleSubmit, values } = useForm({
+  validationSchema: toTypedSchema(CREATE_JOB_SCHEMA),
+  initialValues: {
+    isCvRequired: false,
+    isFulltime: false,
+    isRemote: false,
+    areStudentsAllowed: false,
   },
 })
 
-const onCreateSubmit = createHandleSubmit(async (values) => {
-  await mutateAsync(values)
+const onSubmit = handleSubmit(async (data) => {
+  await mutateAsync(data)
 })
 
 const { data: categories } = useQuery({
@@ -64,36 +36,17 @@ const { data: categories } = useQuery({
   },
 })
 
-const { data: cities } = useQuery({
-  queryKey: ['cities'],
-  queryFn: async () => {
-    const result = await axiosClient.get('/cities')
+const { data: cities } = useCities()
 
-    return result.data
-  },
-})
+const { data: positions } = usePositions()
 
-const { data: positions } = useQuery({
-  queryKey: ['positions'],
-  queryFn: async () => {
-    const result = await axiosClient.get('/positions')
-
-    return result.data
-  },
-})
-
-const { data: employers } = useQuery({
-  queryKey: ['employers'],
-  queryFn: async () => {
-    const result = await axiosClient.get('/employers')
-
-    return result.data
-  },
+const isDisabled = computed(() => {
+  return isStringEmpty(values.name)
 })
 </script>
 <template>
   <Heading size="2">Create job</Heading>
-  <form class="flex flex-col w-full space-y-3 mt-4" @submit="onCreateSubmit">
+  <form class="flex flex-col w-full space-y-3 mt-4" @submit="onSubmit">
     <div class="inline-flex w-full gap-5">
       <FormField v-slot="{ componentField }" name="name">
         <FormItem class="w-full" v-auto-animate>
@@ -212,33 +165,6 @@ const { data: employers } = useQuery({
           <FormMessage />
         </FormItem>
       </FormField>
-      <FormField v-slot="{ componentField }" name="employerId">
-        <FormItem class="w-full" v-auto-animate>
-          <FormLabel>Employer</FormLabel>
-          <FormControl>
-            <Select v-bind="componentField">
-              <SelectTrigger>
-                <SelectValue placeholder="Select an employer" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Employers</SelectLabel>
-                  <template v-if="employers">
-                    <SelectItem
-                      v-for="(employer, index) in employers"
-                      :key="index"
-                      :value="employer.id.toString()"
-                    >
-                      {{ employer.name }}
-                    </SelectItem>
-                  </template>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
       <FormField v-slot="{ componentField }" name="cityId">
         <FormItem class="w-full" v-auto-animate>
           <FormLabel>City</FormLabel>
@@ -301,6 +227,19 @@ const { data: employers } = useQuery({
         </div>
       </FormItem>
     </FormField>
+    <FormField v-slot="{ value, handleChange }" type="checkbox" name="isRemote">
+      <FormItem
+        class="flex flex-row items-start gap-x-3 space-y-0 rounded-md border p-4"
+      >
+        <FormControl>
+          <Checkbox :checked="value" @update:checked="handleChange" />
+        </FormControl>
+        <div class="space-y-1 leading-none">
+          <FormLabel>Is remote?</FormLabel>
+          <FormMessage />
+        </div>
+      </FormItem>
+    </FormField>
     <FormField
       v-slot="{ value, handleChange }"
       type="checkbox"
@@ -318,48 +257,16 @@ const { data: employers } = useQuery({
         </div>
       </FormItem>
     </FormField>
-    <FormField
-      v-slot="{ value, handleChange }"
-      type="checkbox"
-      name="areRetireesAllowed"
-    >
-      <FormItem
-        class="flex flex-row items-start gap-x-3 space-y-0 rounded-md border p-4"
-      >
-        <FormControl>
-          <Checkbox :checked="value" @update:checked="handleChange" />
-        </FormControl>
-        <div class="space-y-1 leading-none">
-          <FormLabel>Are retiress allowed?</FormLabel>
-          <FormMessage />
-        </div>
-      </FormItem>
-    </FormField>
-    <FormField
-      v-slot="{ value, handleChange }"
-      type="checkbox"
-      name="areDisabledAllowed"
-    >
-      <FormItem
-        class="flex flex-row items-start gap-x-3 space-y-0 rounded-md border p-4"
-      >
-        <FormControl>
-          <Checkbox :checked="value" @update:checked="handleChange" />
-        </FormControl>
-        <div class="space-y-1 leading-none">
-          <FormLabel>Are people with disabilities allowed?</FormLabel>
-          <FormMessage />
-        </div>
-      </FormItem>
-    </FormField>
     <div class="inline-flex w-full gap-4">
-      <Button>Create</Button>
       <NuxtLink
         :class="buttonVariants({ variant: 'outline' })"
         to="/admin/jobs"
       >
         Back
       </NuxtLink>
+      <Button type="submit" :disabled="isPending || isDisabled">
+        Create
+      </Button>
     </div>
   </form>
 </template>
