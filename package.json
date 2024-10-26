@@ -9,7 +9,7 @@
     "client:dev": "nx run client:dev -o",
     "server:start": "nx run server:start",
     "server:dev": "nx run server:dev",
-    "app:prepare": "nx run @skill-swap/shared:build",
+    "shared:build": "nx run @skill-swap/shared:build",
     "lint": "eslint .",
     "format": "prettier --write .",
     "prepare": "husky"
