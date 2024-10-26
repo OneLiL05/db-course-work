@@ -1,9 +1,9 @@
-import { Job } from '@/schemas/models/job.js'
-import { CreateJob } from '../schemas/index.js'
+import { CREATE_JOB_SCHEMA_TYPE, Job } from '@skill-swap/shared'
 
 interface IJobRepository {
   findMany: () => Promise<Job[]>
-  createOne: (data: CreateJob) => Promise<void>
+  findCompanyJobs: (companyId: number) => Promise<Job[]>
+  createOne: (companyId: number, data: CREATE_JOB_SCHEMA_TYPE) => Promise<void>
 }
 
 interface JobsModuleDependencies {

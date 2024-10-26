@@ -17,7 +17,7 @@ export const getRoutes = (app: AppInstanse): Routes => {
   const { routes: companiesRoutes } = getCompaniesRoutes(app)
   const { routes: positionsRoutes } = getPositionsRoutes(app)
   const { routes: jobsRoutes } = getJobsRoutes()
-  const { routes: userRoutes } = getUsersRoutes()
+  const { routes: userRoutes } = getUsersRoutes(app)
 
   return {
     routes: [

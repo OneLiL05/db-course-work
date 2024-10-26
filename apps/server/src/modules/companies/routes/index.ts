@@ -1,10 +1,16 @@
 import { Routes } from '@/interfaces/index.js'
 import { AppInstanse } from '@/types/index.js'
-import { CREATE_COMPANY_SCHEMA, GET_BY_ID_SCHEMA } from '@skill-swap/shared'
+import {
+  CREATE_COMPANY_SCHEMA,
+  CREATE_JOB_SCHEMA,
+  GET_BY_ID_SCHEMA,
+} from '@skill-swap/shared'
 import {
   createCompany,
+  createCompanyJob,
   getCompanies,
   getCompany,
+  getCompanyJobs,
   updateCompany,
 } from '../controllers/CompanyController.js'
 
@@ -24,6 +30,14 @@ export const getCompaniesRoutes = (app: AppInstanse): Routes => ({
       },
     },
     {
+      method: 'GET',
+      url: '/companies/:id/jobs',
+      handler: getCompanyJobs,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+      },
+    },
+    {
       method: 'POST',
       url: '/companies',
       handler: createCompany,
@@ -31,6 +45,16 @@ export const getCompaniesRoutes = (app: AppInstanse): Routes => ({
         body: CREATE_COMPANY_SCHEMA,
       },
       preHandler: [app.authentificate],
+    },
+    {
+      method: 'POST',
+      url: '/companies/:id/jobs',
+      handler: createCompanyJob,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+        body: CREATE_JOB_SCHEMA,
+      },
+      preHandler: [app.authentificate, app.isEmployer],
     },
     {
       method: 'PUT',

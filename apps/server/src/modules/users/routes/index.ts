@@ -1,8 +1,9 @@
 import { Routes } from '@/interfaces/index.js'
-import { getUser } from '../controllers/UserController.js'
+import { getUser, getUserCompanies } from '../controllers/UserController.js'
 import { GET_BY_ID_SCHEMA } from '@skill-swap/shared'
+import { AppInstanse } from '@/types/index.js'
 
-export const getUsersRoutes = (): Routes => ({
+export const getUsersRoutes = (app: AppInstanse): Routes => ({
   routes: [
     {
       method: 'GET',
@@ -11,6 +12,15 @@ export const getUsersRoutes = (): Routes => ({
       schema: {
         params: GET_BY_ID_SCHEMA,
       },
+    },
+    {
+      method: 'GET',
+      url: '/users/:id/companies',
+      handler: getUserCompanies,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+      },
+      preHandler: [app.authentificate],
     },
   ],
 })

@@ -26,7 +26,7 @@ export class CompanyRepository implements ICompanyRepository {
 
   async findUserCompanies(userId: number): Promise<Company[]> {
     return this.sql<Company[]>`
-      select *
+      select c.id, c.updated_at, c.created_at, c.name, c.description, c.img, c.is_verified, c.is_deleted
       from companies as c
       join company_admins as c_a on c.id = c_a.company_id
       where c_a.user_id = ${userId} and c_a.company_role_id = 1
@@ -39,9 +39,9 @@ export class CompanyRepository implements ICompanyRepository {
   }: CREATE_COMPANY_SCHEMA_TYPE): Promise<Company | null> {
     const companies = await this.sql<Company[]>`
       insert into companies
-        (name, description, is_verified)
+        (name, description, is_verified, img)
       values
-        (${name}, ${description}, false)
+        (${name}, ${description}, false, '/')
       returning *
     `
 
