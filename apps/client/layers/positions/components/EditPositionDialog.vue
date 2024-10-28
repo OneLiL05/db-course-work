@@ -11,10 +11,12 @@ const props = defineProps<{ position: Position }>()
 
 const { mutateAsync, isPending, status } = useUpdatePosition()
 
+const name = ref(props.position.name)
+
 const { handleSubmit, isSubmitting, values } = useForm({
   validationSchema: toTypedSchema(CREATE_POSITION_SCHEMA),
   initialValues: {
-    name: props.position.name,
+    name: name.value,
   },
 })
 
@@ -48,8 +50,9 @@ const isDisabled = computed(
               <Input
                 type="text"
                 placeholder="Write positions name..."
-                v-bind="componentField"
                 :disabled="isSubmitting"
+                v-bind="componentField"
+                v-model="name"
                 autofocus
               />
             </FormControl>

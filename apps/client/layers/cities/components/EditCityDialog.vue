@@ -11,15 +11,18 @@ const props = defineProps<{ city: City }>()
 
 const { mutateAsync, isPending, status } = useUpdateCity()
 
+const name = ref(props.city.name)
+
 const { handleSubmit, isSubmitting, values } = useForm({
   validationSchema: toTypedSchema(CREATE_CITY_SCHEMA),
   initialValues: {
-    name: props.city.name,
+    name: name.value,
   },
 })
 
 const onSubmit = handleSubmit((data) => {
   mutateAsync({ id: props.city.id, ...data })
+  console.log(data)
 })
 
 const isDisabled = computed(
@@ -47,8 +50,9 @@ const isDisabled = computed(
               <Input
                 type="text"
                 placeholder="Write city name..."
-                v-bind="componentField"
                 :disabled="isSubmitting"
+                v-bind="componentField"
+                v-model="name"
                 autofocus
               />
             </FormControl>

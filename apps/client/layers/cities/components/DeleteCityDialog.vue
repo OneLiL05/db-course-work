@@ -34,10 +34,10 @@ const isDisabled = computed(
     </DialogTrigger>
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Delete position</DialogTitle>
+        <DialogTitle>Delete city</DialogTitle>
         <DialogDescription>
           To approve that you understand all risks connected with deletion of
-          the city. Please write position name to input.
+          the city. Please write city name to input.
         </DialogDescription>
       </DialogHeader>
       <form @submit="onSubmit" class="space-y-3">
