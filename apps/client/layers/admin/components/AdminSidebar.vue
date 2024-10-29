@@ -8,6 +8,11 @@ const links = [
     to: '/admin/cities',
   },
   {
+    name: 'Categories',
+    icon: 'lucide:layout-dashboard',
+    to: '/admin/categories',
+  },
+  {
     name: 'Positions',
     icon: 'lucide:book-user',
     to: '/admin/positions',
@@ -35,7 +40,7 @@ const links = [
       >
         <Icon
           class="size-5 text-muted-foreground"
-          name="lucide:layout-dashboard"
+          name="lucide:square-chart-gantt"
         />
         Dashboard
       </NuxtLink>

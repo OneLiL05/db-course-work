@@ -9,10 +9,7 @@ export const useDeleteCity = () => {
   return useMutation({
     mutationKey: ['delete-city'],
     async mutationFn({ id }: GET_BY_ID_SCHEMA_TYPE) {
-      const city = await axiosClient.delete<City>('/cities', {
-        params: {
-          id,
-        },
+      const city = await axiosClient.delete<City>(`/cities/${id}`, {
         headers,
       })
 
