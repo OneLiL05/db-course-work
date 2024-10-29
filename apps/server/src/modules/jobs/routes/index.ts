@@ -1,5 +1,5 @@
 import { Routes } from '@/interfaces/index.js'
-import { getJobs } from '../controllers/JobController.js'
+import { getJob, getJobs } from '../controllers/JobController.js'
 
 export const getJobsRoutes = (): Routes => ({
   routes: [
@@ -7,6 +7,11 @@ export const getJobsRoutes = (): Routes => ({
       method: 'GET',
       url: '/jobs',
       handler: getJobs,
+    },
+    {
+      method: 'GET',
+      url: '/jobs/:id',
+      handler: getJob,
     },
   ],
 })
