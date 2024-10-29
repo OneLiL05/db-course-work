@@ -1,6 +1,8 @@
+import {
+  CREATE_CATEGORY_SCHEMA_TYPE,
+  GET_BY_ID_SCHEMA_TYPE,
+} from '@skill-swap/shared'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { CreateCategory } from '../schemas/index.js'
-import { GET_BY_ID_SCHEMA_TYPE } from '@skill-swap/shared'
 
 export const getCategories = async (
   request: FastifyRequest,
@@ -32,7 +34,7 @@ export const getCategory = async (
 }
 
 export const createCategory = async (
-  request: FastifyRequest<{ Body: CreateCategory }>,
+  request: FastifyRequest<{ Body: CREATE_CATEGORY_SCHEMA_TYPE }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { categoryRepository } = request.diScope.cradle
@@ -49,7 +51,7 @@ export const createCategory = async (
 export const updateCategory = async (
   request: FastifyRequest<{
     Params: GET_BY_ID_SCHEMA_TYPE
-    Body: CreateCategory
+    Body: CREATE_CATEGORY_SCHEMA_TYPE
   }>,
   reply: FastifyReply,
 ): Promise<void> => {

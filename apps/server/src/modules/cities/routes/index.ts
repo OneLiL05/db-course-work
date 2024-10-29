@@ -5,9 +5,9 @@ import {
   getCities,
   updateCity,
 } from '../controllers/CityController.js'
-import { CREATE_CITY_SCHEMA } from '../schemas/index.js'
 import {
   CITY_MODEL,
+  CREATE_CITY_SCHEMA,
   GET_BY_ID_SCHEMA,
   MESSAGE_SCHEMA,
 } from '@skill-swap/shared'
@@ -36,7 +36,7 @@ export const getCitiesRoutes = (app: AppInstanse): Routes => ({
           500: MESSAGE_SCHEMA,
         },
       },
-      // preHandler: [app.authentificate, app.isAdmin],
+      preHandler: [app.authentificate, app.isAdmin],
     },
     {
       method: 'DELETE',

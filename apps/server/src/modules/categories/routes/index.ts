@@ -6,9 +6,8 @@ import {
   getCategory,
   updateCategory,
 } from '../controllers/CategoryController.js'
-import { CREATE_CATEGORY_SCHEMA } from '../schemas/index.js'
 import { AppInstanse } from '@/types/index.js'
-import { GET_BY_ID_SCHEMA } from '@skill-swap/shared'
+import { CREATE_CATEGORY_SCHEMA, GET_BY_ID_SCHEMA } from '@skill-swap/shared'
 
 export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
   routes: [

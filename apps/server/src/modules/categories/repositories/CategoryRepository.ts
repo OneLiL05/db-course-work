@@ -1,7 +1,6 @@
 import { SqlClient } from '@/types/index.js'
-import { Category } from '@skill-swap/shared'
+import { CREATE_CATEGORY_SCHEMA_TYPE, Category } from '@skill-swap/shared'
 import { ICategoryRepository } from '../interfaces/index.js'
-import { CreateCategory } from '../schemas/index.js'
 import { CategoriesInjectableDependencies } from '../types/index.js'
 
 export class CategoryRepository implements ICategoryRepository {
@@ -25,7 +24,9 @@ export class CategoryRepository implements ICategoryRepository {
     return this.sql<Category[]>`select * from categories`
   }
 
-  async createOne({ name }: CreateCategory): Promise<Category | null> {
+  async createOne({
+    name,
+  }: CREATE_CATEGORY_SCHEMA_TYPE): Promise<Category | null> {
     const categories = await this.sql<Category[]>`
       insert into categories
         (name)
@@ -43,7 +44,7 @@ export class CategoryRepository implements ICategoryRepository {
 
   async updateOne(
     id: number,
-    { name }: CreateCategory,
+    { name }: CREATE_CATEGORY_SCHEMA_TYPE,
   ): Promise<Category | null> {
     const categories = await this.sql<Category[]>`
       update categories

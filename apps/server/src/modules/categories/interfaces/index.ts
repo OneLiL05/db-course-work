@@ -1,11 +1,13 @@
-import { Category } from '@skill-swap/shared'
-import { CreateCategory } from '../schemas/index.js'
+import { CREATE_CATEGORY_SCHEMA_TYPE, Category } from '@skill-swap/shared'
 
 interface ICategoryRepository {
   findOne: (id: number) => Promise<Category | null>
   findMany: () => Promise<Category[]>
-  createOne: (data: CreateCategory) => Promise<Category | null>
-  updateOne: (id: number, data: CreateCategory) => Promise<Category | null>
+  createOne: (data: CREATE_CATEGORY_SCHEMA_TYPE) => Promise<Category | null>
+  updateOne: (
+    id: number,
+    data: CREATE_CATEGORY_SCHEMA_TYPE,
+  ) => Promise<Category | null>
   deleteOne: (id: number) => Promise<Category | null>
 }
 
