@@ -29,8 +29,8 @@ const isDisabled = computed(
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <Button class="ml-4" variant="destructive" size="icon">
-        <Icon class="size-4" name="mynaui:trash" />
+      <Button variant="ghost" size="xs" class="w-full justify-start">
+        Delete
       </Button>
     </DialogTrigger>
     <DialogContent>

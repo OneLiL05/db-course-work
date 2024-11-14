@@ -35,13 +35,13 @@ const isDisabled = computed(
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <Button variant="outline" size="icon" class="mr-2">
-        <Icon class="size-4" name="mynaui:pencil" />
+      <Button variant="ghost" size="xs" class="w-full justify-start">
+        Edit
       </Button>
     </DialogTrigger>
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Edit city</DialogTitle>
+        <DialogTitle>Edit category</DialogTitle>
       </DialogHeader>
       <form @submit="onSubmit" class="space-y-3">
         <FormField v-slot="{ componentField }" name="name">

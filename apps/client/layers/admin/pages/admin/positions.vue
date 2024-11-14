@@ -7,15 +7,15 @@ const query = ref('')
 
 const { data: positions } = usePositions()
 
-const filteredCities = computed(() => {
+const filteredPositions = computed(() => {
   if (!positions.value) return []
 
-  return positions.value.filter((city) => {
+  return positions.value.filter((position) => {
     const comparableQuery = query.value.trim().toLowerCase()
 
     if (!comparableQuery.length) return true
 
-    return city.name.toLowerCase().includes(comparableQuery)
+    return position.name.toLowerCase().includes(comparableQuery)
   })
 })
 </script>
@@ -39,26 +39,9 @@ const filteredCities = computed(() => {
     </div>
     <CreatePositionDialog />
   </div>
-  <Table>
-    <TableCaption>A list of all positions.</TableCaption>
-    <TableHeader>
-      <TableRow>
-        <TableHead class="w-[100px]">#</TableHead>
-        <TableHead>Name</TableHead>
-        <TableHead class="text-right">Actions</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      <template v-if="positions">
-        <TableRow v-for="(position, index) in filteredCities" :key="index">
-          <TableCell class="font-medium">{{ index + 1 }}</TableCell>
-          <TableCell>{{ position.name }}</TableCell>
-          <TableCell class="text-right [&_button]:size-8">
-            <EditPositionDialog :position />
-            <DeletePositionDialog :position />
-          </TableCell>
-        </TableRow>
-      </template>
-    </TableBody>
-  </Table>
+  <DataTable
+    v-if="positions"
+    :data="filteredPositions"
+    :columns="positionsTableColumns"
+  />
 </template>

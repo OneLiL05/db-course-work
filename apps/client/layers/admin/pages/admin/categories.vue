@@ -5,17 +5,17 @@ definePageMeta({
 
 const query = ref('')
 
-const { data: cities } = useCategories()
+const { data: categories } = useCategories()
 
-const filteredCities = computed(() => {
-  if (!cities.value) return []
+const filteredCategories = computed(() => {
+  if (!categories.value) return []
 
-  return cities.value.filter((city) => {
+  return categories.value.filter((category) => {
     const comparableQuery = query.value.trim().toLowerCase()
 
     if (!comparableQuery.length) return true
 
-    return city.name.toLowerCase().includes(comparableQuery)
+    return category.name.toLowerCase().includes(comparableQuery)
   })
 })
 </script>
@@ -39,29 +39,9 @@ const filteredCities = computed(() => {
     </div>
     <CreateCategoryDialog />
   </div>
-  <Table>
-    <TableCaption>A list of all cities.</TableCaption>
-    <TableHeader>
-      <TableRow>
-        <TableHead class="w-[100px]">#</TableHead>
-        <TableHead>Name</TableHead>
-        <TableHead class="text-right">Actions</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      <template v-if="cities">
-        <TableRow
-          v-for="(category, index) in filteredCities"
-          :key="category.id"
-        >
-          <TableCell class="font-medium">{{ index + 1 }}</TableCell>
-          <TableCell>{{ category.name }}</TableCell>
-          <TableCell class="text-right [&_button]:size-8">
-            <EditCategoryDialog :category />
-            <DeleteCategoryDialog :category />
-          </TableCell>
-        </TableRow>
-      </template>
-    </TableBody>
-  </Table>
+  <DataTable
+    v-if="categories"
+    :data="filteredCategories"
+    :columns="categoriesTableColumns"
+  />
 </template>

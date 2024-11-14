@@ -21,7 +21,7 @@ const filteredSkills = computed(() => {
 </script>
 
 <template>
-  <Heading size="2">Categories</Heading>
+  <Heading size="2">Skills</Heading>
   <div class="inline-flex w-full my-4 gap-4">
     <div class="relative w-full max-w-sm items-center">
       <Input
@@ -39,26 +39,9 @@ const filteredSkills = computed(() => {
     </div>
     <CreateSkillDialog />
   </div>
-  <Table>
-    <TableCaption>A list of all cities.</TableCaption>
-    <TableHeader>
-      <TableRow>
-        <TableHead class="w-[100px]">#</TableHead>
-        <TableHead>Name</TableHead>
-        <TableHead class="text-right">Actions</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      <template v-if="skills">
-        <TableRow v-for="(skill, index) in filteredSkills" :key="skill.id">
-          <TableCell class="font-medium">{{ index + 1 }}</TableCell>
-          <TableCell>{{ skill.name }}</TableCell>
-          <TableCell class="text-right [&_button]:size-8">
-            <EditSkillDialog :skill />
-            <DeleteSkillDialog :skill />
-          </TableCell>
-        </TableRow>
-      </template>
-    </TableBody>
-  </Table>
+  <DataTable
+    v-if="skills"
+    :data="filteredSkills"
+    :columns="skillsTableColumns"
+  />
 </template>

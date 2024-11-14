@@ -17,6 +17,11 @@ const links = [
     icon: 'lucide:book-user',
     to: '/admin/positions',
   },
+  {
+    name: 'Skills',
+    icon: 'lucide:flask-conical',
+    to: '/admin/skills',
+  },
 ]
 </script>
 
