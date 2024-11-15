@@ -1,25 +1,25 @@
 <script lang="ts" setup>
 import { buttonVariants } from '~/core/components/ui/button'
 
-const route = useRoute()
+const id = useRouteParams('id')
 
-const { data: company } = useCompany(+route.params.id)
+const { data: company } = useCompany(Number(id.value))
 
 const links = [
   {
     name: 'Jobs',
     icon: 'lucide:briefcase-business',
-    to: `/companies/${route.params.id}/settings/jobs`,
+    to: `/companies/${id.value}/settings/jobs`,
   },
   {
     name: 'Applications',
     icon: 'lucide:users-round',
-    to: `/companies/${route.params.id}/settings/applications`,
+    to: `/companies/${id.value}/settings/applications`,
   },
   {
     name: 'Administrators',
     icon: 'lucide:crown',
-    to: `/companies/${route.params.id}/settings/administrators`,
+    to: `/companies/${id.value}/settings/administrators`,
   },
 ]
 </script>
