@@ -5,6 +5,9 @@ import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
 const authStore = useAuthStore()
 const { user } = toRefs(authStore)
 
+// TODO: Re-write to more inteligent solution
+const isOpen = ref(false)
+
 const items = [
   {
     name: 'Your profile',
@@ -35,8 +38,8 @@ const items = [
 </script>
 
 <template>
-  <Sheet>
-    <SheetTrigger as-child>
+  <Sheet :open="isOpen">
+    <SheetTrigger as-child @click="isOpen = true">
       <Avatar>
         <AvatarImage src="https://github.com/radix-vue.png" alt="@radix-vue" />
       </Avatar>
@@ -47,20 +50,22 @@ const items = [
           v-for="({ name, icon, to }, index) in items"
           :key="index"
           :to
-          :class="buttonVariants({ variant: 'ghost' })"
+          :class="buttonVariants({ variant: 'ghost', size: 'sm' })"
           class="w-full !justify-start gap-3"
+          @click="isOpen = false"
         >
-          <Icon class="size-5 text-muted-foreground" :name="icon" />
+          <Icon class="size-4 text-muted-foreground" :name="icon" />
           {{ name }}
         </NuxtLink>
         <div class="border-b border-muted" />
         <NuxtLink
           v-if="user?.roles.includes('admin')"
           to="/admin"
-          :class="buttonVariants({ variant: 'ghost' })"
+          :class="buttonVariants({ variant: 'ghost', size: 'sm' })"
           class="w-full !justify-start gap-3"
+          @click="isOpen = false"
         >
-          <Icon class="size-5 text-muted-foreground" name="lucide:crown" />
+          <Icon class="size-4 text-muted-foreground" name="lucide:crown" />
           Admin panel
         </NuxtLink>
       </div>
