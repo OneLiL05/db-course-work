@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { buttonVariants } from '~/core/components/ui/button'
-
 const id = useRouteParams('id')
 
 const { data: company } = useCompany(Number(id.value))

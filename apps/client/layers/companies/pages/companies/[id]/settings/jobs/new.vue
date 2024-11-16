@@ -1,17 +1,15 @@
 <script lang="ts" setup>
 import { vAutoAnimate } from '@formkit/auto-animate/vue'
 import { CREATE_JOB_SCHEMA, isStringEmpty } from '@skill-swap/shared'
-import { useQuery } from '@tanstack/vue-query'
 import { buttonVariants } from '~/core/components/ui/button'
-import { axiosClient } from '~/core/lib/axios'
 
 definePageMeta({
   layout: 'employer',
 })
 
-const route = useRoute()
+const id = useRouteParams('id')
 
-const { mutateAsync, isPending } = useCreateJob(+route.params.id)
+const { mutateAsync, isPending } = useCreateJob(Number(id))
 
 const { handleSubmit, values } = useForm({
   validationSchema: toTypedSchema(CREATE_JOB_SCHEMA),
@@ -24,21 +22,8 @@ const { handleSubmit, values } = useForm({
 })
 
 const onSubmit = handleSubmit(async (data) => {
-  await mutateAsync(data)
+  console.log(data)
 })
-
-const { data: categories } = useQuery({
-  queryKey: ['categories'],
-  queryFn: async () => {
-    const result = await axiosClient.get('/categories')
-
-    return result.data
-  },
-})
-
-const { data: cities } = useCities()
-
-const { data: positions } = usePositions()
 
 const isDisabled = computed(() => {
   return isStringEmpty(values.name)
@@ -80,19 +65,7 @@ const isDisabled = computed(() => {
         <FormItem class="w-full" v-auto-animate>
           <FormLabel>Category</FormLabel>
           <FormControl>
-            <Select v-bind="componentField">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a currency" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Currency</SelectLabel>
-                  <SelectItem value="UAH">UAH</SelectItem>
-                  <SelectItem value="USD">USD</SelectItem>
-                  <SelectItem value="EUR">EUR</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <CurrencySelect v-bind="componentField" />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -115,25 +88,7 @@ const isDisabled = computed(() => {
         <FormItem class="w-full" v-auto-animate>
           <FormLabel>Category</FormLabel>
           <FormControl>
-            <Select v-bind="componentField">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Categories</SelectLabel>
-                  <template v-if="categories">
-                    <SelectItem
-                      v-for="(category, index) in categories"
-                      :key="index"
-                      :value="category.id.toString()"
-                    >
-                      {{ category.name }}
-                    </SelectItem>
-                  </template>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <CategoriesSelect v-bind="componentField" />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -142,25 +97,7 @@ const isDisabled = computed(() => {
         <FormItem class="w-full" v-auto-animate>
           <FormLabel>Position</FormLabel>
           <FormControl>
-            <Select v-bind="componentField">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a position" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Positions</SelectLabel>
-                  <template v-if="positions">
-                    <SelectItem
-                      v-for="(position, index) in positions"
-                      :key="index"
-                      :value="position.id.toString()"
-                    >
-                      {{ position.name }}
-                    </SelectItem>
-                  </template>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <PositionsSelect v-bind="componentField" />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -169,25 +106,7 @@ const isDisabled = computed(() => {
         <FormItem class="w-full" v-auto-animate>
           <FormLabel>City</FormLabel>
           <FormControl>
-            <Select v-bind="componentField">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a city" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Cities</SelectLabel>
-                  <template v-if="cities">
-                    <SelectItem
-                      v-for="(city, index) in cities"
-                      :key="index"
-                      :value="city.id.toString()"
-                    >
-                      {{ city.name }}
-                    </SelectItem>
-                  </template>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <CitiesSelect v-bind="componentField" />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -260,7 +179,7 @@ const isDisabled = computed(() => {
     <div class="inline-flex w-full gap-4">
       <NuxtLink
         :class="buttonVariants({ variant: 'outline' })"
-        to="/admin/jobs"
+        :to="`/companies/${id}/settings/jobs`"
       >
         Back
       </NuxtLink>
