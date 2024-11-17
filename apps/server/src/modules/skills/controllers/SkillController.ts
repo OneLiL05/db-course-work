@@ -16,6 +16,17 @@ export const getSkills = async (
   return reply.status(200).send(skills)
 }
 
+export const getSkillLevels = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { skillRepository } = request.diScope.cradle
+
+  const levels = await skillRepository.findLevels()
+
+  return reply.status(200).send(levels)
+}
+
 export const getSkill = async (
   request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
   reply: FastifyReply,

@@ -1,7 +1,8 @@
-import { CREATE_SKILL_SCHEMA_TYPE, Skill } from '@skill-swap/shared'
+import { CREATE_SKILL_SCHEMA_TYPE, Skill, SkillLevel } from '@skill-swap/shared'
 
 interface ISkillRepository {
   findMany: () => Promise<Skill[]>
+  findLevels: () => Promise<SkillLevel[]>
   findOne: (id: number) => Promise<Skill | null>
   createOne: (data: CREATE_SKILL_SCHEMA_TYPE) => Promise<Skill | null>
   updateOne: (

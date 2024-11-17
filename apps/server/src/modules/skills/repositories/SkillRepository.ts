@@ -1,5 +1,5 @@
 import { SqlClient } from '@/types/index.js'
-import { CREATE_SKILL_SCHEMA_TYPE, Skill } from '@skill-swap/shared'
+import { CREATE_SKILL_SCHEMA_TYPE, Skill, SkillLevel } from '@skill-swap/shared'
 import { ISkillRepository } from '../interfaces/index.js'
 import { SkillInjectableDependencies } from '../types/index.js'
 
@@ -12,6 +12,10 @@ export class SkillRepository implements ISkillRepository {
 
   async findMany(): Promise<Skill[]> {
     return this.sql<Skill[]>`select * from skills`
+  }
+
+  async findLevels(): Promise<SkillLevel[]> {
+    return this.sql<SkillLevel[]>`select name from skill_levels order by id`
   }
 
   async findOne(id: number): Promise<Skill | null> {

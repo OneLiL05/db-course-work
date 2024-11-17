@@ -86,33 +86,6 @@ export class JobRepository implements IJobRepository {
         join
           skill_levels sl ON js.skill_level_id = sl.id
       ),
-      cities as (
-        select
-          c.id,
-          c.name
-        from cities c
-      ),
-      categories as (
-        select
-          ca.id,
-          ca.name
-        from categories ca
-      ),
-      companies as (
-        select
-          co.id,
-          co.name,
-          co.description,
-          co.img,
-          co.is_verified
-        from companies co
-      ),
-      positions as (
-        select 
-          po.id,
-          po.name
-        from positions po
-      )
       select
         j.id as id,
         j.created_at,

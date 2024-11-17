@@ -3,6 +3,7 @@ import {
   createSkill,
   deleteSkill,
   getSkill,
+  getSkillLevels,
   getSkills,
   updateSkill,
 } from '../controllers/SkillController.js'
@@ -15,6 +16,11 @@ export const getSkillsRoutes = (app: AppInstanse): Routes => ({
       method: 'GET',
       url: '/skills',
       handler: getSkills,
+    },
+    {
+      method: 'GET',
+      url: '/skills/levels',
+      handler: getSkillLevels,
     },
     {
       method: 'GET',
