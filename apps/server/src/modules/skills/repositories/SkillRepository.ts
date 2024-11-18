@@ -15,7 +15,7 @@ export class SkillRepository implements ISkillRepository {
   }
 
   async findLevels(): Promise<SkillLevel[]> {
-    return this.sql<SkillLevel[]>`select name from skill_levels order by id`
+    return this.sql<SkillLevel[]>`select id, name from skill_levels order by id`
   }
 
   async findOne(id: number): Promise<Skill | null> {

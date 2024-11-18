@@ -85,7 +85,7 @@ export class JobRepository implements IJobRepository {
           skills s ON js.skill_id = s.id
         join
           skill_levels sl ON js.skill_level_id = sl.id
-      ),
+      )
       select
         j.id as id,
         j.created_at,
@@ -206,6 +206,7 @@ export class JobRepository implements IJobRepository {
       categoryId,
       positionId,
       cityId,
+      skills,
     } = data
 
     const jobs = await this.sql<{ id: number }[]>`
@@ -250,5 +251,15 @@ export class JobRepository implements IJobRepository {
       values
         (${job.id}, ${salary.amount}, ${salary.currency})
     `
+
+    // TODO: Rewrite to something more reliable
+    for (const skill of skills) {
+      await this.sql`
+        insert into job_skills
+          (job_id, skill_id, skill_level_id)
+        values
+          (${job.id}, ${skill.skillId}, ${skill.skillLevelId})
+      `
+    }
   }
 }
