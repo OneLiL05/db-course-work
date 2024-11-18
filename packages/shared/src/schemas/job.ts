@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { BASE_MODEL } from './common.js'
+import { CREATE_JOB_SKILL_SCHEMA } from './skill.js'
 
 const JOB_SALARY_SCHEMA = z.object({
   amount: z.number().min(100),
@@ -37,6 +38,8 @@ const CREATE_JOB_SCHEMA = JOB_SCHEMA.omit({
   isActive: true,
   isHidden: true,
   skills: true,
+}).extend({
+  skills: CREATE_JOB_SKILL_SCHEMA.array(),
 })
 
 type CREATE_JOB_SCHEMA_TYPE = z.infer<typeof CREATE_JOB_SCHEMA>

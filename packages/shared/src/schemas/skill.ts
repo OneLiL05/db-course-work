@@ -24,5 +24,31 @@ const UPDATE_SKILL_SCHEMA = z.object({
 
 type UPDATE_SKILL_SCHEMA_TYPE = z.infer<typeof UPDATE_SKILL_SCHEMA>
 
-export type { Skill, CREATE_SKILL_SCHEMA_TYPE, UPDATE_SKILL_SCHEMA_TYPE }
-export { SKILL_SCHEMA, CREATE_SKILL_SCHEMA, UPDATE_SKILL_SCHEMA }
+const SKILL_LEVEL_SCHEMA = z.object({
+  id: z.number(),
+  name: z.string(),
+})
+
+type SkillLevel = z.infer<typeof SKILL_LEVEL_SCHEMA>
+
+const CREATE_JOB_SKILL_SCHEMA = z.object({
+  skillId: z.coerce.number().min(1),
+  skillLevelId: z.coerce.number().min(1),
+})
+
+type CREATE_JOB_SKILL_SCHEMA_TYPE = z.infer<typeof CREATE_JOB_SKILL_SCHEMA>
+
+export type {
+  Skill,
+  CREATE_SKILL_SCHEMA_TYPE,
+  UPDATE_SKILL_SCHEMA_TYPE,
+  SkillLevel,
+  CREATE_JOB_SKILL_SCHEMA_TYPE,
+}
+export {
+  SKILL_SCHEMA,
+  CREATE_SKILL_SCHEMA,
+  UPDATE_SKILL_SCHEMA,
+  SKILL_LEVEL_SCHEMA,
+  CREATE_JOB_SKILL_SCHEMA,
+}
