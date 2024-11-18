@@ -10,7 +10,7 @@
     "cssVariables": true
   },
   "aliases": {
-    "components": "@/core",
+    "components": "@/core/components",
     "utils": "@/core/lib/utils"
   },
   "framework": "nuxt"

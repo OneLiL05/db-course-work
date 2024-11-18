@@ -10,24 +10,26 @@ const emits = defineEmits<SelectRootEmits>()
 
 const forwarded = useForwardPropsEmits(props, emits)
 
-const currencies = ['UAH', 'USD', 'EUR']
+const { data: levels } = useSkillsLevels()
 </script>
 
 <template>
   <Select v-bind="forwarded">
-    <SelectTrigger>
-      <SelectValue placeholder="Select a currency" />
+    <SelectTrigger class="w-1/4">
+      <SelectValue placeholder="Select a level" />
     </SelectTrigger>
     <SelectContent>
       <SelectGroup>
-        <SelectLabel>Currency</SelectLabel>
-        <SelectItem
-          v-for="currency in currencies"
-          :key="currency"
-          :value="currency"
-        >
-          {{ currency }}
-        </SelectItem>
+        <SelectLabel>Levels</SelectLabel>
+        <template v-if="levels">
+          <SelectItem
+            v-for="level in levels"
+            :key="level.name.toLowerCase()"
+            :value="level.id.toString()"
+          >
+            {{ level.name }}
+          </SelectItem>
+        </template>
       </SelectGroup>
     </SelectContent>
   </Select>

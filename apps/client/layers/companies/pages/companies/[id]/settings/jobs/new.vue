@@ -9,7 +9,9 @@ definePageMeta({
 
 const id = useRouteParams('id')
 
-const { mutateAsync, isPending } = useCreateJob(Number(id))
+const { mutateAsync, isPending } = useCreateJob(Number(id.value))
+
+const { selectedSkills, addSkill, removeSkill } = useSelectedSkills()
 
 const { handleSubmit, values } = useForm({
   validationSchema: toTypedSchema(CREATE_JOB_SCHEMA),
@@ -18,11 +20,12 @@ const { handleSubmit, values } = useForm({
     isFulltime: false,
     isRemote: false,
     areStudentsAllowed: false,
+    skills: [],
   },
 })
 
 const onSubmit = handleSubmit(async (data) => {
-  console.log(data)
+  mutateAsync({ ...data, skills: selectedSkills.value })
 })
 
 const isDisabled = computed(() => {
@@ -176,6 +179,14 @@ const isDisabled = computed(() => {
         </div>
       </FormItem>
     </FormField>
+    <div class="flex flex-col w-full gap-3 pt-2 border-t border-muted">
+      <Heading size="4">Skills</Heading>
+      <AddSkillForm
+        :selected-skills="selectedSkills"
+        @add="addSkill"
+        @remove="removeSkill"
+      />
+    </div>
     <div class="inline-flex w-full gap-4">
       <NuxtLink
         :class="buttonVariants({ variant: 'outline' })"

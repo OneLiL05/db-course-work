@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { buttonVariants } from '~/core/components/ui/button'
+import { Spinner } from '~/core/components/ui/spinner'
 
 useHead({
   title: 'My companies',
@@ -8,7 +9,7 @@ useHead({
 const query = ref('')
 
 const { user } = useAuthStore()
-const { data: companies } = useUserCompanies()
+const { data: companies, status } = useUserCompanies()
 
 console.log(companies.value)
 </script>
@@ -38,28 +39,33 @@ console.log(companies.value)
         New
       </NuxtLink>
     </div>
+    <template v-if="status === 'pending'">
+      <Spinner />
+    </template>
     <template v-if="companies">
-      <div
-        v-for="company in companies"
-        :key="company.id"
-        class="inline-flex w-full items-center justify-between bg-transparent border border-muted rounded-xl p-4"
-      >
-        <div class="inline-flex justify-start items-center gap-4">
-          <div
-            class="flex items-center justify-center size-8 rounded-lg bg-muted"
-          >
-            <Icon name="lucide:building-2" class="text-muted-foreground" />
-          </div>
-          <p>{{ company.name }}</p>
-        </div>
-        <NuxtLink
-          :to="`/companies/${company.id}/settings`"
-          class="!size-8"
-          :class="buttonVariants({ variant: 'outline', size: 'icon' })"
+      <section class="flex flex-col w-full gap-4">
+        <div
+          v-for="company in companies"
+          :key="company.id"
+          class="inline-flex w-full items-center justify-between bg-transparent border border-muted rounded-xl p-4"
         >
-          <Icon name="lucide:external-link" />
-        </NuxtLink>
-      </div>
+          <div class="inline-flex justify-start items-center gap-4">
+            <div
+              class="flex items-center justify-center size-8 rounded-lg bg-muted"
+            >
+              <Icon name="lucide:building-2" class="text-muted-foreground" />
+            </div>
+            <p>{{ company.name }}</p>
+          </div>
+          <NuxtLink
+            :to="`/companies/${company.id}/settings`"
+            class="!size-8"
+            :class="buttonVariants({ variant: 'outline', size: 'icon' })"
+          >
+            <Icon name="lucide:external-link" />
+          </NuxtLink>
+        </div>
+      </section>
     </template>
   </section>
 </template>

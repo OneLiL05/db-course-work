@@ -1,20 +1,21 @@
 <script lang="ts" setup>
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from '~/core/components/ui/dropdown-menu'
 import { Badge } from '~/core/components/ui/badge'
 
-const route = useRoute()
+const id = useRouteParams('id')
 
-const { data: job } = await useJob(+route.params.id)
+const { data: job } = await useJob(Number(id.value))
 
 const createdAt = computed(() =>
-  new Date(job.value?.createdAt as unknown as string).toLocaleDateString('en'),
+  new Date(job.value?.createdAt as unknown as string).toLocaleDateString('en', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }),
 )
+
+onMounted(() => {
+  console.log(job.value)
+})
 </script>
 
 <template>
@@ -33,29 +34,7 @@ const createdAt = computed(() =>
             Favourite
           </Button>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button variant="outline">
-              More
-              <Icon name="lucide:chevron-down" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem>
-              <Icon name="lucide:file-text" />
-              Find similar
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Icon name="lucide:printer" />
-              Print
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Icon name="lucide:triangle-alert" />
-              Report
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <JobDropdown />
       </div>
       <div class="flex flex-col gap-3">
         <p class="text-muted-foreground">Job vacancy from {{ createdAt }}</p>
