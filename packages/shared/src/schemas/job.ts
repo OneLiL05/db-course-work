@@ -30,6 +30,24 @@ const JOB_SCHEMA = BASE_MODEL.extend({
 
 type Job = z.infer<typeof JOB_SCHEMA>
 
+const VIEWABLE_JOB_SCHEMA = BASE_MODEL.extend({
+  description: z.string().min(15).max(256),
+  isCvRequired: z.boolean(),
+  isFulltime: z.boolean(),
+  isRemote: z.boolean(),
+  areStudentsAllowed: z.boolean(),
+  isActive: z.boolean(),
+  isHidden: z.boolean(),
+  salary: JOB_SALARY_SCHEMA,
+  skills: JOB_SKILL_SCHEMA.array(),
+  city: BASE_MODEL.pick({ name: true, id: true }),
+  company: BASE_MODEL.pick({ name: true, id: true }),
+  category: BASE_MODEL.pick({ name: true, id: true }),
+  position: BASE_MODEL.pick({ name: true, id: true }),
+})
+
+type ViewableJob = z.infer<typeof VIEWABLE_JOB_SCHEMA>
+
 const CREATE_JOB_SCHEMA = JOB_SCHEMA.omit({
   companyId: true,
   id: true,
@@ -44,5 +62,5 @@ const CREATE_JOB_SCHEMA = JOB_SCHEMA.omit({
 
 type CREATE_JOB_SCHEMA_TYPE = z.infer<typeof CREATE_JOB_SCHEMA>
 
-export type { Job, CREATE_JOB_SCHEMA_TYPE }
-export { JOB_SCHEMA, CREATE_JOB_SCHEMA }
+export type { Job, CREATE_JOB_SCHEMA_TYPE, ViewableJob }
+export { JOB_SCHEMA, CREATE_JOB_SCHEMA, VIEWABLE_JOB_SCHEMA }
