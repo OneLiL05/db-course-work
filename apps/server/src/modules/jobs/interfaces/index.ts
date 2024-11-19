@@ -3,7 +3,9 @@ import { CREATE_JOB_SCHEMA_TYPE, Job } from '@skill-swap/shared'
 interface IJobRepository {
   findMany: () => Promise<Job[]>
   findOne: (id: number) => Promise<Job | null>
+  findLatestCount: (companyId: number) => Promise<{ count: number }>
   findCompanyJobs: (companyId: number) => Promise<Job[]>
+  findCompanyJobsCount: (companyId: number) => Promise<{ count: number }>
   createOne: (companyId: number, data: CREATE_JOB_SCHEMA_TYPE) => Promise<void>
 }
 

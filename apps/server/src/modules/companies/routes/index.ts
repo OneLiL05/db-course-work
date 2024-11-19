@@ -11,6 +11,8 @@ import {
   getCompanies,
   getCompany,
   getCompanyJobs,
+  getCompanyJobsCount,
+  getCompanyLatestJobsCount,
   updateCompany,
 } from '../controllers/CompanyController.js'
 
@@ -33,6 +35,22 @@ export const getCompaniesRoutes = (app: AppInstanse): Routes => ({
       method: 'GET',
       url: '/companies/:id/jobs',
       handler: getCompanyJobs,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+      },
+    },
+    {
+      method: 'GET',
+      url: '/companies/:id/jobs/count',
+      handler: getCompanyJobsCount,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+      },
+    },
+    {
+      method: 'GET',
+      url: '/companies/:id/jobs/latest/count',
+      handler: getCompanyLatestJobsCount,
       schema: {
         params: GET_BY_ID_SCHEMA,
       },

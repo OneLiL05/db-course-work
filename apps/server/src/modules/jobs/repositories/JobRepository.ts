@@ -150,25 +150,26 @@ export class JobRepository implements IJobRepository {
         from
           jobs j
         join
-          job_salaries js on j.id = js.job_id
+          job_salaries js ON j.id = js.job_id
       ),
-      job_skills AS (
+      job_skills as (
         select
-          j.id AS job_id,
-          s.name AS skill_name,
-          sl.name AS skill_level
+          j.id as job_id,
+          s.name as skill_name,
+          sl.name as skill_level
         from
           jobs j
         join
-          job_skills js on j.id = js.job_id
+          job_skills js ON j.id = js.job_id
         join
-          skills s on js.skill_id = s.id
+          skills s ON js.skill_id = s.id
         join
-          skill_levels sl on js.skill_level_id = sl.id
+          skill_levels sl ON js.skill_level_id = sl.id
       )
       select
-        j.id AS id,
-        j.name AS name,
+        j.id as id,
+        j.created_at,
+        j.name as name,
         j.description,
         j.is_cv_required,
         j.is_fulltime,
@@ -177,9 +178,21 @@ export class JobRepository implements IJobRepository {
         j.is_remote,
         j.are_students_allowed,
         json_build_object('amount', js.amount, 'currency', js.currency) as salary,
+        json_build_object('id', co.id, 'name', co.name, 'description', co.description, 'img', co.img, 'is_verified', co.is_verified) as company,
+        json_build_object('id', c.id, 'name', c.name) as city,
+        json_build_object('id', po.id, 'name', po.name) as position,
+        json_build_object('id', ca.id, 'name', ca.name) as category,
         json_agg(json_build_object('name', jk.skill_name, 'level', jk.skill_level)) as skills
       from
         jobs j
+      left join
+        companies co on j.company_id = co.id
+      left join
+        positions po on j.position_id = po.id
+      left join
+        cities c on j.city_id = c.id
+      left join
+        categories ca on j.category_id = ca.id
       left join
         job_salaries js on j.id = js.job_id
       left join
@@ -187,8 +200,52 @@ export class JobRepository implements IJobRepository {
       where
         j.company_id = ${companyId}
       group by
-        j.id, js.amount, js.currency
+        co.id, co.name,
+        co.description,
+        co.img, 
+        co.is_verified,
+        j.id,
+        js.amount,
+        js.currency,
+        c.id,
+        c.name,
+        po.id,
+        po.name,
+        ca.id,
+        ca.name
     `
+  }
+
+  async findLatestCount(companyId: number): Promise<{ count: number }> {
+    const currentDate = new Date()
+    const startDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1,
+    )
+    const endDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0,
+    )
+
+    const [jobsCount]: [{ count: number }] = await this.sql`
+      select count(j.id)
+      from jobs j
+      where j.company_id = ${companyId} and j.created_at between ${startDate} and ${endDate} and j.is_active
+    `
+
+    return { count: +jobsCount.count }
+  }
+
+  async findCompanyJobsCount(companyId: number): Promise<{ count: number }> {
+    const [jobsCount]: [{ count: number }] = await this.sql`
+      select count(j.id)
+      from jobs j
+      where j.company_id = ${companyId} and j.is_active
+    `
+
+    return { count: +jobsCount.count }
   }
 
   async createOne(
