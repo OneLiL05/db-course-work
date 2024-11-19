@@ -17,4 +17,22 @@ const getFormError = ({ error, isError }: GetFormErrorArgs) => {
 
 const toBearer = (token: unknown) => `Bearer ${token}`
 
-export { getFormError, toBearer }
+const formatSalary = (salary: {
+  amount: number
+  currency: 'USD' | 'UAH' | 'EUR'
+}): string => {
+  const locale =
+    salary.currency === 'UAH'
+      ? 'uk-UK'
+      : salary.currency === 'EUR'
+        ? 'de-DE'
+        : 'en-US'
+
+  return Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: salary.currency,
+    maximumSignificantDigits: 1,
+  }).format(salary.amount)
+}
+
+export { getFormError, toBearer, formatSalary }
