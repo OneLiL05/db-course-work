@@ -1,7 +1,12 @@
-import { drizzle } from 'drizzle-orm/postgres-js'
+import { PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import * as schema from './schemas/index.js'
 
-export const queryClient = postgres(process.env.DATABASE_URL as string)
+const queryClient = postgres(process.env.DATABASE_URL as string)
 
-export const db = drizzle(queryClient, { schema })
+const db = drizzle(queryClient, { schema })
+
+type DatabaseClient = PostgresJsDatabase<typeof schema>
+
+export { queryClient, db, type DatabaseClient }
+export * from './schemas/index.js'

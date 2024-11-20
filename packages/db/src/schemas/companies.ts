@@ -10,7 +10,7 @@ export const companies = pgTable('companies', {
   ...baseSchemaAttrs,
   name: varchar().notNull().unique(),
   description: text().notNull(),
-  img: varchar(),
+  img: varchar().notNull(),
   isVerified: boolean('is_verified').notNull().default(false),
   isDeleted: boolean('is_deleted').notNull().default(false),
 })

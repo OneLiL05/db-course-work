@@ -15,8 +15,9 @@ export const jobs = pgTable('jobs', {
   description: text().notNull(),
   isCvRequired: boolean('is_cv_required').notNull(),
   isFulltime: boolean('is_fulltime').notNull(),
-  isActive: boolean('is_active').notNull(),
-  isHidden: boolean('is_hidden').notNull(),
+  isRemote: boolean('is_remote').notNull(),
+  isActive: boolean('is_active').notNull().default(true),
+  isHidden: boolean('is_hidden').notNull().default(false),
   areStudentsAllowed: boolean('are_students_allowed').notNull(),
   categoryId: integer('category_id')
     .notNull()

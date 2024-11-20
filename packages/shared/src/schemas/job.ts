@@ -5,6 +5,7 @@ import { CREATE_JOB_SKILL_SCHEMA } from './skill.js'
 const JOB_SALARY_SCHEMA = z.object({
   amount: z.number().min(100),
   currency: z.enum(['USD', 'UAH', 'EUR']),
+  period: z.enum(['one-time', 'weekly', 'monthly', 'yearly']),
 })
 
 const JOB_SKILL_SCHEMA = z.object({
