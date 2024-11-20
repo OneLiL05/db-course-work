@@ -10,6 +10,10 @@
     "server:start": "nx run server:start",
     "server:dev": "nx run server:dev",
     "shared:build": "nx run @skill-swap/shared:build",
+    "db:build": "nx run @skill-swap/db:build",
+    "db:generate": "nx run @skill-swap/db:generate",
+    "db:build:generate": "pnpm db:build && pnpm db:generate",
+    "db:migrate": "pnpm @skill-swap/db:migrate",
     "lint": "eslint .",
     "format": "prettier --write .",
     "prepare": "husky"
@@ -48,6 +52,7 @@
     "lint-staged": "^15.2.10",
     "nx": "^19.7.3",
     "prettier": "^3.3.3",
+    "typescript": "5.6.3",
     "typescript-eslint": "^8.5.0"
   },
   "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a"
