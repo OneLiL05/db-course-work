@@ -1,26 +1,31 @@
-import { SqlClient } from '@/types/index.js'
+import { DatabaseClient, skillLevels, skills } from '@skill-swap/db'
 import { CREATE_SKILL_SCHEMA_TYPE, Skill, SkillLevel } from '@skill-swap/shared'
+import { asc, eq } from 'drizzle-orm'
 import { ISkillRepository } from '../interfaces/index.js'
 import { SkillInjectableDependencies } from '../types/index.js'
 
 export class SkillRepository implements ISkillRepository {
-  private readonly sql: SqlClient
+  private readonly db: DatabaseClient
 
-  constructor({ sql }: SkillInjectableDependencies) {
-    this.sql = sql
+  constructor({ db }: SkillInjectableDependencies) {
+    this.db = db.client
   }
 
   async findMany(): Promise<Skill[]> {
-    return this.sql<Skill[]>`select * from skills`
+    return this.db.select().from(skills)
   }
 
   async findLevels(): Promise<SkillLevel[]> {
-    return this.sql<SkillLevel[]>`select id, name from skill_levels order by id`
+    return this.db
+      .select({ id: skillLevels.id, name: skillLevels.name })
+      .from(skillLevels)
+      .orderBy(asc(skillLevels.id))
   }
 
   async findOne(id: number): Promise<Skill | null> {
-    const [skill]: [Skill?] = await this
-      .sql`select * from skills where id = ${id}`
+    const result = await this.db.select().from(skills).where(eq(skills.id, id))
+
+    const skill = result.at(0)
 
     if (!skill) return null
 
@@ -28,15 +33,9 @@ export class SkillRepository implements ISkillRepository {
   }
 
   async createOne({ name }: CREATE_SKILL_SCHEMA_TYPE): Promise<Skill | null> {
-    const skills = await this.sql<Skill[]>`
-      insert into skills
-        (name)
-      values
-        (${name})
-      returning *
-    `
+    const result = await this.db.insert(skills).values({ name }).returning()
 
-    const skill = skills.at(0)
+    const skill = result.at(0)
 
     if (!skill) return null
 
@@ -47,14 +46,13 @@ export class SkillRepository implements ISkillRepository {
     id: number,
     { name }: CREATE_SKILL_SCHEMA_TYPE,
   ): Promise<Skill | null> {
-    const skills = await this.sql<Skill[]>`
-      update skills
-      set name = ${name}
-      where id = ${id}
-      returning *
-    `
+    const result = await this.db
+      .update(skills)
+      .set({ name })
+      .where(eq(skills.id, id))
+      .returning()
 
-    const skill = skills.at(0)
+    const skill = result.at(0)
 
     if (!skill) return null
 
@@ -62,13 +60,12 @@ export class SkillRepository implements ISkillRepository {
   }
 
   async deleteOne(id: number): Promise<Skill | null> {
-    const skills = await this.sql<Skill[]>`
-      delete from skills
-      where id = ${id}
-      returning *
-    `
+    const result = await this.db
+      .delete(skills)
+      .where(eq(skills.id, id))
+      .returning()
 
-    const skill = skills.at(0)
+    const skill = result.at(0)
 
     if (!skill) return null
 

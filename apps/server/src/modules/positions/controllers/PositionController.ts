@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { CreatePosition } from '../schemas/index.js'
-import { GET_BY_ID_SCHEMA_TYPE } from '@skill-swap/shared'
+import {
+  CREATE_POSITION_SCHEMA_TYPE,
+  GET_BY_ID_SCHEMA_TYPE,
+} from '@skill-swap/shared'
 
 export const getPositions = async (
   request: FastifyRequest,
@@ -30,7 +32,7 @@ export const getPosition = async (
 }
 
 export const createPosition = async (
-  request: FastifyRequest<{ Body: CreatePosition }>,
+  request: FastifyRequest<{ Body: CREATE_POSITION_SCHEMA_TYPE }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { positionRepository } = request.diScope.cradle
@@ -47,7 +49,7 @@ export const createPosition = async (
 export const updatePosition = async (
   request: FastifyRequest<{
     Params: GET_BY_ID_SCHEMA_TYPE
-    Body: CreatePosition
+    Body: CREATE_POSITION_SCHEMA_TYPE
   }>,
   reply: FastifyReply,
 ): Promise<void> => {

@@ -1,18 +1,23 @@
 import { ICityRepository } from '../interfaces/index.js'
 import { CitiesInjectableDependencies } from '../types/index.js'
-import { CreateCity } from '../schemas/index.js'
 import { SqlClient } from '@/types/index.js'
-import { City } from '@skill-swap/shared'
+import { CREATE_CITY_SCHEMA_TYPE, City } from '@skill-swap/shared'
+import { DatabaseClient, cities } from '@skill-swap/db'
+import { eq } from 'drizzle-orm'
 
 export class CityRepository implements ICityRepository {
   private readonly sql: SqlClient
+  private readonly db: DatabaseClient
 
-  constructor({ sql }: CitiesInjectableDependencies) {
+  constructor({ sql, db }: CitiesInjectableDependencies) {
     this.sql = sql
+    this.db = db.client
   }
 
   async findOne(id: number): Promise<City | null> {
-    const [city]: [City?] = await this.sql`select * from cities where id=${id}`
+    const result = await this.db.select().from(cities).where(eq(cities.id, id))
+
+    const city = result.at(0)
 
     if (!city) return null
 
@@ -20,34 +25,30 @@ export class CityRepository implements ICityRepository {
   }
 
   async findMany(): Promise<City[]> {
-    return this.sql<City[]>`select * from cities order by updated_at desc`
+    return this.db.select().from(cities)
   }
 
-  async createOne({ name }: CreateCity): Promise<City | null> {
-    const cities = await this.sql<City[]>`
-      insert into cities
-        (name)
-      values
-        (${name})
-      returning *
-    `
+  async createOne({ name }: CREATE_CITY_SCHEMA_TYPE): Promise<City | null> {
+    const result = await this.db.insert(cities).values({ name }).returning()
 
-    const city = cities.at(0)
+    const city = result.at(0)
 
     if (!city) return null
 
     return city
   }
 
-  async updateOne(id: number, { name }: CreateCity): Promise<City | null> {
-    const cities = await this.sql<City[]>`
-      update cities
-      set name=${name}
-      where id=${id}
-      returning *
-    `
+  async updateOne(
+    id: number,
+    { name }: CREATE_CITY_SCHEMA_TYPE,
+  ): Promise<City | null> {
+    const result = await this.db
+      .update(cities)
+      .set({ name })
+      .where(eq(cities.id, id))
+      .returning()
 
-    const city = cities.at(0)
+    const city = result.at(0)
 
     if (!city) return null
 
@@ -55,11 +56,12 @@ export class CityRepository implements ICityRepository {
   }
 
   async deleteOne(id: number): Promise<City | null> {
-    const cities = await this.sql<
-      City[]
-    >`delete from cities where id=${id} returning *`
+    const result = await this.db
+      .delete(cities)
+      .where(eq(cities.id, id))
+      .returning()
 
-    const city = cities.at(0)
+    const city = result.at(0)
 
     if (!city) return null
 

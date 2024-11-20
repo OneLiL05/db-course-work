@@ -1,107 +1,76 @@
-import { Role, User } from '@skill-swap/shared'
-import { IUserRepository } from '../interfaces/index.js'
-import { CreateUser } from '../schemas/index.js'
-import { ReturnedUser, UserInjectableDependencies } from '../types/index.js'
-import { SqlClient } from '@/types/index.js'
 import { ROLES } from '@/constants/index.js'
+import { DatabaseClient, roles, userRoles, users } from '@skill-swap/db'
+import { CREATE_USER_SCHEMA_TYPE, Role, User } from '@skill-swap/shared'
+import { eq, getTableColumns } from 'drizzle-orm'
+import { IUserRepository } from '../interfaces/index.js'
+import { ReturnedUser, UserInjectableDependencies } from '../types/index.js'
 
 export class UserRepository implements IUserRepository {
-  private readonly sql: SqlClient
+  private readonly db: DatabaseClient
 
-  constructor({ sql }: UserInjectableDependencies) {
-    this.sql = sql
+  constructor({ db }: UserInjectableDependencies) {
+    this.db = db.client
   }
 
   async findOne(id: number): Promise<User | null> {
-    const [user]: [User?] = await this.sql`
-      select
-        u.id,
-        u.username,
-        u.email,
-        u.first_name,
-        u.last_name,
-        u.password,
-        u.img,
-        u.created_at,
-        u.updated_at,
-        array_agg(r.name) AS roles
-      from
-        users u
-      left join
-        user_roles ur on u.id=ur.user_id
-      left join
-        roles r ON ur.role_id=r.id
-      where
-        u.id=${id}
-      group by
-        u.id;
-    `
+    const result = await this.db
+      .select()
+      .from(users)
+      .innerJoin(userRoles, eq(users.id, userRoles.userId))
+      .innerJoin(roles, eq(roles.id, userRoles.id))
+      .where(eq(users.id, id))
+
+    const user = result.at(0)
 
     if (!user) return null
 
-    return user
+    return {
+      ...user.users,
+      roles: result.map((u) => u.roles.name) as Role[],
+    }
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    const [user]: [User?] = await this.sql`
-      select
-        u.id,
-        u.username,
-        u.email,
-        u.first_name,
-        u.last_name,
-        u.password,
-        u.img,
-        u.created_at,
-        u.updated_at,
-        array_agg(r.name) AS roles
-      from
-        users u
-      left join
-        user_roles ur on u.id=ur.user_id
-      left join
-        roles r ON ur.role_id=r.id
-      where
-        u.email=${email}
-      group by
-        u.id;
-      `
+    const result = await this.db
+      .select()
+      .from(users)
+      .innerJoin(userRoles, eq(users.id, userRoles.userId))
+      .innerJoin(roles, eq(roles.id, userRoles.id))
+      .where(eq(users.email, email))
+
+    const user = result.at(0)
 
     if (!user) return null
 
-    return user
+    return {
+      ...user.users,
+      roles: result.map((u) => u.roles.name) as Role[],
+    }
   }
 
-  async createOne(data: CreateUser): Promise<ReturnedUser> {
-    const { username, email, password, firstName, lastName, img } = data
+  async createOne(data: CREATE_USER_SCHEMA_TYPE): Promise<ReturnedUser> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { createdAt, updatedAt, password, ...rest } = getTableColumns(users)
 
-    const users = await this.sql<ReturnedUser[]>`
-      insert into users
-        (username, email, password, first_name, last_name, img)
-      values
-        (${username}, ${email}, ${password}, ${firstName}, ${lastName}, ${img})
-      returning users.id, users.username, users.email, users.first_name, users.last_name, users.img
-    `
+    const user = await this.db.transaction(async (tx) => {
+      const result = await tx
+        .insert(users)
+        .values(data)
+        .returning({ ...rest })
 
-    const user = users.at(0) as ReturnedUser
+      const user = result.at(0) as ReturnedUser
 
-    await this.sql`
-      insert into user_roles
-        (user_id, role_id)
-      values
-        (${user.id}, 3)
-      returning role_id
-    `
+      await this.db.insert(userRoles).values({ userId: user.id, roleId: 3 })
+
+      return user
+    })
 
     return user
   }
 
   async addRole(id: number, role: Role): Promise<void> {
-    await this.sql`
-      insert into user_roles
-       (user_id, role_id)
-      values
-        (${id}, ${ROLES.get(role) as number})
-    `
+    await this.db
+      .insert(userRoles)
+      .values({ userId: id, roleId: ROLES.get(role) as number })
   }
 }

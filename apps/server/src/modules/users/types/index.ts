@@ -11,7 +11,7 @@ type UserInjectableDependencies =
 type UserDiConfig = BaseDiConfig<UsersModuleDependencies>
 
 type ReturnedUser = UserWithout<
-  'createdAt' | 'updatedAt' | 'password' | 'employerId' | 'roles'
+  'createdAt' | 'updatedAt' | 'password' | 'roles'
 >
 
 type NewType = UserWithout<'password'>

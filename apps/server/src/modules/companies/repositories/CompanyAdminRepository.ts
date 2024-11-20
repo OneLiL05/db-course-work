@@ -1,13 +1,13 @@
-import { SqlClient } from '@/types/index.js'
-import { CompaniesInjectableDependencies } from '../types/index.js'
-import { ICompanyAdminRepository } from '../interfaces/index.js'
+import { DatabaseClient, companyAdmins } from '@skill-swap/db'
 import { CREATE_COMPANY_ADMIN_SCHEMA_TYPE } from '@skill-swap/shared'
+import { ICompanyAdminRepository } from '../interfaces/index.js'
+import { CompaniesInjectableDependencies } from '../types/index.js'
 
 export class CompanyAdminRepository implements ICompanyAdminRepository {
-  private readonly sql: SqlClient
+  private readonly db: DatabaseClient
 
-  constructor({ sql }: CompaniesInjectableDependencies) {
-    this.sql = sql
+  constructor({ db }: CompaniesInjectableDependencies) {
+    this.db = db.client
   }
 
   async createOne(
@@ -16,13 +16,10 @@ export class CompanyAdminRepository implements ICompanyAdminRepository {
   ): Promise<void> {
     const { role, userId } = data
 
-    const companyRoleId = role === 'owner' ? 1 : 2
+    const roleId = role === 'owner' ? 1 : 2
 
-    await this.sql`
-      insert into company_admins
-        (user_id, company_role_id, company_id)
-      values
-        (${userId}, ${companyRoleId}, ${id})
-    `
+    await this.db
+      .insert(companyAdmins)
+      .values({ userId, roleId, companyId: id })
   }
 }

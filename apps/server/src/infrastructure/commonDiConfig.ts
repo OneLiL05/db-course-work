@@ -5,6 +5,7 @@ import postgres from 'postgres'
 import { Redis } from '@upstash/redis'
 import { CommonDependencies, ExternalDependencies } from '@/interfaces/index.js'
 import { SINGLETON_CONFIG } from '@/constants/config.js'
+import { db, queryClient } from '@skill-swap/db'
 
 export const resolveCommonDiConfig = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,6 +18,17 @@ export const resolveCommonDiConfig = (
     {
       dispose: (sql) => {
         sql.end()
+      },
+      lifetime: Lifetime.SINGLETON,
+    },
+  ),
+  db: asFunction(
+    () => {
+      return { client: db, connection: queryClient }
+    },
+    {
+      dispose: ({ connection }) => {
+        connection.end()
       },
       lifetime: Lifetime.SINGLETON,
     },

@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { CreateCity } from '../schemas/index.js'
-import { GET_BY_ID_SCHEMA_TYPE } from '@skill-swap/shared'
+import {
+  CREATE_CITY_SCHEMA_TYPE,
+  GET_BY_ID_SCHEMA_TYPE,
+} from '@skill-swap/shared'
 
 export const getCities = async (
   request: FastifyRequest,
@@ -14,7 +16,7 @@ export const getCities = async (
 }
 
 export const createCity = async (
-  request: FastifyRequest<{ Body: CreateCity }>,
+  request: FastifyRequest<{ Body: CREATE_CITY_SCHEMA_TYPE }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { cityRepository } = request.diScope.cradle
@@ -51,7 +53,10 @@ export const deleteCity = async (
 }
 
 export const updateCity = async (
-  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE; Body: CreateCity }>,
+  request: FastifyRequest<{
+    Params: GET_BY_ID_SCHEMA_TYPE
+    Body: CREATE_CITY_SCHEMA_TYPE
+  }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { id } = request.params
