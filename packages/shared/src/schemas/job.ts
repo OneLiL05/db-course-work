@@ -2,12 +2,18 @@ import { z } from 'zod'
 import { BASE_MODEL } from './common.js'
 import { CREATE_JOB_SKILL_SCHEMA } from './skill.js'
 
+const SALARY_CURRENCY_SCHEMA = z.enum(['USD', 'UAH', 'EUR'])
+
+type SalaryCurrency = z.infer<typeof SALARY_CURRENCY_SCHEMA>
+
+const SALARY_PERIOD_SCHEMA = z.enum(['one-time', 'weekly', 'monthly', 'yearly'])
+
+type SalaryPeriod = z.infer<typeof SALARY_PERIOD_SCHEMA>
+
 const JOB_SALARY_SCHEMA = z.object({
   amount: z.number().min(100).max(9999999999),
-  currency: z.enum(['USD', 'UAH', 'EUR']),
-  period: z
-    .enum(['one-time', 'weekly', 'monthly', 'yearly'])
-    .default('monthly'),
+  currency: SALARY_CURRENCY_SCHEMA,
+  period: SALARY_PERIOD_SCHEMA.default('monthly'),
 })
 
 const JOB_SKILL_SCHEMA = z.object({
@@ -57,6 +63,23 @@ type ViewableJob = z.infer<typeof VIEWABLE_JOB_SCHEMA>
 
 // const JOBS_QUERY_SCHEMA = JOB_SCHEMA.
 
+const JOBS_AVG_SALARY_QUERY_SCHEMA = z.object({
+  currency: SALARY_CURRENCY_SCHEMA.optional().default('USD'),
+  period: SALARY_PERIOD_SCHEMA.optional().default('monthly'),
+})
+
+type JOBS_AVG_SALARY_QUERY_SCHEMA_TYPE = z.infer<
+  typeof JOBS_AVG_SALARY_QUERY_SCHEMA
+>
+
+const JOB_AVG_SALARY_SCHEMA = z.object({
+  avg: z.number(),
+  currency: SALARY_CURRENCY_SCHEMA,
+  period: SALARY_PERIOD_SCHEMA,
+})
+
+type AvgSalary = z.infer<typeof JOB_AVG_SALARY_SCHEMA>
+
 const CREATE_JOB_SCHEMA = JOB_SCHEMA.omit({
   companyId: true,
   id: true,
@@ -71,5 +94,21 @@ const CREATE_JOB_SCHEMA = JOB_SCHEMA.omit({
 
 type CREATE_JOB_SCHEMA_TYPE = z.infer<typeof CREATE_JOB_SCHEMA>
 
-export type { Job, CREATE_JOB_SCHEMA_TYPE, ViewableJob }
-export { JOB_SCHEMA, CREATE_JOB_SCHEMA, VIEWABLE_JOB_SCHEMA }
+export type {
+  Job,
+  CREATE_JOB_SCHEMA_TYPE,
+  ViewableJob,
+  SalaryCurrency,
+  SalaryPeriod,
+  JOBS_AVG_SALARY_QUERY_SCHEMA_TYPE,
+  AvgSalary,
+}
+export {
+  JOB_SCHEMA,
+  CREATE_JOB_SCHEMA,
+  VIEWABLE_JOB_SCHEMA,
+  SALARY_CURRENCY_SCHEMA,
+  SALARY_PERIOD_SCHEMA,
+  JOBS_AVG_SALARY_QUERY_SCHEMA,
+  JOB_AVG_SALARY_SCHEMA,
+}
