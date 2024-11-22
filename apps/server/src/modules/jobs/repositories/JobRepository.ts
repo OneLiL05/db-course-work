@@ -5,7 +5,7 @@ import {
   jobs,
   jobsView,
 } from '@skill-swap/db'
-import { CREATE_JOB_SCHEMA_TYPE, Job } from '@skill-swap/shared'
+import { CREATE_JOB_SCHEMA_TYPE, Job, AvgSalary } from '@skill-swap/shared'
 import { SQL, and, between, count, eq, sql } from 'drizzle-orm'
 import { FindAvgSalaryArgs, IJobRepository } from '../interfaces/index.js'
 import { JobsInjectableDependencies } from '../types/index.js'
@@ -45,7 +45,7 @@ export class JobRepository implements IJobRepository {
     where,
     currency,
     period,
-  }: FindAvgSalaryArgs): Promise<{ avg: number } | null> {
+  }: FindAvgSalaryArgs): Promise<AvgSalary | null> {
     const result = await this.db
       .select({ avg: sql<number>`cast(${jobSalaries.amount} as int)` })
       .from(jobs)
@@ -62,7 +62,11 @@ export class JobRepository implements IJobRepository {
 
     if (!avgSalary) return null
 
-    return avgSalary
+    return {
+      ...avgSalary,
+      currency,
+      period,
+    }
   }
 
   async findLatestCount(companyId: number): Promise<{ count: number } | null> {

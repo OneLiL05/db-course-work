@@ -3,9 +3,10 @@ import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_POSITION_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
+  JOBS_AVG_SALARY_QUERY_SCHEMA_TYPE,
 } from '@skill-swap/shared'
 import { eq } from 'drizzle-orm'
-import { jobsView } from '@skill-swap/db'
+import { jobs, jobsView } from '@skill-swap/db'
 
 export const getPositions = async (
   request: FastifyRequest<{ Querystring: BASE_MODEL_QUERY_TYPE }>,
@@ -50,6 +51,32 @@ export const getPositionJobs = async (
   const jobs = await jobRepository.findJobsBy(eq(jobsView.positionId, id))
 
   return reply.status(200).send(jobs)
+}
+
+export const getPositionJobsAvgSalary = async (
+  request: FastifyRequest<{
+    Params: GET_BY_ID_SCHEMA_TYPE
+    Querystring: JOBS_AVG_SALARY_QUERY_SCHEMA_TYPE
+  }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { currency, period } = request.query
+  const { positionRepository, jobRepository } = request.diScope.cradle
+
+  const position = await positionRepository.findOne(id)
+
+  if (!position) {
+    return reply.status(404).send({ message: 'Position with id is not found' })
+  }
+
+  const avg = await jobRepository.findAvgSalaryBy({
+    where: eq(jobs.positionId, id),
+    currency,
+    period,
+  })
+
+  return reply.status(200).send(avg)
 }
 
 export const createPosition = async (
