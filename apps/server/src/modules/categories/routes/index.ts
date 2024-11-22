@@ -4,6 +4,7 @@ import {
   deleteCategory,
   getCategories,
   getCategory,
+  getCategoryJobs,
   updateCategory,
 } from '../controllers/CategoryController.js'
 import { AppInstanse } from '@/types/index.js'
@@ -27,6 +28,14 @@ export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
       method: 'GET',
       url: '/categories/:id',
       handler: getCategory,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+      },
+    },
+    {
+      method: 'GET',
+      url: '/categories/:id/jobs',
+      handler: getCategoryJobs,
       schema: {
         params: GET_BY_ID_SCHEMA,
       },

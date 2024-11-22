@@ -6,8 +6,8 @@ import {
   jobsView,
 } from '@skill-swap/db'
 import { CREATE_JOB_SCHEMA_TYPE, Job } from '@skill-swap/shared'
-import { and, between, count, eq } from 'drizzle-orm'
-import { IJobRepository } from '../interfaces/index.js'
+import { SQL, and, between, count, eq, sql } from 'drizzle-orm'
+import { FindAvgSalaryArgs, IJobRepository } from '../interfaces/index.js'
 import { JobsInjectableDependencies } from '../types/index.js'
 
 export class JobRepository implements IJobRepository {
@@ -34,11 +34,35 @@ export class JobRepository implements IJobRepository {
     return job
   }
 
-  async findCompanyJobs(companyId: number): Promise<Job[]> {
+  async findJobsBy(where: SQL): Promise<Job[]> {
     return this.db
       .select()
       .from(jobsView)
-      .where(eq(jobsView.companyId, companyId)) as unknown as Job[]
+      .where(and(where, eq(jobsView.isActive, true))) as unknown as Job[]
+  }
+
+  async findAvgSalaryBy({
+    where,
+    currency,
+    period,
+  }: FindAvgSalaryArgs): Promise<{ avg: number } | null> {
+    const result = await this.db
+      .select({ avg: sql<number>`cast(${jobSalaries.amount} as int)` })
+      .from(jobs)
+      .leftJoin(jobSalaries, eq(jobs.id, jobSalaries.jobId))
+      .where(
+        and(
+          where,
+          eq(jobSalaries.currency, currency),
+          eq(jobSalaries.period, period),
+        ),
+      )
+
+    const avgSalary = result.at(0)
+
+    if (!avgSalary) return null
+
+    return avgSalary
   }
 
   async findLatestCount(companyId: number): Promise<{ count: number } | null> {

@@ -1,9 +1,11 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
+import { jobsView } from '@skill-swap/db'
 import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_CITY_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
 } from '@skill-swap/shared'
+import { eq } from 'drizzle-orm'
+import { FastifyReply, FastifyRequest } from 'fastify'
 
 export const getCities = async (
   request: FastifyRequest<{ Querystring: BASE_MODEL_QUERY_TYPE }>,
@@ -14,6 +16,24 @@ export const getCities = async (
   const cities = await cityRepository.findMany(request.query)
 
   reply.status(200).send(cities)
+}
+
+export const getCityJobs = async (
+  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { cityRepository, jobRepository } = request.diScope.cradle
+
+  const isExist = await cityRepository.findOne(id)
+
+  if (!isExist) {
+    return reply.status(404).send({ message: 'City with such id not found' })
+  }
+
+  const jobs = await jobRepository.findJobsBy(eq(jobsView.cityId, id))
+
+  return reply.status(200).send(jobs)
 }
 
 export const createCity = async (

@@ -4,6 +4,8 @@ import {
   CREATE_POSITION_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
 } from '@skill-swap/shared'
+import { eq } from 'drizzle-orm'
+import { jobsView } from '@skill-swap/db'
 
 export const getPositions = async (
   request: FastifyRequest<{ Querystring: BASE_MODEL_QUERY_TYPE }>,
@@ -30,6 +32,24 @@ export const getPosition = async (
   }
 
   return reply.status(200).send(position)
+}
+
+export const getPositionJobs = async (
+  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { positionRepository, jobRepository } = request.diScope.cradle
+
+  const position = await positionRepository.findOne(id)
+
+  if (!position) {
+    return reply.status(404).send({ message: 'Position with id is not found' })
+  }
+
+  const jobs = await jobRepository.findJobsBy(eq(jobsView.positionId, id))
+
+  return reply.status(200).send(jobs)
 }
 
 export const createPosition = async (

@@ -3,6 +3,7 @@ import {
   createCity,
   deleteCity,
   getCities,
+  getCityJobs,
   updateCity,
 } from '../controllers/CityController.js'
 import {
@@ -25,6 +26,14 @@ export const getCitiesRoutes = (app: AppInstanse): Routes => ({
         response: {
           200: CITY_MODEL.array(),
         },
+      },
+    },
+    {
+      method: 'GET',
+      url: '/cities/:id/jobs',
+      handler: getCityJobs,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
       },
     },
     {

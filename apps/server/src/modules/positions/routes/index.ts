@@ -3,6 +3,7 @@ import {
   createPosition,
   deletePosition,
   getPosition,
+  getPositionJobs,
   getPositions,
   updatePosition,
 } from '../controllers/PositionController.js'
@@ -27,6 +28,14 @@ export const getPositionsRoutes = (app: AppInstanse): Routes => ({
       method: 'GET',
       url: '/positions/:id',
       handler: getPosition,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+      },
+    },
+    {
+      method: 'GET',
+      url: '/positions/:id/jobs',
+      handler: getPositionJobs,
       schema: {
         params: GET_BY_ID_SCHEMA,
       },

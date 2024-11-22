@@ -1,8 +1,10 @@
+import { jobsView } from '@skill-swap/db'
 import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_CATEGORY_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
 } from '@skill-swap/shared'
+import { eq } from 'drizzle-orm'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export const getCategories = async (
@@ -32,6 +34,26 @@ export const getCategory = async (
   }
 
   return reply.status(200).send(category)
+}
+
+export const getCategoryJobs = async (
+  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { categoryRepository, jobRepository } = request.diScope.cradle
+
+  const isExist = await categoryRepository.findOne(id)
+
+  if (!isExist) {
+    return reply
+      .status(404)
+      .send({ message: 'Category with such id not found' })
+  }
+
+  const jobs = await jobRepository.findJobsBy(eq(jobsView.categoryId, id))
+
+  return reply.status(200).send(jobs)
 }
 
 export const createCategory = async (

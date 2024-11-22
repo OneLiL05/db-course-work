@@ -1,8 +1,10 @@
+import { jobsView } from '@skill-swap/db'
 import {
   CREATE_COMPANY_SCHEMA_TYPE,
   CREATE_JOB_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
 } from '@skill-swap/shared'
+import { eq } from 'drizzle-orm'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export const getCompanies = async (
@@ -45,7 +47,7 @@ export const getCompanyJobs = async (
     return reply.status(404).send({ message: 'Company with id is not found' })
   }
 
-  const jobs = await jobRepository.findCompanyJobs(id)
+  const jobs = await jobRepository.findJobsBy(eq(jobsView.companyId, id))
 
   return reply.status(200).send(jobs)
 }
