@@ -1,16 +1,17 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import {
+  BASE_MODEL_QUERY_TYPE,
   CREATE_POSITION_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
 } from '@skill-swap/shared'
 
 export const getPositions = async (
-  request: FastifyRequest,
+  request: FastifyRequest<{ Querystring: BASE_MODEL_QUERY_TYPE }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { positionRepository } = request.diScope.cradle
 
-  const positions = await positionRepository.findMany()
+  const positions = await positionRepository.findMany(request.query)
 
   return reply.status(200).send(positions)
 }

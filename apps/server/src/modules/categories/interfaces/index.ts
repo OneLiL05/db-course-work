@@ -1,8 +1,12 @@
-import { CREATE_CATEGORY_SCHEMA_TYPE, Category } from '@skill-swap/shared'
+import {
+  BASE_MODEL_QUERY_TYPE,
+  CREATE_CATEGORY_SCHEMA_TYPE,
+  Category,
+} from '@skill-swap/shared'
 
 interface ICategoryRepository {
   findOne: (id: number) => Promise<Category | null>
-  findMany: () => Promise<Category[]>
+  findMany: (query: BASE_MODEL_QUERY_TYPE) => Promise<Category[]>
   createOne: (data: CREATE_CATEGORY_SCHEMA_TYPE) => Promise<Category | null>
   updateOne: (
     id: number,

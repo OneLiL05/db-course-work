@@ -1,6 +1,10 @@
 import { DatabaseClient, categories } from '@skill-swap/db'
-import { CREATE_CATEGORY_SCHEMA_TYPE, Category } from '@skill-swap/shared'
-import { eq } from 'drizzle-orm'
+import {
+  BASE_MODEL_QUERY_TYPE,
+  CREATE_CATEGORY_SCHEMA_TYPE,
+  Category,
+} from '@skill-swap/shared'
+import { SQL, asc, desc, eq } from 'drizzle-orm'
 import { ICategoryRepository } from '../interfaces/index.js'
 import { CategoriesInjectableDependencies } from '../types/index.js'
 
@@ -24,8 +28,22 @@ export class CategoryRepository implements ICategoryRepository {
     return category
   }
 
-  async findMany(): Promise<Category[]> {
-    return this.db.select().from(categories)
+  async findMany(query: BASE_MODEL_QUERY_TYPE): Promise<Category[]> {
+    const { order, sortBy } = query
+
+    const expressions: SQL[] = []
+
+    if (sortBy && order) {
+      const expression =
+        order === 'asc' ? asc(categories[sortBy]) : desc(categories[sortBy])
+
+      expressions.push(expression)
+    }
+
+    return this.db
+      .select()
+      .from(categories)
+      .orderBy(...expressions)
   }
 
   async createOne({

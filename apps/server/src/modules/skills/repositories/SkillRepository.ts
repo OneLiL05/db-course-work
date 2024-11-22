@@ -1,6 +1,11 @@
 import { DatabaseClient, skillLevels, skills } from '@skill-swap/db'
-import { CREATE_SKILL_SCHEMA_TYPE, Skill, SkillLevel } from '@skill-swap/shared'
-import { asc, eq } from 'drizzle-orm'
+import {
+  BASE_MODEL_QUERY_TYPE,
+  CREATE_SKILL_SCHEMA_TYPE,
+  Skill,
+  SkillLevel,
+} from '@skill-swap/shared'
+import { SQL, asc, desc, eq } from 'drizzle-orm'
 import { ISkillRepository } from '../interfaces/index.js'
 import { SkillInjectableDependencies } from '../types/index.js'
 
@@ -11,8 +16,22 @@ export class SkillRepository implements ISkillRepository {
     this.db = db.client
   }
 
-  async findMany(): Promise<Skill[]> {
-    return this.db.select().from(skills)
+  async findMany(query: BASE_MODEL_QUERY_TYPE): Promise<Skill[]> {
+    const { order, sortBy } = query
+
+    const expressions: SQL[] = []
+
+    if (sortBy && order) {
+      const expression =
+        order === 'asc' ? asc(skills[sortBy]) : desc(skills[sortBy])
+
+      expressions.push(expression)
+    }
+
+    return this.db
+      .select()
+      .from(skills)
+      .orderBy(...expressions)
   }
 
   async findLevels(): Promise<SkillLevel[]> {

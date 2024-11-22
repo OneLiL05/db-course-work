@@ -1,9 +1,13 @@
+import { SqlClient } from '@/types/index.js'
+import { DatabaseClient, cities } from '@skill-swap/db'
+import {
+  BASE_MODEL_QUERY_TYPE,
+  CREATE_CITY_SCHEMA_TYPE,
+  City,
+} from '@skill-swap/shared'
+import { SQL, asc, desc, eq } from 'drizzle-orm'
 import { ICityRepository } from '../interfaces/index.js'
 import { CitiesInjectableDependencies } from '../types/index.js'
-import { SqlClient } from '@/types/index.js'
-import { CREATE_CITY_SCHEMA_TYPE, City } from '@skill-swap/shared'
-import { DatabaseClient, cities } from '@skill-swap/db'
-import { eq } from 'drizzle-orm'
 
 export class CityRepository implements ICityRepository {
   private readonly sql: SqlClient
@@ -24,8 +28,22 @@ export class CityRepository implements ICityRepository {
     return city
   }
 
-  async findMany(): Promise<City[]> {
-    return this.db.select().from(cities)
+  async findMany(query: BASE_MODEL_QUERY_TYPE): Promise<City[]> {
+    const { order, sortBy } = query
+
+    const expressions: SQL[] = []
+
+    if (sortBy && order) {
+      const expression =
+        order === 'asc' ? asc(cities[sortBy]) : desc(cities[sortBy])
+
+      expressions.push(expression)
+    }
+
+    return this.db
+      .select()
+      .from(cities)
+      .orderBy(...expressions)
   }
 
   async createOne({ name }: CREATE_CITY_SCHEMA_TYPE): Promise<City | null> {

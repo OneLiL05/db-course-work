@@ -1,11 +1,17 @@
-import { Position } from '@skill-swap/shared'
-import { CreatePosition } from '../schemas/index.js'
+import {
+  BASE_MODEL_QUERY_TYPE,
+  CREATE_POSITION_SCHEMA_TYPE,
+  Position,
+} from '@skill-swap/shared'
 
 interface IPositionRepository {
-  findMany: () => Promise<Position[]>
+  findMany: (query: BASE_MODEL_QUERY_TYPE) => Promise<Position[]>
   findOne: (id: number) => Promise<Position | null>
-  createOne: (data: CreatePosition) => Promise<Position | null>
-  updateOne: (id: number, data: CreatePosition) => Promise<Position | null>
+  createOne: (data: CREATE_POSITION_SCHEMA_TYPE) => Promise<Position | null>
+  updateOne: (
+    id: number,
+    data: CREATE_POSITION_SCHEMA_TYPE,
+  ) => Promise<Position | null>
   deleteOne: (id: number) => Promise<Position | null>
 }
 

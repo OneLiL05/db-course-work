@@ -1,4 +1,5 @@
 import {
+  BASE_MODEL_QUERY_TYPE,
   CREATE_SKILL_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
 } from '@skill-swap/shared'
@@ -6,12 +7,12 @@ import { FastifyReply } from 'fastify'
 import { FastifyRequest } from 'fastify/types/request.js'
 
 export const getSkills = async (
-  request: FastifyRequest,
+  request: FastifyRequest<{ Querystring: BASE_MODEL_QUERY_TYPE }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { skillRepository } = request.diScope.cradle
 
-  const skills = await skillRepository.findMany()
+  const skills = await skillRepository.findMany(request.query)
 
   return reply.status(200).send(skills)
 }

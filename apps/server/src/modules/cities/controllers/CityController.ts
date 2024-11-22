@@ -1,16 +1,17 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import {
+  BASE_MODEL_QUERY_TYPE,
   CREATE_CITY_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
 } from '@skill-swap/shared'
 
 export const getCities = async (
-  request: FastifyRequest,
+  request: FastifyRequest<{ Querystring: BASE_MODEL_QUERY_TYPE }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { cityRepository } = request.diScope.cradle
 
-  const cities = await cityRepository.findMany()
+  const cities = await cityRepository.findMany(request.query)
 
   reply.status(200).send(cities)
 }

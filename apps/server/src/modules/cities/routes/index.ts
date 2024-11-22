@@ -6,6 +6,7 @@ import {
   updateCity,
 } from '../controllers/CityController.js'
 import {
+  BASE_MODEL_QUERY,
   CITY_MODEL,
   CREATE_CITY_SCHEMA,
   GET_BY_ID_SCHEMA,
@@ -20,6 +21,7 @@ export const getCitiesRoutes = (app: AppInstanse): Routes => ({
       url: '/cities',
       handler: getCities,
       schema: {
+        querystring: BASE_MODEL_QUERY,
         response: {
           200: CITY_MODEL.array(),
         },

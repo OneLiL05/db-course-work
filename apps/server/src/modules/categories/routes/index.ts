@@ -7,7 +7,11 @@ import {
   updateCategory,
 } from '../controllers/CategoryController.js'
 import { AppInstanse } from '@/types/index.js'
-import { CREATE_CATEGORY_SCHEMA, GET_BY_ID_SCHEMA } from '@skill-swap/shared'
+import {
+  BASE_MODEL_QUERY,
+  CREATE_CATEGORY_SCHEMA,
+  GET_BY_ID_SCHEMA,
+} from '@skill-swap/shared'
 
 export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
   routes: [
@@ -15,6 +19,9 @@ export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
       method: 'GET',
       url: '/categories',
       handler: getCategories,
+      schema: {
+        querystring: BASE_MODEL_QUERY,
+      },
     },
     {
       method: 'GET',

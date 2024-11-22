@@ -7,7 +7,11 @@ import {
   updatePosition,
 } from '../controllers/PositionController.js'
 import { Routes } from '@/interfaces/index.js'
-import { CREATE_POSITION_SCHEMA, GET_BY_ID_SCHEMA } from '@skill-swap/shared'
+import {
+  BASE_MODEL_QUERY,
+  CREATE_POSITION_SCHEMA,
+  GET_BY_ID_SCHEMA,
+} from '@skill-swap/shared'
 
 export const getPositionsRoutes = (app: AppInstanse): Routes => ({
   routes: [
@@ -15,6 +19,9 @@ export const getPositionsRoutes = (app: AppInstanse): Routes => ({
       method: 'GET',
       url: '/positions',
       handler: getPositions,
+      schema: {
+        querystring: BASE_MODEL_QUERY,
+      },
     },
     {
       method: 'GET',

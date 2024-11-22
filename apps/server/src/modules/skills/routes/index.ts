@@ -7,7 +7,11 @@ import {
   getSkills,
   updateSkill,
 } from '../controllers/SkillController.js'
-import { CREATE_SKILL_SCHEMA, GET_BY_ID_SCHEMA } from '@skill-swap/shared'
+import {
+  BASE_MODEL_QUERY,
+  CREATE_SKILL_SCHEMA,
+  GET_BY_ID_SCHEMA,
+} from '@skill-swap/shared'
 import { AppInstanse } from '@/types/index.js'
 
 export const getSkillsRoutes = (app: AppInstanse): Routes => ({
@@ -16,6 +20,9 @@ export const getSkillsRoutes = (app: AppInstanse): Routes => ({
       method: 'GET',
       url: '/skills',
       handler: getSkills,
+      schema: {
+        querystring: BASE_MODEL_QUERY,
+      },
     },
     {
       method: 'GET',

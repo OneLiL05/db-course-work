@@ -1,16 +1,17 @@
 import {
+  BASE_MODEL_QUERY_TYPE,
   CREATE_CATEGORY_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
 } from '@skill-swap/shared'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export const getCategories = async (
-  request: FastifyRequest,
+  request: FastifyRequest<{ Querystring: BASE_MODEL_QUERY_TYPE }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { categoryRepository } = request.diScope.cradle
 
-  const categories = await categoryRepository.findMany()
+  const categories = await categoryRepository.findMany(request.query)
 
   reply.status(200).send(categories)
 }
