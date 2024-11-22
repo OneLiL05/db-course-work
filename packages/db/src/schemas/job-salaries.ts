@@ -11,7 +11,7 @@ export const jobSalaries = pgTable(
     id,
     amount: numeric({ precision: 10, scale: 4 }).notNull(),
     currency: varchar({ length: 3 }).notNull(),
-    period: varchar().notNull(),
+    period: varchar().notNull().default('monthly'),
     jobId: integer('job_id')
       .notNull()
       .references(() => jobs.id, { onDelete: 'restrict', onUpdate: 'cascade' }),

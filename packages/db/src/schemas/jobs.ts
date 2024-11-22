@@ -1,3 +1,4 @@
+import { eq, getTableColumns, relations } from 'drizzle-orm'
 import {
   boolean,
   integer,
@@ -6,17 +7,16 @@ import {
   text,
   varchar,
 } from 'drizzle-orm/pg-core'
-import { baseSchemaAttrs } from '../utils.js'
+import { baseSchemaAttrs, jsonAgg, jsonBuildObject } from '../utils.js'
 import { categories } from './categories.js'
 import { cities } from './city.js'
 import { companies } from './companies.js'
-import { positions } from './positions.js'
-import { getTableColumns, relations, sql, eq } from 'drizzle-orm'
+import { employees } from './employees.js'
 import { jobSalaries } from './job-salaries.js'
 import { jobSkills } from './job-skills.js'
-import { employees } from './employees.js'
-import { skills } from './skills.js'
+import { positions } from './positions.js'
 import { skillLevels } from './skill-levels.js'
+import { skills } from './skills.js'
 
 export const jobs = pgTable('jobs', {
   ...baseSchemaAttrs,
@@ -75,44 +75,36 @@ export const jobsRelations = relations(jobs, ({ one, many }) => ({
 }))
 
 export const jobsView = pgView('jobs_view').as((qb) => {
-  const {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    categoryId,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    cityId,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    companyId: cId,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    positionId,
-    ...rest
-  } = getTableColumns(jobs)
-
   return qb
     .select({
-      ...rest,
-      company:
-        sql`json_build_object('id', ${companies.id}, 'name', ${companies.name}, 'description', ${companies.description}, 'img', ${companies.img}, 'is_verified', ${companies.isVerified})`.as(
-          'company',
-        ),
-      city: sql`json_build_object('id', ${cities.id}, 'name', ${cities.name})`.as(
-        'city',
-      ),
-      category:
-        sql`json_build_object('id', ${categories.id}, 'name', ${categories.name})`.as(
-          'category',
-        ),
-      position:
-        sql`json_build_object('id', ${positions.id}, 'name', ${positions.name})`.as(
-          'position',
-        ),
-      salary:
-        sql`json_build_object('amount', ${jobSalaries.amount}, 'currency', ${jobSalaries.currency})`.as(
-          'salary',
-        ),
-      skills:
-        sql`json_agg(json_build_object('name', ${skills.name}, 'level', ${skillLevels.name}))`.as(
-          'skills',
-        ),
+      ...getTableColumns(jobs),
+      company: jsonBuildObject({
+        id: companies.id,
+        name: companies.name,
+        description: companies.description,
+        img: companies.img,
+        isVerified: companies.isVerified,
+      }).as('company'),
+      city: jsonBuildObject({
+        id: cities.id,
+        name: cities.name,
+      }).as('city'),
+      category: jsonBuildObject({
+        id: categories.id,
+        name: categories.name,
+      }).as('category'),
+      position: jsonBuildObject({
+        id: positions.id,
+        name: positions.name,
+      }).as('position'),
+      salary: jsonBuildObject({
+        amount: jobSalaries.amount,
+        currency: jobSalaries.currency,
+        period: jobSalaries.period,
+      }).as('salary'),
+      skills: jsonAgg(
+        jsonBuildObject({ name: skills.name, level: skillLevels.name }),
+      ).as('skills'),
     })
     .from(jobs)
     .leftJoin(companies, eq(jobs.companyId, companies.id))
@@ -127,6 +119,7 @@ export const jobsView = pgView('jobs_view').as((qb) => {
       jobs.id,
       jobSalaries.amount,
       jobSalaries.currency,
+      jobSalaries.period,
       companies.id,
       companies.name,
       companies.img,
