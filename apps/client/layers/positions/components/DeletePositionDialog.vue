@@ -38,7 +38,8 @@ const isDisabled = computed(
         <DialogTitle>Delete position</DialogTitle>
         <DialogDescription>
           To approve that you understand all risks connected with deletion of
-          the position. Please write position name to input.
+          the "{{ position.name }}" position. Please write position name to
+          input.
         </DialogDescription>
       </DialogHeader>
       <form @submit="onSubmit" class="space-y-3">

@@ -39,7 +39,8 @@ const isDisabled = computed(
         <DialogTitle>Delete category</DialogTitle>
         <DialogDescription>
           To approve that you understand all risks connected with deletion of
-          the city. Please write category name to input.
+          the "{{ category.name }}" category. Please write category name to
+          input.
         </DialogDescription>
       </DialogHeader>
       <form @submit="onSubmit" class="space-y-3">
