@@ -3,9 +3,11 @@ import { BASE_MODEL } from './common.js'
 import { CREATE_JOB_SKILL_SCHEMA } from './skill.js'
 
 const JOB_SALARY_SCHEMA = z.object({
-  amount: z.number().min(100),
+  amount: z.number().min(100).max(9999999999),
   currency: z.enum(['USD', 'UAH', 'EUR']),
-  period: z.enum(['one-time', 'weekly', 'monthly', 'yearly']),
+  period: z
+    .enum(['one-time', 'weekly', 'monthly', 'yearly'])
+    .default('monthly'),
 })
 
 const JOB_SKILL_SCHEMA = z.object({
@@ -45,9 +47,15 @@ const VIEWABLE_JOB_SCHEMA = BASE_MODEL.extend({
   company: BASE_MODEL.pick({ name: true, id: true }),
   category: BASE_MODEL.pick({ name: true, id: true }),
   position: BASE_MODEL.pick({ name: true, id: true }),
+  categoryId: z.coerce.number(),
+  positionId: z.coerce.number(),
+  companyId: z.coerce.number(),
+  cityId: z.coerce.number(),
 })
 
 type ViewableJob = z.infer<typeof VIEWABLE_JOB_SCHEMA>
+
+// const JOBS_QUERY_SCHEMA = JOB_SCHEMA.
 
 const CREATE_JOB_SCHEMA = JOB_SCHEMA.omit({
   companyId: true,
