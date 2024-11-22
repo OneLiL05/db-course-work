@@ -1,20 +1,19 @@
 import type { City } from '@skill-swap/shared'
+import { useQuery } from '@tanstack/vue-query'
+import { axiosClient } from '~/core/lib/axios'
 
 export const useCities = () => {
-  const store = useCitiesStore()
-  const config = useRuntimeConfig()
+  return useQuery({
+    queryKey: ['cities'],
+    queryFn: async () => {
+      const params = new URLSearchParams([
+        ['order', 'asc'],
+        ['sortBy', 'name'],
+      ])
 
-  return useAsyncData('cities', async () => {
-    if (store.cities.length) {
-      return store.cities
-    }
+      const result = await axiosClient.get<City[]>('/cities', { params })
 
-    const url = `${config.public.apiUrl}/cities`
-
-    const cities = await $fetch<City[]>(url)
-
-    store.cities = cities
-
-    return cities
+      return result.data
+    },
   })
 }

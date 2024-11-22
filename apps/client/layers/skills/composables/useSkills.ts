@@ -1,13 +1,19 @@
 import type { Skill } from '@skill-swap/shared'
+import { useQuery } from '@tanstack/vue-query'
+import { axiosClient } from '~/core/lib/axios'
 
 export const useSkills = () => {
-  const config = useRuntimeConfig()
+  return useQuery({
+    queryKey: ['skills'],
+    queryFn: async () => {
+      const params = new URLSearchParams([
+        ['order', 'asc'],
+        ['sortBy', 'name'],
+      ])
 
-  return useAsyncData('skills', async () => {
-    const url = `${config.public.apiUrl}/skills`
+      const result = await axiosClient.get<Skill[]>('/skills', { params })
 
-    const skills = await $fetch<Skill[]>(url)
-
-    return skills
+      return result.data
+    },
   })
 }

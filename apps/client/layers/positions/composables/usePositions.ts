@@ -1,21 +1,19 @@
 import type { Position } from '@skill-swap/shared'
+import { useQuery } from '@tanstack/vue-query'
+import { axiosClient } from '~/core/lib/axios'
 
 export const usePositions = () => {
-  const config = useRuntimeConfig()
+  return useQuery({
+    queryKey: ['positions'],
+    queryFn: async () => {
+      const params = new URLSearchParams([
+        ['order', 'asc'],
+        ['sortBy', 'name'],
+      ])
 
-  return useAsyncData('positions', async () => {
-    const store = usePositionsStore()
+      const result = await axiosClient.get<Position[]>('/positions', { params })
 
-    if (store.positions.length) {
-      return store.positions
-    }
-
-    const url = `${config.public.apiUrl}/positions`
-
-    const positions = await $fetch<Position[]>(url)
-
-    store.positions = positions
-
-    return positions
+      return result.data
+    },
   })
 }

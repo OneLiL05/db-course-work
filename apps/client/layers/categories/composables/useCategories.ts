@@ -1,13 +1,19 @@
 import type { Category } from '@skill-swap/shared'
+import { useQuery } from '@tanstack/vue-query'
+import { axiosClient } from '~/core/lib/axios'
 
 export const useCategories = () => {
-  const config = useRuntimeConfig()
+  return useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const params = new URLSearchParams([
+        ['order', 'asc'],
+        ['sortBy', 'name'],
+      ])
 
-  return useAsyncData('categories', async () => {
-    const url = `${config.public.apiUrl}/categories`
+      const result = await axiosClient.get<Category>('/categories', { params })
 
-    const categories = await $fetch<Category[]>(url)
-
-    return categories
+      return result.data
+    },
   })
 }
