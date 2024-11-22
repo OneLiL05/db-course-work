@@ -10,8 +10,8 @@ const BASE_MODEL = z.object({
 const ORDER_SCHEMA = z.enum(['asc', 'desc'])
 
 const BASE_MODEL_QUERY = z.object({
-  order: ORDER_SCHEMA,
-  sortBy: z.enum(['id', 'name']),
+  order: ORDER_SCHEMA.optional(),
+  sortBy: z.enum(['id', 'name']).optional(),
 })
 
 type BASE_MODEL_QUERY_TYPE = z.infer<typeof BASE_MODEL_QUERY>
