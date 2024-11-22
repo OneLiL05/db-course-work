@@ -4,7 +4,7 @@ import * as schema from './schemas/index.js'
 
 const queryClient = postgres(process.env.DATABASE_URL as string)
 
-const db = drizzle(queryClient, { schema })
+const db = drizzle(queryClient, { schema, logger: true })
 
 type DatabaseClient = PostgresJsDatabase<typeof schema>
 
