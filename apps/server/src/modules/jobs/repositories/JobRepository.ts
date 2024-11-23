@@ -22,16 +22,14 @@ export class JobRepository implements IJobRepository {
   }
 
   async findOne(id: number): Promise<Job | null> {
-    const result = this.db
+    const result = await this.db
       .select()
       .from(jobsView)
-      .where(eq(jobsView.id, id)) as unknown as Job[]
+      .where(eq(jobsView.id, id))
 
     const job = result.at(0)
 
-    if (!job) return null
-
-    return job
+    return job as Job
   }
 
   async findJobsBy(where: SQL): Promise<Job[]> {
