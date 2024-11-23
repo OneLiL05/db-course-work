@@ -6,7 +6,7 @@ import { cn } from '~/core/lib/utils'
 const props = defineProps<{
   modelValue?: string
   defaultValue?: string
-  skills: Skill[] | null
+  skills: Skill[] | undefined
 }>()
 
 const emits = defineEmits<{
@@ -40,7 +40,7 @@ const open = ref(false)
     </PopoverTrigger>
     <PopoverContent class="p-0 no-scrollbar" align="start">
       <Command>
-        <CommandInput class="h-9" placeholder="Search framework..." />
+        <CommandInput class="h-9" placeholder="Search skill..." />
         <CommandEmpty>No skill found.</CommandEmpty>
         <CommandList>
           <CommandGroup v-if="skills">

@@ -11,9 +11,17 @@ const id = useRouteParams('id')
 
 const { mutateAsync, isPending } = useCreateJob(Number(id.value))
 
+const { data: cities } = useCities()
+
 const { selectedSkills, addSkill, removeSkill } = useSelectedSkills()
 
-const { handleSubmit, values } = useForm({
+const cityName = ref('')
+
+const cityId = computed(() => {
+  return cities.value?.find((city) => city.name === cityName.value)?.id
+})
+
+const { handleSubmit, values, errors, setFieldError } = useForm({
   validationSchema: toTypedSchema(CREATE_JOB_SCHEMA),
   initialValues: {
     isCvRequired: false,
@@ -21,11 +29,16 @@ const { handleSubmit, values } = useForm({
     isRemote: false,
     areStudentsAllowed: false,
     skills: [],
+    cityId: cityId.value,
   },
 })
 
 const onSubmit = handleSubmit(async (data) => {
-  mutateAsync({ ...data, skills: selectedSkills.value })
+  if (selectedSkills.value.length) {
+    setFieldError('skills', `Skills field can't be empty`)
+  } else {
+    mutateAsync({ ...data, skills: selectedSkills.value })
+  }
 })
 
 const isDisabled = computed(() => {
@@ -66,9 +79,18 @@ const isDisabled = computed(() => {
       </FormField>
       <FormField v-slot="{ componentField }" name="salary.currency">
         <FormItem class="w-full" v-auto-animate>
-          <FormLabel>Category</FormLabel>
+          <FormLabel>Currency</FormLabel>
           <FormControl>
             <CurrencySelect v-bind="componentField" />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+      <FormField v-slot="{ componentField }" name="salary.period">
+        <FormItem class="w-full" v-auto-animate>
+          <FormLabel>Period</FormLabel>
+          <FormControl>
+            <PeriodSelect v-bind="componentField" />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -186,6 +208,9 @@ const isDisabled = computed(() => {
         @add="addSkill"
         @remove="removeSkill"
       />
+      <p v-if="errors.skills" class="text-sm font-medium text-destructive">
+        {{ errors.skills }}
+      </p>
     </div>
     <div class="inline-flex w-full gap-4">
       <NuxtLink
