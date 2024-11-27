@@ -9,7 +9,7 @@ const baseSchemaAttrs = {
   updatedAt: timestamp('updated_at', { withTimezone: true })
     .notNull()
     .defaultNow()
-    .$onUpdateFn(() => sql`now()`),
+    .$onUpdateFn(() => new Date()),
 }
 
 const jsonBuildObject = <T extends Record<string, PgColumn | SQL>>(
