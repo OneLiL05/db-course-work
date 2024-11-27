@@ -21,6 +21,7 @@ interface IJobRepository {
   findCompanyJobsCount: (companyId: number) => Promise<{ count: number } | null>
   findAvgSalaryBy: (args: FindAvgSalaryArgs) => Promise<AvgSalary | null>
   createOne: (companyId: number, data: CREATE_JOB_SCHEMA_TYPE) => Promise<void>
+  deleteOne: (id: number) => Promise<void>
 }
 
 interface JobsModuleDependencies {

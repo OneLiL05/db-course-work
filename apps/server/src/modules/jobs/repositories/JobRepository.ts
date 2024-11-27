@@ -131,41 +131,51 @@ export class JobRepository implements IJobRepository {
       skills,
     } = data
 
-    await this.db.transaction(async (tx) => {
-      const result = await tx
-        .insert(jobs)
-        .values({
-          name,
-          description,
-          isCvRequired,
-          isFulltime,
-          isRemote,
-          areStudentsAllowed,
-          companyId,
-          positionId,
-          categoryId,
-          cityId,
-          isActive: true,
-          isHidden: false,
+    await this.db.transaction(
+      async (tx) => {
+        const result = await tx
+          .insert(jobs)
+          .values({
+            name,
+            description,
+            isCvRequired,
+            isFulltime,
+            isRemote,
+            areStudentsAllowed,
+            companyId,
+            positionId,
+            categoryId,
+            cityId,
+          })
+          .returning()
+
+        const job = result.at(0)
+
+        if (!job) return null
+
+        await tx.insert(jobSalaries).values({
+          jobId: job.id,
+          amount: salary.amount.toString(),
+          currency: salary.currency,
+          period: salary.period,
         })
-        .returning()
 
-      const job = result.at(0)
+        const mappedSkills = skills.map(({ skillId, skillLevelId }) => {
+          return { jobId: job.id, skillId, skillLevelId }
+        })
 
-      if (!job) return null
+        await tx.insert(jobSkills).values(mappedSkills)
+      },
+      {
+        isolationLevel: 'serializable',
+      },
+    )
+  }
 
-      await tx.insert(jobSalaries).values({
-        jobId: job.id,
-        amount: salary.amount.toString(),
-        currency: salary.currency,
-        period: salary.period,
-      })
-
-      const mappedSkills = skills.map(({ skillId, skillLevelId }) => {
-        return { jobId: job.id, skillId, skillLevelId }
-      })
-
-      await tx.insert(jobSkills).values(mappedSkills)
-    })
+  async deleteOne(id: number): Promise<void> {
+    await this.db
+      .update(jobs)
+      .set({ isHidden: true, isActive: false })
+      .where(eq(jobs.id, id))
   }
 }

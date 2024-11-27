@@ -27,3 +27,30 @@ export const getJob = async (
 
   return reply.status(200).send(job)
 }
+
+export const deleteJob = async (
+  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { jobRepository, companyRepository } = request.diScope.cradle
+
+  const isExist = await jobRepository.findOne(id)
+
+  if (!isExist) {
+    return reply.status(404).send({ message: 'Job with such id not found' })
+  }
+
+  const isOwner = await companyRepository.isOwner(
+    isExist.companyId,
+    request.user,
+  )
+
+  if (!isOwner || !request.user.roles.includes('admin')) {
+    return reply.status(401).send({ message: 'Access denied' })
+  }
+
+  await jobRepository.deleteOne(id)
+
+  return reply.status(204)
+}
