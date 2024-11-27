@@ -1,9 +1,20 @@
-import { DatabaseClient, companies, companyAdmins } from '@skill-swap/db'
+import { SqlClient } from '@/types/index.js'
+import {
+  DatabaseClient,
+  companies,
+  companyAdmins,
+  companyRoles,
+  users,
+} from '@skill-swap/db'
+import {
+  CREATE_COMPANY_SCHEMA_TYPE,
+  Company,
+  CompanyAdmin,
+  JwtPayload,
+} from '@skill-swap/shared'
+import { and, eq, getTableColumns } from 'drizzle-orm'
 import { ICompanyRepository } from '../interfaces/index.js'
 import { CompaniesInjectableDependencies } from '../types/index.js'
-import { SqlClient } from '@/types/index.js'
-import { CREATE_COMPANY_SCHEMA_TYPE, Company } from '@skill-swap/shared'
-import { eq, and, getTableColumns } from 'drizzle-orm'
 
 export class CompanyRepository implements ICompanyRepository {
   private readonly sql: SqlClient
@@ -29,6 +40,22 @@ export class CompanyRepository implements ICompanyRepository {
 
   async findMany(): Promise<Company[]> {
     return this.db.select().from(companies)
+  }
+
+  async findAdmins(id: number): Promise<CompanyAdmin[]> {
+    return this.db
+      .select({
+        id: companyAdmins.id,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        email: users.email,
+        role: companyRoles.name,
+      })
+      .from(companies)
+      .leftJoin(companyAdmins, eq(companyAdmins.companyId, companies.id))
+      .leftJoin(companyRoles, eq(companyAdmins.roleId, companyRoles.id))
+      .leftJoin(users, eq(companyAdmins.userId, users.id))
+      .where(eq(companies.id, id)) as unknown as CompanyAdmin[]
   }
 
   async findUserCompanies(userId: number): Promise<Company[]> {
@@ -94,5 +121,22 @@ export class CompanyRepository implements ICompanyRepository {
     if (!company) return null
 
     return company
+  }
+
+  async isOwner(id: number, user: JwtPayload): Promise<boolean> {
+    const result = await this.db
+      .select({ role: companyRoles.name })
+      .from(companies)
+      .leftJoin(companyAdmins, eq(companies.id, companyAdmins.companyId))
+      .leftJoin(companyRoles, eq(companyAdmins.roleId, companyRoles.id))
+      .where(
+        and(
+          eq(companies.id, id),
+          eq(companyAdmins.userId, user.id),
+          eq(companyRoles.name, 'owner'),
+        ),
+      )
+
+    return result.at(0) ? true : false
   }
 }

@@ -2,13 +2,14 @@ import {
   CREATE_COMPANY_ADMIN_SCHEMA_TYPE,
   CREATE_COMPANY_SCHEMA_TYPE,
   Company,
+  CompanyAdmin,
   JwtPayload,
 } from '@skill-swap/shared'
 
 interface ICompanyRepository {
   findMany: () => Promise<Company[]>
   findOne: (id: number) => Promise<Company | null>
-  findAdmins: (id: number) => Promise<unknown[]>
+  findAdmins: (id: number) => Promise<CompanyAdmin[]>
   createOne: (data: CREATE_COMPANY_SCHEMA_TYPE) => Promise<Company | null>
   updateOne: (
     id: number,
