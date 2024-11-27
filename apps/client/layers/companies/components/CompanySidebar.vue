@@ -45,6 +45,12 @@ const links = [
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton asChild>
+            <NuxtLink :to="`/companies/${id}/settings/edit`">
+              <Icon class="text-muted-foreground" name="lucide:settings" />
+              Settings
+            </NuxtLink>
+          </SidebarMenuButton>
+          <SidebarMenuButton asChild>
             <NuxtLink to="/">
               <Icon class="text-muted-foreground" name="lucide:arrow-left" />
               Back to website
