@@ -88,6 +88,24 @@ export const getCompanyLatestJobsCount = async (
   return reply.status(200).send(count)
 }
 
+export const getCompanyAdmins = async (
+  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { companyRepository } = request.diScope.cradle
+
+  const isExist = await companyRepository.findOne(id)
+
+  if (!isExist) {
+    return reply.status(404).send({ message: 'Company with id is not found' })
+  }
+
+  const admins = await companyRepository.findAdmins(id)
+
+  return reply.status(200).send(admins)
+}
+
 export const createCompany = async (
   request: FastifyRequest<{ Body: CREATE_COMPANY_SCHEMA_TYPE }>,
   reply: FastifyReply,

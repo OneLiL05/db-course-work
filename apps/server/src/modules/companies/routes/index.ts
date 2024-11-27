@@ -11,6 +11,7 @@ import {
   deleteCompany,
   getCompanies,
   getCompany,
+  getCompanyAdmins,
   getCompanyJobs,
   getCompanyJobsCount,
   getCompanyLatestJobsCount,
@@ -52,6 +53,14 @@ export const getCompaniesRoutes = (app: AppInstanse): Routes => ({
       method: 'GET',
       url: '/companies/:id/jobs/latest/count',
       handler: getCompanyLatestJobsCount,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+      },
+    },
+    {
+      method: 'GET',
+      url: '/companies/:id/admins',
+      handler: getCompanyAdmins,
       schema: {
         params: GET_BY_ID_SCHEMA,
       },

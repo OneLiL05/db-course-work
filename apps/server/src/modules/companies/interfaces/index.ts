@@ -8,6 +8,7 @@ import {
 interface ICompanyRepository {
   findMany: () => Promise<Company[]>
   findOne: (id: number) => Promise<Company | null>
+  findAdmins: (id: number) => Promise<unknown[]>
   createOne: (data: CREATE_COMPANY_SCHEMA_TYPE) => Promise<Company | null>
   updateOne: (
     id: number,
