@@ -2,6 +2,7 @@ import {
   CREATE_COMPANY_ADMIN_SCHEMA_TYPE,
   CREATE_COMPANY_SCHEMA_TYPE,
   Company,
+  JwtPayload,
 } from '@skill-swap/shared'
 
 interface ICompanyRepository {
@@ -14,6 +15,7 @@ interface ICompanyRepository {
   ) => Promise<Company | null>
   deleteOne: (id: number) => Promise<Company | null>
   findUserCompanies: (userId: number) => Promise<Company[]>
+  isOwner: (id: number, user: JwtPayload) => Promise<boolean>
 }
 
 interface ICompanyAdminRepository {

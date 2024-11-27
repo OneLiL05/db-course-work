@@ -8,6 +8,7 @@ import {
 import {
   createCompany,
   createCompanyJob,
+  deleteCompany,
   getCompanies,
   getCompany,
   getCompanyJobs,
@@ -72,7 +73,7 @@ export const getCompaniesRoutes = (app: AppInstanse): Routes => ({
         params: GET_BY_ID_SCHEMA,
         body: CREATE_JOB_SCHEMA,
       },
-      preHandler: [app.authentificate, app.isEmployer],
+      preHandler: [app.authentificate],
     },
     {
       method: 'PUT',
@@ -82,7 +83,16 @@ export const getCompaniesRoutes = (app: AppInstanse): Routes => ({
         params: GET_BY_ID_SCHEMA,
         body: CREATE_COMPANY_SCHEMA,
       },
-      preHandler: [app.authentificate, app.isAdmin],
+      preHandler: [app.authentificate, app.nonUser],
+    },
+    {
+      method: 'DELETE',
+      url: '/companies/:id',
+      handler: deleteCompany,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+      },
+      preHandler: [app.authentificate, app.nonUser],
     },
   ],
 })

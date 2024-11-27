@@ -146,6 +146,12 @@ export const updateCompany = async (
     return reply.status(404).send({ message: 'Company with such id not found' })
   }
 
+  const isOwner = await companyRepository.isOwner(id, request.user)
+
+  if (!isOwner) {
+    return reply.status(401).send({ message: 'Access denied' })
+  }
+
   const company = await companyRepository.updateOne(id, request.body)
 
   if (!company) {
