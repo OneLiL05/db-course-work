@@ -6,6 +6,12 @@ const CITY_MODEL = BASE_MODEL
 
 type City = z.infer<typeof CITY_MODEL>
 
+const CITY_MODEL_WITH_COUNT = CITY_MODEL.extend({
+  count: z.number(),
+})
+
+type CityWithCount = z.infer<typeof CITY_MODEL_WITH_COUNT>
+
 const CREATE_CITY_SCHEMA = z.object({
   name: z.string({ required_error: 'City name is required' }).min(4).max(128),
 })
@@ -19,5 +25,15 @@ const UPDATE_CITY_SCHEMA = z.object({
 
 type UPDATE_CITY_SCHEMA_TYPE = z.infer<typeof UPDATE_CITY_SCHEMA>
 
-export { CITY_MODEL, CREATE_CITY_SCHEMA, UPDATE_CITY_SCHEMA }
-export type { City, CREATE_CITY_SCHEMA_TYPE, UPDATE_CITY_SCHEMA_TYPE }
+export {
+  CITY_MODEL,
+  CREATE_CITY_SCHEMA,
+  UPDATE_CITY_SCHEMA,
+  CITY_MODEL_WITH_COUNT,
+}
+export type {
+  City,
+  CREATE_CITY_SCHEMA_TYPE,
+  UPDATE_CITY_SCHEMA_TYPE,
+  CityWithCount,
+}
