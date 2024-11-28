@@ -52,5 +52,5 @@ export const deleteJob = async (
 
   await jobRepository.deleteOne(id)
 
-  return reply.status(204)
+  return reply.status(200).send(null)
 }
