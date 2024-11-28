@@ -24,7 +24,9 @@ defineProps<{ job: ViewableJob }>()
         </NuxtLink>
       </DropdownMenuItem>
       <DropdownMenuItem>Edit</DropdownMenuItem>
-      <DropdownMenuItem>Delete</DropdownMenuItem>
+      <DropdownMenuItem as-child>
+        <DeleteJobDialog :job />
+      </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>
