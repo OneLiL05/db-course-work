@@ -25,13 +25,15 @@ export const getCompany = async (
   const { id } = request.params
   const { companyRepository } = request.diScope.cradle
 
-  const company = await companyRepository.findOne(id)
+  const result = await companyRepository.findOne(id)
 
-  if (!company) {
-    return reply.status(404).send({ message: 'Company with id is not found' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(200).send(company)
+  return reply.status(200).send(result.value)
 }
 
 export const getCompanyJobs = async (
@@ -43,8 +45,10 @@ export const getCompanyJobs = async (
 
   const isExist = await companyRepository.findOne(id)
 
-  if (!isExist) {
-    return reply.status(404).send({ message: 'Company with id is not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const jobs = await jobRepository.findJobsBy(eq(jobsView.companyId, id))
@@ -61,8 +65,10 @@ export const getCompanyJobsCount = async (
 
   const isExist = await companyRepository.findOne(id)
 
-  if (!isExist) {
-    return reply.status(404).send({ message: 'Company with id is not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const count = await jobRepository.findCompanyJobsCount(id)
@@ -79,8 +85,10 @@ export const getCompanyLatestJobsCount = async (
 
   const isExist = await companyRepository.findOne(id)
 
-  if (!isExist) {
-    return reply.status(404).send({ message: 'Company with id is not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const count = await jobRepository.findLatestCount(id)
@@ -97,8 +105,10 @@ export const getCompanyAdmins = async (
 
   const isExist = await companyRepository.findOne(id)
 
-  if (!isExist) {
-    return reply.status(404).send({ message: 'Company with id is not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const admins = await companyRepository.findAdmins(id)
@@ -113,18 +123,23 @@ export const createCompany = async (
   const { companyRepository, companyAdminRepository } = request.diScope.cradle
   const user = request.user
 
-  const company = await companyRepository.createOne(request.body)
+  const result = await companyRepository.createOne(request.body)
 
-  if (!company) {
-    return reply.status(500).send({ message: 'Company creation failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  await companyAdminRepository.createOne(company.id, {
+  const { id } = result.value
+
+  // TODO: Move to the transaction
+  await companyAdminRepository.createOne(id, {
     userId: user.id,
     role: 'owner',
   })
 
-  return reply.status(201).send(company)
+  return reply.status(201).send(result.value)
 }
 
 export const createCompanyJob = async (
@@ -158,10 +173,12 @@ export const updateCompany = async (
   const { id } = request.params
   const { companyRepository } = request.diScope.cradle
 
-  const isExists = await companyRepository.findOne(id)
+  const isExist = await companyRepository.findOne(id)
 
-  if (!isExists) {
-    return reply.status(404).send({ message: 'Company with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const isOwner = await companyRepository.isOwner(id, request.user)
@@ -170,13 +187,15 @@ export const updateCompany = async (
     return reply.status(401).send({ message: 'Access denied' })
   }
 
-  const company = await companyRepository.updateOne(id, request.body)
+  const result = await companyRepository.updateOne(id, request.body)
 
-  if (!company) {
-    return reply.status(500).send({ message: 'Company update failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(200).send(company)
+  return reply.status(200).send(result.value)
 }
 
 export const deleteCompany = async (
@@ -188,17 +207,15 @@ export const deleteCompany = async (
   const { id } = request.params
   const { companyRepository } = request.diScope.cradle
 
-  const isExists = await companyRepository.findOne(id)
+  const isExist = await companyRepository.findOne(id)
 
-  if (!isExists) {
-    return reply.status(404).send({ message: 'Company with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const company = await companyRepository.deleteOne(id)
-
-  if (!company) {
-    return reply.status(500).send({ message: 'Company deletion failed' })
-  }
 
   return reply.status(200).send(company)
 }

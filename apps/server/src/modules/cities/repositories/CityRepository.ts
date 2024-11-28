@@ -9,6 +9,9 @@ import {
 import { SQL, asc, count, desc, eq, getTableColumns } from 'drizzle-orm'
 import { ICityRepository } from '../interfaces/index.js'
 import { CitiesInjectableDependencies } from '../types/index.js'
+import { Failure, Result, Success } from '@/utils/result.js'
+import { HttpError } from '@/interfaces/common.js'
+import postgres from 'postgres'
 
 export class CityRepository implements ICityRepository {
   private readonly sql: SqlClient
@@ -19,14 +22,19 @@ export class CityRepository implements ICityRepository {
     this.db = db.client
   }
 
-  async findOne(id: number): Promise<City | null> {
+  async findOne(id: number): Promise<Result<City, HttpError>> {
     const result = await this.db.select().from(cities).where(eq(cities.id, id))
 
     const city = result.at(0)
 
-    if (!city) return null
+    if (!city) {
+      return Failure<HttpError>({
+        status: 404,
+        message: 'City with such id not found',
+      })
+    }
 
-    return city
+    return Success(city)
   }
 
   async findMany(query: BASE_MODEL_QUERY_TYPE): Promise<City[]> {
@@ -70,43 +78,81 @@ export class CityRepository implements ICityRepository {
       .groupBy(cities.id)
   }
 
-  async createOne({ name }: CREATE_CITY_SCHEMA_TYPE): Promise<City | null> {
-    const result = await this.db.insert(cities).values({ name }).returning()
+  async createOne({
+    name,
+  }: CREATE_CITY_SCHEMA_TYPE): Promise<Result<City, HttpError>> {
+    try {
+      const result = await this.db.insert(cities).values({ name }).returning()
 
-    const city = result.at(0)
+      const city = result.at(0) as City
 
-    if (!city) return null
+      return Success(city)
+    } catch (e: unknown) {
+      if (e instanceof postgres.PostgresError && e.code === '23505') {
+        return Failure<HttpError>({
+          status: 400,
+          message: 'This name is already in use',
+        })
+      }
 
-    return city
+      return Failure<HttpError>({
+        status: 500,
+        message: 'An unexpected error occured',
+      })
+    }
   }
 
   async updateOne(
     id: number,
     { name }: CREATE_CITY_SCHEMA_TYPE,
-  ): Promise<City | null> {
-    const result = await this.db
-      .update(cities)
-      .set({ name })
-      .where(eq(cities.id, id))
-      .returning()
+  ): Promise<Result<City, HttpError>> {
+    try {
+      const result = await this.db
+        .update(cities)
+        .set({ name })
+        .where(eq(cities.id, id))
+        .returning()
 
-    const city = result.at(0)
+      const city = result.at(0) as City
 
-    if (!city) return null
+      return Success(city)
+    } catch (e: unknown) {
+      if (e instanceof postgres.PostgresError && e.code === '23505') {
+        return Failure<HttpError>({
+          status: 400,
+          message: 'This name is already in use',
+        })
+      }
 
-    return city
+      return Failure<HttpError>({
+        status: 500,
+        message: 'An unexpected error occured',
+      })
+    }
   }
 
-  async deleteOne(id: number): Promise<City | null> {
-    const result = await this.db
-      .delete(cities)
-      .where(eq(cities.id, id))
-      .returning()
+  async deleteOne(id: number): Promise<Result<City, HttpError>> {
+    try {
+      const result = await this.db
+        .delete(cities)
+        .where(eq(cities.id, id))
+        .returning()
 
-    const city = result.at(0)
+      const city = result.at(0) as City
 
-    if (!city) return null
+      return Success(city)
+    } catch (e: unknown) {
+      if (e instanceof postgres.PostgresError && e.code === '23503') {
+        return Failure<HttpError>({
+          status: 409,
+          message: 'Unable to delete the city',
+        })
+      }
 
-    return city
+      return Failure<HttpError>({
+        status: 500,
+        message: 'An unexpected error occured',
+      })
+    }
   }
 }

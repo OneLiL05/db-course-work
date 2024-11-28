@@ -1,3 +1,5 @@
+import { HttpError } from '@/interfaces/common.js'
+import { Result } from '@/utils/result.js'
 import {
   CREATE_JOB_SCHEMA_TYPE,
   Job,
@@ -15,7 +17,7 @@ interface FindAvgSalaryArgs {
 
 interface IJobRepository {
   findMany: () => Promise<Job[]>
-  findOne: (id: number) => Promise<Job | null>
+  findOne: (id: number) => Promise<Result<Job, HttpError>>
   findLatestCount: (companyId: number) => Promise<{ count: number } | null>
   findJobsBy: (where: SQL) => Promise<Job[]>
   findCompanyJobsCount: (companyId: number) => Promise<{ count: number } | null>

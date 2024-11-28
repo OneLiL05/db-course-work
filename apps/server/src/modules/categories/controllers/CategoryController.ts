@@ -26,15 +26,15 @@ export const getCategory = async (
   const { id } = request.params
   const { categoryRepository } = request.diScope.cradle
 
-  const category = await categoryRepository.findOne(id)
+  const result = await categoryRepository.findOne(id)
 
-  if (!category) {
-    return reply
-      .status(404)
-      .send({ message: 'Category with such id not found' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(200).send(category)
+  return reply.status(200).send(result.value)
 }
 
 export const getCategoryJobs = async (
@@ -46,10 +46,10 @@ export const getCategoryJobs = async (
 
   const isExist = await categoryRepository.findOne(id)
 
-  if (!isExist) {
-    return reply
-      .status(404)
-      .send({ message: 'Category with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const jobs = await jobRepository.findJobsBy(eq(jobsView.categoryId, id))
@@ -70,10 +70,10 @@ export const getCategoryJobsAvgSalary = async (
 
   const isExist = await categoryRepository.findOne(id)
 
-  if (!isExist) {
-    return reply
-      .status(404)
-      .send({ message: 'Category with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const avg = await jobRepository.findAvgSalaryBy({
@@ -91,13 +91,15 @@ export const createCategory = async (
 ): Promise<void> => {
   const { categoryRepository } = request.diScope.cradle
 
-  const category = await categoryRepository.createOne(request.body)
+  const result = await categoryRepository.createOne(request.body)
 
-  if (!category) {
-    return reply.status(500).send({ message: 'Category creation failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(201).send(category)
+  return reply.status(201).send(result.value)
 }
 
 export const updateCategory = async (
@@ -112,19 +114,21 @@ export const updateCategory = async (
 
   const isExist = await categoryRepository.findOne(id)
 
-  if (!isExist) {
-    return reply
-      .status(404)
-      .send({ message: 'Category with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
-  const category = await categoryRepository.updateOne(id, request.body)
+  const result = await categoryRepository.updateOne(id, request.body)
 
-  if (!category) {
-    return reply.status(500).send({ message: 'Category update failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(200).send(category)
+  return reply.status(200).send(result.value)
 }
 
 export const deleteCategory = async (
@@ -136,17 +140,19 @@ export const deleteCategory = async (
 
   const isExist = await categoryRepository.findOne(id)
 
-  if (!isExist) {
-    return reply
-      .status(404)
-      .send({ message: 'Category with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
-  const category = await categoryRepository.deleteOne(id)
+  const result = await categoryRepository.deleteOne(id)
 
-  if (!category) {
-    return reply.status(500).send({ message: 'Category deletion failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(200).send(category)
+  return reply.status(200).send(result.value)
 }

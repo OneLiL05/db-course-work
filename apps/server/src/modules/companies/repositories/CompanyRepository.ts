@@ -1,4 +1,6 @@
+import { HttpError } from '@/interfaces/common.js'
 import { SqlClient } from '@/types/index.js'
+import { Failure, Result, Success } from '@/utils/result.js'
 import {
   DatabaseClient,
   companies,
@@ -13,6 +15,7 @@ import {
   JwtPayload,
 } from '@skill-swap/shared'
 import { and, eq, getTableColumns } from 'drizzle-orm'
+import postgres from 'postgres'
 import { ICompanyRepository } from '../interfaces/index.js'
 import { CompaniesInjectableDependencies } from '../types/index.js'
 
@@ -25,7 +28,7 @@ export class CompanyRepository implements ICompanyRepository {
     this.db = db.client
   }
 
-  async findOne(id: number): Promise<Company | null> {
+  async findOne(id: number): Promise<Result<Company, HttpError>> {
     const result = await this.db
       .select()
       .from(companies)
@@ -33,9 +36,14 @@ export class CompanyRepository implements ICompanyRepository {
 
     const company = result.at(0)
 
-    if (!company) return null
+    if (!company) {
+      return Failure<HttpError>({
+        status: 404,
+        message: 'Company with such id not found',
+      })
+    }
 
-    return company
+    return Success(company)
   }
 
   async findMany(): Promise<Company[]> {
@@ -77,48 +85,70 @@ export class CompanyRepository implements ICompanyRepository {
   async createOne({
     name,
     description,
-  }: CREATE_COMPANY_SCHEMA_TYPE): Promise<Company | null> {
-    const result = await this.db
-      .insert(companies)
-      .values({ name, description, isVerified: false, img: '/' })
-      .returning()
+  }: CREATE_COMPANY_SCHEMA_TYPE): Promise<Result<Company, HttpError>> {
+    try {
+      const result = await this.db
+        .insert(companies)
+        .values({ name, description, isVerified: false, img: '/' })
+        .returning()
 
-    const company = result.at(0)
+      const company = result.at(0) as Company
 
-    if (!company) return null
+      return Success(company)
+    } catch (e: unknown) {
+      if (e instanceof postgres.PostgresError && e.code === '23505') {
+        return Failure<HttpError>({
+          status: 400,
+          message: 'This name is already in use',
+        })
+      }
 
-    return company
+      return Failure<HttpError>({
+        status: 500,
+        message: 'An unexpected error occured',
+      })
+    }
   }
 
   async updateOne(
     id: number,
     data: CREATE_COMPANY_SCHEMA_TYPE,
-  ): Promise<Company | null> {
-    const { name, description } = data
+  ): Promise<Result<Company, HttpError>> {
+    try {
+      const { name, description } = data
 
-    const result = await this.db
-      .update(companies)
-      .set({ name, description })
-      .where(eq(companies.id, id))
-      .returning()
+      const result = await this.db
+        .update(companies)
+        .set({ name, description })
+        .where(eq(companies.id, id))
+        .returning()
 
-    const company = result.at(0)
+      const company = result.at(0) as Company
 
-    if (!company) return null
+      return Success(company)
+    } catch (e: unknown) {
+      if (e instanceof postgres.PostgresError && e.code === '23505') {
+        return Failure<HttpError>({
+          status: 400,
+          message: 'This name is already in use',
+        })
+      }
 
-    return company
+      return Failure<HttpError>({
+        status: 500,
+        message: 'An unexpected error occured',
+      })
+    }
   }
 
-  async deleteOne(id: number): Promise<Company | null> {
+  async deleteOne(id: number): Promise<Company> {
     const result = await this.db
       .update(companies)
       .set({ isDeleted: true })
       .where(eq(companies.id, id))
       .returning()
 
-    const company = result.at(0)
-
-    if (!company) return null
+    const company = result.at(0) as Company
 
     return company
   }

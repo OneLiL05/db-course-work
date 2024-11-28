@@ -9,6 +9,8 @@ import { CREATE_JOB_SCHEMA_TYPE, Job, AvgSalary } from '@skill-swap/shared'
 import { SQL, and, between, count, eq, sql } from 'drizzle-orm'
 import { FindAvgSalaryArgs, IJobRepository } from '../interfaces/index.js'
 import { JobsInjectableDependencies } from '../types/index.js'
+import { Failure, Result, Success } from '@/utils/result.js'
+import { HttpError } from '@/interfaces/common.js'
 
 export class JobRepository implements IJobRepository {
   private readonly db: DatabaseClient
@@ -21,15 +23,19 @@ export class JobRepository implements IJobRepository {
     return this.db.select().from(jobsView) as unknown as Job[]
   }
 
-  async findOne(id: number): Promise<Job | null> {
+  async findOne(id: number): Promise<Result<Job, HttpError>> {
     const result = await this.db
       .select()
       .from(jobsView)
       .where(eq(jobsView.id, id))
 
-    const job = result.at(0)
+    const job = result.at(0) as Job
 
-    return job as Job
+    if (!job) {
+      return Failure({ status: 404, message: 'Job with such id not found' })
+    }
+
+    return Success(job)
   }
 
   async findJobsBy(where: SQL): Promise<Job[]> {

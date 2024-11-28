@@ -26,13 +26,15 @@ export const getCity = async (
   const { id } = request.params
   const { cityRepository } = request.diScope.cradle
 
-  const city = await cityRepository.findOne(id)
+  const result = await cityRepository.findOne(id)
 
-  if (!city) {
-    return reply.status(404).send({ message: 'City with such id not found' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(200).send(city)
+  return reply.status(200).send(result.value)
 }
 
 export const getCitiesWithJobsCount = async (
@@ -57,8 +59,10 @@ export const getCityJobs = async (
 
   const isExist = await cityRepository.findOne(id)
 
-  if (!isExist) {
-    return reply.status(404).send({ message: 'City with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const jobs = await jobRepository.findJobsBy(eq(jobsView.cityId, id))
@@ -79,8 +83,10 @@ export const getCityJobsAvgSalary = async (
 
   const isExist = await cityRepository.findOne(id)
 
-  if (!isExist) {
-    return reply.status(404).send({ message: 'City with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const avg = await jobRepository.findAvgSalaryBy({
@@ -98,13 +104,15 @@ export const createCity = async (
 ): Promise<void> => {
   const { cityRepository } = request.diScope.cradle
 
-  const city = await cityRepository.createOne(request.body)
+  const result = await cityRepository.createOne(request.body)
 
-  if (!city) {
-    return reply.status(500).send({ message: 'City creation failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(201).send(city)
+  return reply.status(201).send(result.value)
 }
 
 export const deleteCity = async (
@@ -116,17 +124,21 @@ export const deleteCity = async (
 
   const isExist = await cityRepository.findOne(id)
 
-  if (!isExist) {
-    return reply.status(404).send({ message: 'City with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
-  const city = await cityRepository.deleteOne(id)
+  const result = await cityRepository.deleteOne(id)
 
-  if (!city) {
-    return reply.status(500).send({ message: 'City deletion failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.code(200).send(city)
+  return reply.code(200).send(result.value)
 }
 
 export const updateCity = async (
@@ -141,15 +153,19 @@ export const updateCity = async (
 
   const isExist = await cityRepository.findOne(id)
 
-  if (!isExist) {
-    return reply.status(404).send({ message: 'City with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
-  const city = await cityRepository.updateOne(id, request.body)
+  const result = await cityRepository.updateOne(id, request.body)
 
-  if (!city) {
-    return reply.status(500).send({ message: 'City update failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.code(200).send(city)
+  return reply.code(200).send(result.value)
 }

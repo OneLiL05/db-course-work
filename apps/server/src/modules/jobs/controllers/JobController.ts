@@ -19,13 +19,15 @@ export const getJob = async (
   const { id } = request.params
   const { jobRepository } = request.diScope.cradle
 
-  const job = await jobRepository.findOne(id)
+  const result = await jobRepository.findOne(id)
 
-  if (!job) {
-    return reply.status(404).send({ message: 'Job with such id not found' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(200).send(job)
+  return reply.status(200).send(result.value)
 }
 
 export const deleteJob = async (
@@ -37,14 +39,15 @@ export const deleteJob = async (
 
   const isExist = await jobRepository.findOne(id)
 
-  if (!isExist) {
-    return reply.status(404).send({ message: 'Job with such id not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
-  const isOwner = await companyRepository.isOwner(
-    isExist.companyId,
-    request.user,
-  )
+  const { companyId } = isExist.value
+
+  const isOwner = await companyRepository.isOwner(companyId, request.user)
 
   if (!isOwner || !request.user.roles.includes('admin')) {
     return reply.status(401).send({ message: 'Access denied' })

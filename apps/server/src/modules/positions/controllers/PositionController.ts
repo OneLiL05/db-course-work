@@ -26,13 +26,15 @@ export const getPosition = async (
   const { id } = request.params
   const { positionRepository } = request.diScope.cradle
 
-  const position = await positionRepository.findOne(id)
+  const result = await positionRepository.findOne(id)
 
-  if (!position) {
-    return reply.status(404).send({ message: 'Position with id is not found' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(200).send(position)
+  return reply.status(200).send(result.value)
 }
 
 export const getPositionJobs = async (
@@ -42,10 +44,12 @@ export const getPositionJobs = async (
   const { id } = request.params
   const { positionRepository, jobRepository } = request.diScope.cradle
 
-  const position = await positionRepository.findOne(id)
+  const isExist = await positionRepository.findOne(id)
 
-  if (!position) {
-    return reply.status(404).send({ message: 'Position with id is not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const jobs = await jobRepository.findJobsBy(eq(jobsView.positionId, id))
@@ -64,10 +68,12 @@ export const getPositionJobsAvgSalary = async (
   const { currency, period } = request.query
   const { positionRepository, jobRepository } = request.diScope.cradle
 
-  const position = await positionRepository.findOne(id)
+  const isExist = await positionRepository.findOne(id)
 
-  if (!position) {
-    return reply.status(404).send({ message: 'Position with id is not found' })
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
   }
 
   const avg = await jobRepository.findAvgSalaryBy({
@@ -85,13 +91,15 @@ export const createPosition = async (
 ): Promise<void> => {
   const { positionRepository } = request.diScope.cradle
 
-  const position = await positionRepository.createOne(request.body)
+  const result = await positionRepository.createOne(request.body)
 
-  if (!position) {
-    return reply.status(500).send({ message: 'Position creation failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(201).send(position)
+  return reply.status(201).send(result.value)
 }
 
 export const updatePosition = async (
@@ -106,19 +114,21 @@ export const updatePosition = async (
 
   const isExists = await positionRepository.findOne(id)
 
-  if (!isExists) {
-    return reply
-      .status(404)
-      .send({ message: 'Position with such id not found' })
+  if (!isExists.success) {
+    const { status, message } = isExists.error
+
+    return reply.status(status).send({ message })
   }
 
-  const position = await positionRepository.updateOne(id, request.body)
+  const result = await positionRepository.updateOne(id, request.body)
 
-  if (!position) {
-    return reply.status(500).send({ message: 'Position update failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(200).send(position)
+  return reply.status(200).send(result.value)
 }
 
 export const deletePosition = async (
@@ -132,17 +142,19 @@ export const deletePosition = async (
 
   const isExists = await positionRepository.findOne(id)
 
-  if (!isExists) {
-    return reply
-      .status(404)
-      .send({ message: 'Position with such id not found' })
+  if (!isExists.success) {
+    const { status, message } = isExists.error
+
+    return reply.status(status).send({ message })
   }
 
-  const position = await positionRepository.deleteOne(id)
+  const result = await positionRepository.deleteOne(id)
 
-  if (!position) {
-    return reply.status(500).send({ message: 'Position deletion failed' })
+  if (!result.success) {
+    const { status, message } = result.error
+
+    return reply.status(status).send({ message })
   }
 
-  return reply.status(200).send(position)
+  return reply.status(200).send(result.value)
 }

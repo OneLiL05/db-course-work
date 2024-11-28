@@ -1,3 +1,5 @@
+import { HttpError } from '@/interfaces/common.js'
+import { Result } from '@/utils/result.js'
 import {
   CREATE_COMPANY_ADMIN_SCHEMA_TYPE,
   CREATE_COMPANY_SCHEMA_TYPE,
@@ -8,14 +10,16 @@ import {
 
 interface ICompanyRepository {
   findMany: () => Promise<Company[]>
-  findOne: (id: number) => Promise<Company | null>
+  findOne: (id: number) => Promise<Result<Company, HttpError>>
   findAdmins: (id: number) => Promise<CompanyAdmin[]>
-  createOne: (data: CREATE_COMPANY_SCHEMA_TYPE) => Promise<Company | null>
+  createOne: (
+    data: CREATE_COMPANY_SCHEMA_TYPE,
+  ) => Promise<Result<Company, HttpError>>
   updateOne: (
     id: number,
     data: CREATE_COMPANY_SCHEMA_TYPE,
-  ) => Promise<Company | null>
-  deleteOne: (id: number) => Promise<Company | null>
+  ) => Promise<Result<Company, HttpError>>
+  deleteOne: (id: number) => Promise<Company>
   findUserCompanies: (userId: number) => Promise<Company[]>
   isOwner: (id: number, user: JwtPayload) => Promise<boolean>
 }
