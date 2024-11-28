@@ -9,11 +9,13 @@ import {
 
 const props = defineProps<{ skill: Skill }>()
 
-const { mutateAsync, status, isPending } = useDeleteSkill()
+const { mutateAsync, status, isPending, isError, error } = useDeleteSkill()
 
 const { handleSubmit, values, isSubmitting } = useForm({
   validationSchema: toTypedSchema(CREATE_SKILL_SCHEMA),
 })
+
+const formError = getFormError({ isError, error })
 
 const onSubmit = handleSubmit((data) => {
   mutateAsync({ id: props.skill.id, ...data })
@@ -57,6 +59,7 @@ const isDisabled = computed(
             <FormMessage />
           </FormItem>
         </FormField>
+        <p v-if="formError" class="text-destructive">{{ formError }}</p>
         <DialogFooter>
           <Button
             variant="destructive"

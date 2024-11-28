@@ -45,6 +45,7 @@ const formError = getFormError({ isError, error })
             <FormMessage />
           </FormItem>
         </FormField>
+        <p v-if="formError" class="text-destructive">{{ formError }}</p>
         <DialogFooter>
           <Button
             type="submit"

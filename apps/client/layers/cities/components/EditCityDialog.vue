@@ -9,7 +9,7 @@ import { vAutoAnimate } from '@formkit/auto-animate'
 
 const props = defineProps<{ city: City }>()
 
-const { mutateAsync, isPending, status } = useUpdateCity()
+const { mutateAsync, isPending, status, isError, error } = useUpdateCity()
 
 const name = ref(props.city.name)
 
@@ -19,6 +19,8 @@ const { handleSubmit, isSubmitting, values } = useForm({
     name: name.value,
   },
 })
+
+const formError = getFormError({ isError, error })
 
 const onSubmit = handleSubmit((data) => {
   mutateAsync({ id: props.city.id, ...data })
@@ -59,6 +61,7 @@ const isDisabled = computed(
             <FormMessage />
           </FormItem>
         </FormField>
+        <p v-if="formError" class="text-destructive">{{ formError }}</p>
         <DialogFooter>
           <Button
             type="submit"

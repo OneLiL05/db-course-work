@@ -10,11 +10,13 @@ import {
 
 const props = defineProps<{ category: Category }>()
 
-const { mutateAsync, status, isPending } = useDeleteCategory()
+const { mutateAsync, status, isPending, isError, error } = useDeleteCategory()
 
 const { handleSubmit, values, isSubmitting } = useForm({
   validationSchema: toTypedSchema(CREATE_CATEGORY_SCHEMA),
 })
+
+const formError = getFormError({ error, isError })
 
 const onSubmit = handleSubmit((data) => {
   mutateAsync({ id: props.category.id, ...data })
@@ -59,6 +61,7 @@ const isDisabled = computed(
             <FormMessage />
           </FormItem>
         </FormField>
+        <p v-if="formError" class="text-destructive">{{ formError }}</p>
         <DialogFooter>
           <Button
             variant="destructive"

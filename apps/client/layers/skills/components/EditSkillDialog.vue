@@ -9,7 +9,7 @@ import {
 
 const props = defineProps<{ skill: Skill }>()
 
-const { mutateAsync, isPending, status } = useUpdateSkill()
+const { mutateAsync, isPending, status, isError, error } = useUpdateSkill()
 
 const name = ref(props.skill.name)
 
@@ -19,6 +19,8 @@ const { handleSubmit, isSubmitting, values } = useForm({
     name: name.value,
   },
 })
+
+const formError = getFormError({ isError, error })
 
 const onSubmit = handleSubmit((data) => {
   mutateAsync({ id: props.skill.id, ...data })
@@ -58,6 +60,7 @@ const isDisabled = computed(
             <FormMessage />
           </FormItem>
         </FormField>
+        <p v-if="formError" class="text-destructive">{{ formError }}</p>
         <DialogFooter>
           <Button
             type="submit"

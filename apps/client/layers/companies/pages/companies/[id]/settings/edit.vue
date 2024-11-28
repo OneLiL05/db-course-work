@@ -13,12 +13,16 @@ const id = useRouteParams('id')
 
 const { data: company } = useCompany(Number(id.value))
 
-const { mutateAsync, isPending } = useUpdateCompany(Number(id.value))
+const { mutateAsync, isPending, isError, error } = useUpdateCompany(
+  Number(id.value),
+)
 
 const { handleSubmit, values } = useForm({
   validationSchema: toTypedSchema(CREATE_COMPANY_SCHEMA),
   initialValues: company.value,
 })
+
+const formError = getFormError({ error, isError })
 
 const isDisabled = computed(() => {
   return (
@@ -30,8 +34,6 @@ const isDisabled = computed(() => {
 })
 
 const onSubmit = handleSubmit(async (data) => {
-  console.log(data)
-
   mutateAsync(data)
 })
 </script>
@@ -67,6 +69,7 @@ const onSubmit = handleSubmit(async (data) => {
         <FormMessage />
       </FormItem>
     </FormField>
+    <p v-if="formError" class="text-destructive">{{ formError }}</p>
     <div class="inline-flex w-full mt-4 gap-4">
       <Button :disabled="isDisabled">
         {{ isPending ? 'Editing' : 'Edit' }}
