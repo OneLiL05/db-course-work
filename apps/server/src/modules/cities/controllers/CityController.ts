@@ -19,6 +19,35 @@ export const getCities = async (
   reply.status(200).send(cities)
 }
 
+export const getCity = async (
+  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { cityRepository } = request.diScope.cradle
+
+  const city = await cityRepository.findOne(id)
+
+  if (!city) {
+    return reply.status(404).send({ message: 'City with such id not found' })
+  }
+
+  return reply.status(200).send(city)
+}
+
+export const getCitiesWithJobsCount = async (
+  request: FastifyRequest<{ Querystring: BASE_MODEL_QUERY_TYPE }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { cityRepository } = request.diScope.cradle
+
+  const citiesWithJobsCount = await cityRepository.findManyWithJobsCount(
+    request.query,
+  )
+
+  return reply.status(200).send(citiesWithJobsCount)
+}
+
 export const getCityJobs = async (
   request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
   reply: FastifyReply,

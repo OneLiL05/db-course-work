@@ -3,6 +3,8 @@ import {
   createCity,
   deleteCity,
   getCities,
+  getCitiesWithJobsCount,
+  getCity,
   getCityJobs,
   getCityJobsAvgSalary,
   updateCity,
@@ -10,6 +12,7 @@ import {
 import {
   BASE_MODEL_QUERY,
   CITY_MODEL,
+  CITY_MODEL_WITH_COUNT,
   CREATE_CITY_SCHEMA,
   GET_BY_ID_SCHEMA,
   JOBS_AVG_SALARY_QUERY_SCHEMA,
@@ -27,6 +30,28 @@ export const getCitiesRoutes = (app: AppInstanse): Routes => ({
         querystring: BASE_MODEL_QUERY,
         response: {
           200: CITY_MODEL.array(),
+        },
+      },
+    },
+    {
+      method: 'GET',
+      url: '/cities/:id',
+      handler: getCity,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+        response: {
+          200: CITY_MODEL,
+        },
+      },
+    },
+    {
+      method: 'GET',
+      url: '/cities/jobs/count',
+      handler: getCitiesWithJobsCount,
+      schema: {
+        querystring: BASE_MODEL_QUERY,
+        response: {
+          200: CITY_MODEL_WITH_COUNT.array(),
         },
       },
     },
