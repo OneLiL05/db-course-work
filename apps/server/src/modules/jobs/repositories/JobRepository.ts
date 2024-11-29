@@ -11,7 +11,7 @@ import {
   AvgSalary,
   UPDATE_JOB_SCHEMA_TYPE,
 } from '@skill-swap/shared'
-import { SQL, and, between, count, eq, sql } from 'drizzle-orm'
+import { SQL, and, between, count, eq, inArray, sql } from 'drizzle-orm'
 import { FindAvgSalaryArgs, IJobRepository } from '../interfaces/index.js'
 import { JobsInjectableDependencies } from '../types/index.js'
 import { Failure, Result, Success } from '@/utils/result.js'
@@ -47,7 +47,7 @@ export class JobRepository implements IJobRepository {
     return this.db
       .select()
       .from(jobsView)
-      .where(and(where, eq(jobsView.isActive, true))) as unknown as Job[]
+      .where(and(where, eq(jobsView.isHidden, false))) as unknown as Job[]
   }
 
   async findAvgSalaryBy({
@@ -203,9 +203,7 @@ export class JobRepository implements IJobRepository {
       if (removeSkills.length) {
         const mappedSkills = removeSkills.map(({ id }) => id)
 
-        await tx
-          .delete(jobSkills)
-          .where(sql`${jobSkills.id} in (${sql.join(mappedSkills)})`)
+        await tx.delete(jobSkills).where(inArray(jobSkills.id, mappedSkills))
       }
     })
   }
