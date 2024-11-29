@@ -103,7 +103,13 @@ export const jobsView = pgView('jobs_view').as((qb) => {
         period: jobSalaries.period,
       }).as('salary'),
       skills: jsonAgg(
-        jsonBuildObject({ name: skills.name, level: skillLevels.name }),
+        jsonBuildObject({
+          id: jobSkills.id,
+          name: skills.name,
+          skillId: skills.id,
+          level: skillLevels.name,
+          skillLevelId: skillLevels.id,
+        }),
       ).as('skills'),
     })
     .from(jobs)
@@ -112,7 +118,7 @@ export const jobsView = pgView('jobs_view').as((qb) => {
     .leftJoin(cities, eq(jobs.cityId, cities.id))
     .leftJoin(categories, eq(jobs.categoryId, categories.id))
     .leftJoin(jobSalaries, eq(jobs.id, jobSalaries.jobId))
-    .leftJoin(jobSkills, eq(jobs.id, jobSkills.id))
+    .leftJoin(jobSkills, eq(jobs.id, jobSkills.jobId))
     .leftJoin(skills, eq(jobSkills.skillId, skills.id))
     .leftJoin(skillLevels, eq(jobSkills.skillLevelId, skillLevels.id))
     .groupBy(
