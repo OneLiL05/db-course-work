@@ -1,11 +1,11 @@
-import type { ViewableJob } from '@skill-swap/shared'
+import type { Job } from '@skill-swap/shared'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { ArrowUpDown } from 'lucide-vue-next'
 import Button from '~/core/components/ui/button/Button.vue'
 import Checkbox from '~/core/components/ui/checkbox/Checkbox.vue'
 import JobsTableDropdown from '../components/JobsTableDropdown.vue'
 
-export const jobsTableColumns: ColumnDef<ViewableJob>[] = [
+export const jobsTableColumns: ColumnDef<Job>[] = [
   {
     id: 'select',
     header: ({ table }) =>
