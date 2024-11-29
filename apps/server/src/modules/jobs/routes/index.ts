@@ -1,6 +1,11 @@
 import { Routes } from '@/interfaces/index.js'
-import { deleteJob, getJob, getJobs } from '../controllers/JobController.js'
-import { GET_BY_ID_SCHEMA } from '@skill-swap/shared'
+import {
+  deleteJob,
+  getJob,
+  getJobs,
+  updateJob,
+} from '../controllers/JobController.js'
+import { GET_BY_ID_SCHEMA, UPDATE_JOB_SCHEMA } from '@skill-swap/shared'
 import { AppInstanse } from '@/types/index.js'
 
 export const getJobsRoutes = (app: AppInstanse): Routes => ({
@@ -17,6 +22,16 @@ export const getJobsRoutes = (app: AppInstanse): Routes => ({
       schema: {
         params: GET_BY_ID_SCHEMA,
       },
+    },
+    {
+      method: 'PUT',
+      url: '/jobs/:id',
+      handler: updateJob,
+      schema: {
+        params: GET_BY_ID_SCHEMA,
+        body: UPDATE_JOB_SCHEMA,
+      },
+      preHandler: [app.authentificate, app.nonUser],
     },
     {
       method: 'DELETE',

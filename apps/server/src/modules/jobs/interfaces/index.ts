@@ -6,6 +6,7 @@ import {
   AvgSalary,
   SalaryPeriod,
   SalaryCurrency,
+  UPDATE_JOB_SCHEMA_TYPE,
 } from '@skill-swap/shared'
 import { SQL } from 'drizzle-orm'
 
@@ -24,6 +25,7 @@ interface IJobRepository {
   findAvgSalaryBy: (args: FindAvgSalaryArgs) => Promise<AvgSalary | null>
   createOne: (companyId: number, data: CREATE_JOB_SCHEMA_TYPE) => Promise<void>
   deleteOne: (id: number) => Promise<void>
+  updateOne: (id: number, data: UPDATE_JOB_SCHEMA_TYPE) => Promise<void>
 }
 
 interface JobsModuleDependencies {

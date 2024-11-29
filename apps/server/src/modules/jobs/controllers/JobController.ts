@@ -1,4 +1,7 @@
-import { GET_BY_ID_SCHEMA_TYPE } from '@skill-swap/shared'
+import {
+  GET_BY_ID_SCHEMA_TYPE,
+  UPDATE_JOB_SCHEMA_TYPE,
+} from '@skill-swap/shared'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export const getJobs = async (
@@ -28,6 +31,29 @@ export const getJob = async (
   }
 
   return reply.status(200).send(result.value)
+}
+
+export const updateJob = async (
+  request: FastifyRequest<{
+    Params: GET_BY_ID_SCHEMA_TYPE
+    Body: UPDATE_JOB_SCHEMA_TYPE
+  }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { jobRepository } = request.diScope.cradle
+
+  const isExist = await jobRepository.findOne(id)
+
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
+  }
+
+  await jobRepository.updateOne(id, request.body)
+
+  return reply.status(200).send()
 }
 
 export const deleteJob = async (

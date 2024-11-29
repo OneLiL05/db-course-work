@@ -5,7 +5,12 @@ import {
   jobs,
   jobsView,
 } from '@skill-swap/db'
-import { CREATE_JOB_SCHEMA_TYPE, Job, AvgSalary } from '@skill-swap/shared'
+import {
+  CREATE_JOB_SCHEMA_TYPE,
+  Job,
+  AvgSalary,
+  UPDATE_JOB_SCHEMA_TYPE,
+} from '@skill-swap/shared'
 import { SQL, and, between, count, eq, sql } from 'drizzle-orm'
 import { FindAvgSalaryArgs, IJobRepository } from '../interfaces/index.js'
 import { JobsInjectableDependencies } from '../types/index.js'
@@ -176,6 +181,33 @@ export class JobRepository implements IJobRepository {
         isolationLevel: 'serializable',
       },
     )
+  }
+
+  async updateOne(id: number, data: UPDATE_JOB_SCHEMA_TYPE): Promise<void> {
+    const { addSkills, removeSkills, ...rest } = data
+
+    await this.db.transaction(async (tx) => {
+      await tx
+        .update(jobs)
+        .set({ ...rest })
+        .where(eq(jobs.id, id))
+
+      if (addSkills.length) {
+        const mappedSkills = addSkills.map(({ skillId, skillLevelId }) => {
+          return { jobId: id, skillId, skillLevelId }
+        })
+
+        await tx.insert(jobSkills).values(mappedSkills)
+      }
+
+      if (removeSkills.length) {
+        const mappedSkills = removeSkills.map(({ id }) => id)
+
+        await tx
+          .delete(jobSkills)
+          .where(sql`${jobSkills.id} in (${sql.join(mappedSkills)})`)
+      }
+    })
   }
 
   async deleteOne(id: number): Promise<void> {
