@@ -17,9 +17,14 @@ const JOB_SALARY_SCHEMA = z.object({
 })
 
 const JOB_SKILL_SCHEMA = z.object({
+  id: z.number(),
   name: z.string(),
+  skillId: z.number(),
   level: z.string(),
+  skillLevelId: z.number(),
 })
+
+type JobSkill = z.infer<typeof JOB_SKILL_SCHEMA>
 
 const JOB_SCHEMA = BASE_MODEL.extend({
   description: z.string().min(15).max(256),
@@ -35,33 +40,28 @@ const JOB_SCHEMA = BASE_MODEL.extend({
   cityId: z.coerce.number(),
   salary: JOB_SALARY_SCHEMA,
   skills: JOB_SKILL_SCHEMA.array(),
+  category: z.object({
+    id: z.number(),
+    name: z.string(),
+  }),
+  city: z.object({
+    id: z.number(),
+    name: z.string(),
+  }),
+  company: z.object({
+    id: z.number(),
+    name: z.string(),
+    description: z.string(),
+    img: z.string(),
+    isVerified: z.boolean(),
+  }),
+  position: z.object({
+    id: z.number(),
+    name: z.string(),
+  }),
 })
 
 type Job = z.infer<typeof JOB_SCHEMA>
-
-const VIEWABLE_JOB_SCHEMA = BASE_MODEL.extend({
-  description: z.string().min(15).max(256),
-  isCvRequired: z.boolean(),
-  isFulltime: z.boolean(),
-  isRemote: z.boolean(),
-  areStudentsAllowed: z.boolean(),
-  isActive: z.boolean(),
-  isHidden: z.boolean(),
-  salary: JOB_SALARY_SCHEMA,
-  skills: JOB_SKILL_SCHEMA.array(),
-  city: BASE_MODEL.pick({ name: true, id: true }),
-  company: BASE_MODEL.pick({ name: true, id: true }),
-  category: BASE_MODEL.pick({ name: true, id: true }),
-  position: BASE_MODEL.pick({ name: true, id: true }),
-  categoryId: z.coerce.number(),
-  positionId: z.coerce.number(),
-  companyId: z.coerce.number(),
-  cityId: z.coerce.number(),
-})
-
-type ViewableJob = z.infer<typeof VIEWABLE_JOB_SCHEMA>
-
-// const JOBS_QUERY_SCHEMA = JOB_SCHEMA.
 
 const JOBS_AVG_SALARY_QUERY_SCHEMA = z.object({
   currency: SALARY_CURRENCY_SCHEMA.optional().default('USD'),
@@ -88,27 +88,51 @@ const CREATE_JOB_SCHEMA = JOB_SCHEMA.omit({
   isActive: true,
   isHidden: true,
   skills: true,
+  category: true,
+  city: true,
+  company: true,
+  position: true,
 }).extend({
   skills: CREATE_JOB_SKILL_SCHEMA.array(),
 })
 
 type CREATE_JOB_SCHEMA_TYPE = z.infer<typeof CREATE_JOB_SCHEMA>
 
+const UPDATE_JOB_SCHEMA = JOB_SCHEMA.omit({
+  companyId: true,
+  id: true,
+  updatedAt: true,
+  createdAt: true,
+  isActive: true,
+  isHidden: true,
+  skills: true,
+  category: true,
+  city: true,
+  company: true,
+  position: true,
+}).extend({
+  addSkills: CREATE_JOB_SKILL_SCHEMA.array(),
+  removeSkills: z.object({ id: z.number() }).array(),
+})
+
+type UPDATE_JOB_SCHEMA_TYPE = z.infer<typeof UPDATE_JOB_SCHEMA>
+
 export type {
   Job,
   CREATE_JOB_SCHEMA_TYPE,
-  ViewableJob,
   SalaryCurrency,
   SalaryPeriod,
   JOBS_AVG_SALARY_QUERY_SCHEMA_TYPE,
   AvgSalary,
+  UPDATE_JOB_SCHEMA_TYPE,
+  JobSkill,
 }
 export {
   JOB_SCHEMA,
   CREATE_JOB_SCHEMA,
-  VIEWABLE_JOB_SCHEMA,
   SALARY_CURRENCY_SCHEMA,
   SALARY_PERIOD_SCHEMA,
   JOBS_AVG_SALARY_QUERY_SCHEMA,
   JOB_AVG_SALARY_SCHEMA,
+  UPDATE_JOB_SCHEMA,
 }
