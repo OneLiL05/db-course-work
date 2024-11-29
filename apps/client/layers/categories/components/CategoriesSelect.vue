@@ -25,7 +25,7 @@ const { data: categories } = useCategories()
           <SelectItem
             v-for="(category, index) in categories"
             :key="index"
-            :value="category.id.toString()"
+            :value="category.id"
           >
             {{ category.name }}
           </SelectItem>

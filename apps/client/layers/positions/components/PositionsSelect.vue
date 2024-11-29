@@ -25,7 +25,7 @@ const { data: positions } = usePositions()
           <SelectItem
             v-for="(position, index) in positions"
             :key="index"
-            :value="position.id.toString()"
+            :value="position.id"
           >
             {{ position.name }}
           </SelectItem>

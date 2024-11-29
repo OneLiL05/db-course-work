@@ -48,7 +48,9 @@ onMounted(() => {
           <p class="text-muted-foreground">Job vacancy from {{ createdAt }}</p>
           <Heading size="3">{{ job?.name }}</Heading>
         </div>
-        <Heading size="4">{{ formatSalary(job?.salary!) }}</Heading>
+        <Heading size="4">{{
+          `${formatSalary(job?.salary!)}/${job?.salary.period}`
+        }}</Heading>
       </div>
       <div class="flex flex-col w-full gap-3">
         <div class="inline-flex gap-3">

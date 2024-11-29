@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { ViewableJob } from '@skill-swap/shared'
+import type { Job } from '@skill-swap/shared'
 import { buttonVariants } from '~/core/components/ui/button'
 
-defineProps<{ job: ViewableJob }>()
+defineProps<{ job: Job }>()
 </script>
 <template>
   <DropdownMenu>
@@ -23,7 +23,15 @@ defineProps<{ job: ViewableJob }>()
           Visit
         </NuxtLink>
       </DropdownMenuItem>
-      <DropdownMenuItem>Edit</DropdownMenuItem>
+      <DropdownMenuItem as-child>
+        <NuxtLink
+          :class="buttonVariants({ size: 'sm', variant: 'ghost' })"
+          class="w-full !justify-start font-normal !px-2"
+          :to="`/jobs/${job.id}/edit`"
+        >
+          Edit
+        </NuxtLink>
+      </DropdownMenuItem>
       <DropdownMenuItem as-child>
         <DeleteJobDialog :job />
       </DropdownMenuItem>

@@ -25,7 +25,7 @@ const { data: cities } = useCities()
           <SelectItem
             v-for="(city, index) in cities"
             :key="index"
-            :value="city.id.toString()"
+            :value="city.id"
           >
             {{ city.name }}
           </SelectItem>
