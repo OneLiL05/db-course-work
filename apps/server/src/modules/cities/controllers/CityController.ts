@@ -1,9 +1,10 @@
-import { jobs, jobsView } from '@skill-swap/db'
+import { jobs } from '@skill-swap/db'
 import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_CITY_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
   JOBS_AVG_SALARY_QUERY_SCHEMA_TYPE,
+  JOB_FILTERS_SCHEMA_TYPE,
 } from '@skill-swap/shared'
 import { eq } from 'drizzle-orm'
 import { FastifyReply, FastifyRequest } from 'fastify'
@@ -51,7 +52,10 @@ export const getCitiesWithJobsCount = async (
 }
 
 export const getCityJobs = async (
-  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
+  request: FastifyRequest<{
+    Params: GET_BY_ID_SCHEMA_TYPE
+    Querystring: JOB_FILTERS_SCHEMA_TYPE
+  }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { id } = request.params
@@ -65,9 +69,12 @@ export const getCityJobs = async (
     return reply.status(status).send({ message })
   }
 
-  const jobs = await jobRepository.findJobsBy(eq(jobsView.cityId, id))
+  const result = await jobRepository.findJobsBy({
+    where: eq(jobs.cityId, id),
+    query: request.query,
+  })
 
-  return reply.status(200).send(jobs)
+  return reply.status(200).send(result)
 }
 
 export const getCityJobsAvgSalary = async (

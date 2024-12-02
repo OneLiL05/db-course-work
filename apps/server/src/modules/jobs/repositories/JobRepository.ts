@@ -1,9 +1,17 @@
 import {
   DatabaseClient,
+  categories,
+  cities,
+  companies,
   jobSalaries,
   jobSkills,
   jobs,
   jobsView,
+  jsonAgg,
+  jsonBuildObject,
+  positions,
+  skillLevels,
+  skills,
 } from '@skill-swap/db'
 import {
   CREATE_JOB_SCHEMA_TYPE,
@@ -11,8 +19,23 @@ import {
   AvgSalary,
   UPDATE_JOB_SCHEMA_TYPE,
 } from '@skill-swap/shared'
-import { SQL, and, between, count, eq, inArray, sql } from 'drizzle-orm'
-import { FindAvgSalaryArgs, IJobRepository } from '../interfaces/index.js'
+import {
+  SQL,
+  and,
+  between,
+  count,
+  eq,
+  getTableColumns,
+  gte,
+  inArray,
+  lte,
+  sql,
+} from 'drizzle-orm'
+import {
+  FindAvgSalaryArgs,
+  FindByArgs,
+  IJobRepository,
+} from '../interfaces/index.js'
 import { JobsInjectableDependencies } from '../types/index.js'
 import { Failure, Result, Success } from '@/utils/result.js'
 import { HttpError } from '@/interfaces/common.js'
@@ -43,11 +66,123 @@ export class JobRepository implements IJobRepository {
     return Success(job)
   }
 
-  async findJobsBy(where: SQL): Promise<Job[]> {
+  async findJobsBy({ where, query }: FindByArgs): Promise<Job[]> {
+    const {
+      employmentTypes,
+      salaryAmount,
+      salaryCurrency,
+      salaryPeriod,
+      suitableFor,
+    } = query
+
+    const expressions: SQL[] = [where, eq(jobs.isHidden, false)]
+
+    if (employmentTypes && employmentTypes.length) {
+      if (employmentTypes.includes('full-time')) {
+        expressions.push(eq(jobs.isFulltime, true))
+      }
+
+      if (employmentTypes.includes('part-time')) {
+        expressions.push(eq(jobs.isFulltime, false))
+      }
+    }
+
+    if (salaryAmount) {
+      if (salaryAmount.min) {
+        expressions.push(gte(jobSalaries.amount, salaryAmount.min.toString()))
+      }
+
+      if (salaryAmount.max) {
+        expressions.push(lte(jobSalaries.amount, salaryAmount.max.toString()))
+      }
+    }
+
+    if (suitableFor && suitableFor.length) {
+      if (suitableFor.includes('remote')) {
+        expressions.push(eq(jobs.isRemote, true))
+      }
+
+      if (suitableFor.includes('without-cv')) {
+        expressions.push(eq(jobs.isCvRequired, false))
+      }
+
+      if (suitableFor.includes('student')) {
+        expressions.push(eq(jobs.areStudentsAllowed, true))
+      }
+    }
+
+    if (salaryCurrency && salaryCurrency.length) {
+      expressions.push(inArray(jobSalaries.currency, [...salaryCurrency]))
+    }
+
+    if (salaryPeriod && salaryPeriod.length) {
+      expressions.push(inArray(jobSalaries.period, [...salaryPeriod]))
+    }
+
     return this.db
-      .select()
-      .from(jobsView)
-      .where(and(where, eq(jobsView.isHidden, false))) as unknown as Job[]
+      .select({
+        ...getTableColumns(jobs),
+        company: jsonBuildObject({
+          id: companies.id,
+          name: companies.name,
+          description: companies.description,
+          img: companies.img,
+          isVerified: companies.isVerified,
+        }).as('company'),
+        city: jsonBuildObject({
+          id: cities.id,
+          name: cities.name,
+        }).as('city'),
+        category: jsonBuildObject({
+          id: categories.id,
+          name: categories.name,
+        }).as('category'),
+        position: jsonBuildObject({
+          id: positions.id,
+          name: positions.name,
+        }).as('position'),
+        salary: jsonBuildObject({
+          amount: jobSalaries.amount,
+          currency: jobSalaries.currency,
+          period: jobSalaries.period,
+        }).as('salary'),
+        skills: jsonAgg(
+          jsonBuildObject({
+            id: jobSkills.id,
+            name: skills.name,
+            skillId: skills.id,
+            level: skillLevels.name,
+            skillLevelId: skillLevels.id,
+          }),
+        ).as('skills'),
+      })
+      .from(jobs)
+      .leftJoin(companies, eq(jobs.companyId, companies.id))
+      .leftJoin(positions, eq(jobs.positionId, positions.id))
+      .leftJoin(cities, eq(jobs.cityId, cities.id))
+      .leftJoin(categories, eq(jobs.categoryId, categories.id))
+      .leftJoin(jobSalaries, eq(jobs.id, jobSalaries.jobId))
+      .leftJoin(jobSkills, eq(jobs.id, jobSkills.jobId))
+      .leftJoin(skills, eq(jobSkills.skillId, skills.id))
+      .leftJoin(skillLevels, eq(jobSkills.skillLevelId, skillLevels.id))
+      .where(and(...expressions))
+      .groupBy(
+        jobs.id,
+        jobSalaries.id,
+        jobSalaries.amount,
+        jobSalaries.currency,
+        jobSalaries.period,
+        companies.id,
+        companies.name,
+        companies.img,
+        companies.description,
+        positions.id,
+        positions.name,
+        cities.id,
+        cities.name,
+        categories.id,
+        categories.name,
+      ) as unknown as Job[]
   }
 
   async findAvgSalaryBy({
