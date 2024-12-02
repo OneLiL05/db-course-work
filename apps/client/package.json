@@ -33,6 +33,7 @@
     "nuxt": "^3.13.0",
     "pinia": "^2.2.4",
     "pinia-plugin-persistedstate": "^4.1.1",
+    "qs": "^6.13.1",
     "radix-vue": "^1.9.6",
     "shadcn-nuxt": "^0.10.4",
     "tailwind-merge": "^2.5.2",
@@ -45,6 +46,7 @@
   "devDependencies": {
     "@iconify-json/mynaui": "^1.2.4",
     "@nuxtjs/tailwindcss": "^6.12.1",
+    "@types/qs": "^6.9.17",
     "@vue/devtools-api": "^7.4.6"
   }
 }

@@ -1,19 +1,20 @@
-import type { Category } from '@skill-swap/shared'
+import type { CityWithCount } from '@skill-swap/shared'
 import { useQuery } from '@tanstack/vue-query'
 import { axiosClient } from '~/core/lib/axios'
 
-export const useCategories = () => {
+export const useCitiesWithJobsCount = () => {
   return useQuery({
-    queryKey: ['categories'],
+    queryKey: ['cities', 'jobs', 'count'],
     queryFn: async () => {
       const params = new URLSearchParams([
         ['order', 'asc'],
         ['sortBy', 'name'],
       ])
 
-      const result = await axiosClient.get<Category[]>('/categories', {
-        params,
-      })
+      const result = await axiosClient.get<CityWithCount[]>(
+        '/cities/jobs/count',
+        { params },
+      )
 
       return result.data
     },

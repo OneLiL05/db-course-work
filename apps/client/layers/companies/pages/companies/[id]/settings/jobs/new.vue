@@ -11,15 +11,7 @@ const id = useRouteParams('id')
 
 const { mutateAsync, isPending } = useCreateJob(Number(id.value))
 
-const { data: cities } = useCities()
-
 const { selectedSkills, addSkill, removeSkill } = useSelectedSkills()
-
-const cityName = ref('')
-
-const cityId = computed(() => {
-  return cities.value?.find((city) => city.name === cityName.value)?.id
-})
 
 const { handleSubmit, values, errors, setFieldError } = useForm({
   validationSchema: toTypedSchema(CREATE_JOB_SCHEMA),
@@ -29,12 +21,11 @@ const { handleSubmit, values, errors, setFieldError } = useForm({
     isRemote: false,
     areStudentsAllowed: false,
     skills: [],
-    cityId: cityId.value,
   },
 })
 
 const onSubmit = handleSubmit(async (data) => {
-  if (selectedSkills.value.length) {
+  if (!selectedSkills.value.length) {
     setFieldError('skills', `Skills field can't be empty`)
   } else {
     mutateAsync({ ...data, skills: selectedSkills.value })

@@ -8,8 +8,8 @@ const links = [
     to: '/',
   },
   {
-    name: 'Jobs',
-    to: '/',
+    name: 'Cities',
+    to: '/cities',
   },
   {
     name: 'Companies',
