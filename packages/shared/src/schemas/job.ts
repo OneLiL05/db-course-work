@@ -117,6 +117,28 @@ const UPDATE_JOB_SCHEMA = JOB_SCHEMA.omit({
 
 type UPDATE_JOB_SCHEMA_TYPE = z.infer<typeof UPDATE_JOB_SCHEMA>
 
+const JOB_FILTERS_SCHEMA = z.object({
+  employmentTypes: z.array(z.string()),
+  suitableFor: z.array(z.string()),
+  salaryPeriod: z.array(SALARY_PERIOD_SCHEMA),
+  salaryCurrency: z.array(SALARY_CURRENCY_SCHEMA),
+  salaryAmount: z
+    .object({
+      min: z.number().min(1).optional(),
+      max: z.number().max(9999999999).optional(),
+    })
+    .superRefine((value, ctx) => {
+      if (value.max && value.min && value.min > value.max) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Min value can't be more than max one`,
+        })
+      }
+    }),
+})
+
+type JOB_FILTERS_SCHEMA_TYPE = z.infer<typeof JOB_FILTERS_SCHEMA>
+
 export type {
   Job,
   CREATE_JOB_SCHEMA_TYPE,
@@ -126,6 +148,7 @@ export type {
   AvgSalary,
   UPDATE_JOB_SCHEMA_TYPE,
   JobSkill,
+  JOB_FILTERS_SCHEMA_TYPE,
 }
 export {
   JOB_SCHEMA,
@@ -135,4 +158,5 @@ export {
   JOBS_AVG_SALARY_QUERY_SCHEMA,
   JOB_AVG_SALARY_SCHEMA,
   UPDATE_JOB_SCHEMA,
+  JOB_FILTERS_SCHEMA,
 }
