@@ -117,24 +117,35 @@ const UPDATE_JOB_SCHEMA = JOB_SCHEMA.omit({
 
 type UPDATE_JOB_SCHEMA_TYPE = z.infer<typeof UPDATE_JOB_SCHEMA>
 
+const JOBS_FILTER_PERIOD_SCHEMA = z.enum([
+  'day',
+  '7-days',
+  '14-days',
+  'month',
+  'all-time',
+])
+
 const JOB_FILTERS_SCHEMA = z.object({
-  employmentTypes: z.array(z.string()),
-  suitableFor: z.array(z.string()),
-  salaryPeriod: z.array(SALARY_PERIOD_SCHEMA),
-  salaryCurrency: z.array(SALARY_CURRENCY_SCHEMA),
+  employmentTypes: z.array(z.string()).optional(),
+  suitableFor: z.array(z.string()).optional(),
+  salaryPeriod: z.array(SALARY_PERIOD_SCHEMA).optional(),
+  salaryCurrency: z.array(SALARY_CURRENCY_SCHEMA).optional(),
   salaryAmount: z
     .object({
-      min: z.number().min(1).optional(),
-      max: z.number().max(9999999999).optional(),
+      min: z.number().int().min(1).optional(),
+      max: z.number().int().max(9999999999).optional(),
     })
     .superRefine((value, ctx) => {
-      if (value.max && value.min && value.min > value.max) {
+      if (value && value.max && value.min && value.min > value.max) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Min value can't be more than max one`,
         })
       }
-    }),
+    })
+    .optional(),
+  search: z.string().optional(),
+  period: JOBS_FILTER_PERIOD_SCHEMA.optional(),
 })
 
 type JOB_FILTERS_SCHEMA_TYPE = z.infer<typeof JOB_FILTERS_SCHEMA>
