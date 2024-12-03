@@ -1,12 +1,12 @@
 import { HttpError } from '@/interfaces/common.js'
 import { Failure, Result, Success } from '@/utils/result.js'
-import { DatabaseClient, categories } from '@skill-swap/db'
+import { DatabaseClient, categories, jobs } from '@skill-swap/db'
 import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_CATEGORY_SCHEMA_TYPE,
   Category,
 } from '@skill-swap/shared'
-import { SQL, asc, desc, eq } from 'drizzle-orm'
+import { SQL, asc, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { ICategoryRepository } from '../interfaces/index.js'
 import { CategoriesInjectableDependencies } from '../types/index.js'
 import postgres from 'postgres'
@@ -52,6 +52,35 @@ export class CategoryRepository implements ICategoryRepository {
       .select()
       .from(categories)
       .orderBy(...expressions)
+  }
+
+  async findManyWithJobsCount(
+    query: BASE_MODEL_QUERY_TYPE,
+  ): Promise<Category[]> {
+    const { order, sortBy } = query
+    const columns = getTableColumns(categories)
+
+    const expressions: SQL[] = []
+
+    if (sortBy && order) {
+      const expression =
+        order === 'asc' ? asc(categories[sortBy]) : desc(categories[sortBy])
+
+      expressions.push(expression)
+    }
+
+    return this.db
+      .select({
+        ...columns,
+        count:
+          sql<number>`cast(count(case when ${jobs.isActive} then 1 end) as int)`.as(
+            'count',
+          ),
+      })
+      .from(categories)
+      .leftJoin(jobs, eq(jobs.categoryId, categories.id))
+      .orderBy(...expressions)
+      .groupBy(categories.id)
   }
 
   async createOne({

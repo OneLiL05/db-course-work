@@ -1,10 +1,10 @@
-import { DatabaseClient, positions } from '@skill-swap/db'
+import { DatabaseClient, jobs, positions } from '@skill-swap/db'
 import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_POSITION_SCHEMA_TYPE,
   Position,
 } from '@skill-swap/shared'
-import { SQL, asc, desc, eq } from 'drizzle-orm'
+import { SQL, asc, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { IPositionRepository } from '../interfaces/index.js'
 import { PositionsInjectableDependencies } from '../types/index.js'
 import { Failure, Result, Success } from '@/utils/result.js'
@@ -52,6 +52,35 @@ export class PositionRepository implements IPositionRepository {
       .select()
       .from(positions)
       .orderBy(...expressions)
+  }
+
+  async findManyWithJobsCount(
+    query: BASE_MODEL_QUERY_TYPE,
+  ): Promise<Position[]> {
+    const { order, sortBy } = query
+    const columns = getTableColumns(positions)
+
+    const expressions: SQL[] = []
+
+    if (sortBy && order) {
+      const expression =
+        order === 'asc' ? asc(positions[sortBy]) : desc(positions[sortBy])
+
+      expressions.push(expression)
+    }
+
+    return this.db
+      .select({
+        ...columns,
+        count:
+          sql<number>`cast(count(case when ${jobs.isActive} then 1 end) as int)`.as(
+            'count',
+          ),
+      })
+      .from(positions)
+      .leftJoin(jobs, eq(jobs.positionId, positions.id))
+      .orderBy(...expressions)
+      .groupBy(positions.id)
   }
 
   async createOne({

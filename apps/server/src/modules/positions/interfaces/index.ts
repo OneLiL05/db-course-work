@@ -7,8 +7,9 @@ import {
 } from '@skill-swap/shared'
 
 interface IPositionRepository {
-  findMany: (query: BASE_MODEL_QUERY_TYPE) => Promise<Position[]>
   findOne: (id: number) => Promise<Result<Position, HttpError>>
+  findMany: (query: BASE_MODEL_QUERY_TYPE) => Promise<Position[]>
+  findManyWithJobsCount: (query: BASE_MODEL_QUERY_TYPE) => Promise<Position[]>
   createOne: (
     data: CREATE_POSITION_SCHEMA_TYPE,
   ) => Promise<Result<Position, HttpError>>

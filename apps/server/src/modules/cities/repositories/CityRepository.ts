@@ -1,4 +1,5 @@
-import { SqlClient } from '@/types/index.js'
+import { HttpError } from '@/interfaces/common.js'
+import { Failure, Result, Success } from '@/utils/result.js'
 import { DatabaseClient, cities, jobs } from '@skill-swap/db'
 import {
   BASE_MODEL_QUERY_TYPE,
@@ -6,19 +7,15 @@ import {
   City,
   CityWithCount,
 } from '@skill-swap/shared'
-import { SQL, asc, count, desc, eq, getTableColumns } from 'drizzle-orm'
+import { SQL, asc, desc, eq, getTableColumns, sql } from 'drizzle-orm'
+import postgres from 'postgres'
 import { ICityRepository } from '../interfaces/index.js'
 import { CitiesInjectableDependencies } from '../types/index.js'
-import { Failure, Result, Success } from '@/utils/result.js'
-import { HttpError } from '@/interfaces/common.js'
-import postgres from 'postgres'
 
 export class CityRepository implements ICityRepository {
-  private readonly sql: SqlClient
   private readonly db: DatabaseClient
 
-  constructor({ sql, db }: CitiesInjectableDependencies) {
-    this.sql = sql
+  constructor({ db }: CitiesInjectableDependencies) {
     this.db = db.client
   }
 
@@ -71,7 +68,13 @@ export class CityRepository implements ICityRepository {
     }
 
     return this.db
-      .select({ ...columns, count: count(jobs.id) })
+      .select({
+        ...columns,
+        count:
+          sql<number>`cast(count(case when ${jobs.isActive} then 1 end) as int)`.as(
+            'count',
+          ),
+      })
       .from(cities)
       .leftJoin(jobs, eq(jobs.cityId, cities.id))
       .orderBy(...expressions)
