@@ -13,12 +13,17 @@ import {
 } from '../constants'
 
 const emits = defineEmits<{
-  (e: 'submit', values: JOB_FILTERS_SCHEMA_TYPE): void
+  (
+    e: 'submit',
+    values: Omit<JOB_FILTERS_SCHEMA_TYPE, 'period' | 'search'>,
+  ): void
   (e: 'reset'): void
 }>()
 
-const { handleSubmit, handleReset } = useForm({
-  validationSchema: toTypedSchema(JOB_FILTERS_SCHEMA),
+const { handleSubmit, handleReset, values } = useForm({
+  validationSchema: toTypedSchema(
+    JOB_FILTERS_SCHEMA.omit({ search: true, period: true }),
+  ),
   initialValues: {
     employmentTypes: [],
     suitableFor: [],
@@ -35,6 +40,17 @@ const onReset = () => {
   handleReset()
   emits('reset')
 }
+
+const isDisabled = computed(() => {
+  return (
+    !values.employmentTypes?.length &&
+    !values.salaryAmount?.max &&
+    !values.salaryAmount?.min &&
+    !values.salaryCurrency?.length &&
+    !values.salaryPeriod?.length &&
+    !values.suitableFor?.length
+  )
+})
 </script>
 
 <template>
@@ -180,10 +196,18 @@ const onReset = () => {
       </FormItem>
     </FormField>
     <div class="flex flex-col gap-2 w-full justify-start">
-      <Button type="submit" class="w-full">Submit</Button>
-      <Button variant="outline" type="button" class="w-full" @click="onReset"
-        >Reset</Button
+      <Button type="submit" class="w-full" :disabled="isDisabled"
+        >Submit</Button
       >
+      <Button
+        variant="outline"
+        type="button"
+        class="w-full"
+        @click="onReset"
+        :disabled="isDisabled"
+      >
+        Reset
+      </Button>
     </div>
   </form>
 </template>

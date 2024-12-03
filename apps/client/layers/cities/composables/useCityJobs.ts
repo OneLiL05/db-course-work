@@ -16,6 +16,8 @@ export const useCityJobs = (
           salaryCurrency: params.value?.salaryCurrency,
           salaryAmount: params.value?.salaryAmount,
           suitableFor: params.value?.suitableFor,
+          search: params.value?.search,
+          period: params.value?.period,
         },
         paramsSerializer: {
           indexes: null,

@@ -11,23 +11,25 @@ const { data: jobs } = useCityJobs(Number(id.value), searchParams)
 const activeJobsFallback = computed(() => {
   return `${jobs.value?.length} active ${jobs.value?.length !== 1 ? 'jobs' : 'job'} in ${city.value?.name}`
 })
+
+const resetFilters = () => {
+  searchParams.value = {
+    ...searchParams.value,
+    employmentTypes: undefined,
+    salaryAmount: undefined,
+    salaryCurrency: undefined,
+    salaryPeriod: undefined,
+  }
+}
 </script>
 
 <template>
   <section class="flex flex-col size-full w-[1000px] mx-auto py-5 gap-4">
+    <JobsSearch
+      @submit="(values) => (searchParams = { ...searchParams, ...values })"
+    />
     <div class="inline-flex w-full justify-between items-center">
       <p class="text-muted-foreground">{{ activeJobsFallback }}</p>
-      <Select>
-        <SelectTrigger class="w-[150px]">
-          <SelectValue placeholder="Select period" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="month">Per month</SelectItem>
-          <SelectItem value="14-days">Per 14 days</SelectItem>
-          <SelectItem value="7-days">Per 7 days</SelectItem>
-          <SelectItem value="day">Per 1 day</SelectItem>
-        </SelectContent>
-      </Select>
     </div>
     <div class="grid grid-cols-[80%_20%] gap-5">
       <div class="flex flex-col w-full gap-3">
@@ -56,8 +58,8 @@ const activeJobsFallback = computed(() => {
         </div>
       </div>
       <JobsFilter
-        @submit="(values) => (searchParams = values)"
-        @reset="() => (searchParams = undefined)"
+        @submit="(values) => (searchParams = { ...searchParams, ...values })"
+        @reset="resetFilters"
       />
     </div>
   </section>
