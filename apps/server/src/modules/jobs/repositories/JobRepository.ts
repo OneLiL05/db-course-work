@@ -27,6 +27,7 @@ import {
   eq,
   getTableColumns,
   gte,
+  ilike,
   inArray,
   lte,
   sql,
@@ -73,6 +74,8 @@ export class JobRepository implements IJobRepository {
       salaryCurrency,
       salaryPeriod,
       suitableFor,
+      search,
+      period,
     } = query
 
     const expressions: SQL[] = [where, eq(jobs.isHidden, false)]
@@ -94,6 +97,54 @@ export class JobRepository implements IJobRepository {
 
       if (salaryAmount.max) {
         expressions.push(lte(jobSalaries.amount, salaryAmount.max.toString()))
+      }
+    }
+
+    if (search) {
+      expressions.push(ilike(jobs.name, `%${search}%`))
+    }
+
+    if (period && period !== 'all-time') {
+      const currentDate = new Date()
+
+      if (period === 'day') {
+        const yesterday = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - 1,
+        )
+
+        expressions.push(between(jobs.createdAt, currentDate, yesterday))
+      }
+
+      if (period === '7-days') {
+        const lastWeek = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - 7,
+        )
+
+        expressions.push(between(jobs.createdAt, currentDate, lastWeek))
+      }
+
+      if (period === '14-days') {
+        const twoWeeksAgo = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate() - 7,
+        )
+
+        expressions.push(between(jobs.createdAt, currentDate, twoWeeksAgo))
+      }
+
+      if (period === 'month') {
+        const lastMonth = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - 1,
+          currentDate.getDate(),
+        )
+
+        expressions.push(between(jobs.createdAt, currentDate, lastMonth))
       }
     }
 
