@@ -123,6 +123,7 @@ export const jobsView = pgView('jobs_view').as((qb) => {
     .leftJoin(skillLevels, eq(jobSkills.skillLevelId, skillLevels.id))
     .groupBy(
       jobs.id,
+      jobSalaries.id,
       jobSalaries.amount,
       jobSalaries.currency,
       jobSalaries.period,

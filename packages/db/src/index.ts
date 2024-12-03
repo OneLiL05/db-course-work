@@ -10,3 +10,4 @@ type DatabaseClient = PostgresJsDatabase<typeof schema>
 
 export { queryClient, db, type DatabaseClient }
 export * from './schemas/index.js'
+export * from './utils.js'
