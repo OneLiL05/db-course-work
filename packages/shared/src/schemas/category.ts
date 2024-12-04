@@ -1,10 +1,14 @@
 import { z } from 'zod'
-import { BASE_MODEL } from './common.js'
+import { BASE_MODEL, BASE_MODEL_WITH_COUNT } from './common.js'
 import { ID_SCHEMA } from './index.js'
 
 const CATEGORY_MODEL = BASE_MODEL
 
 type Category = z.infer<typeof CATEGORY_MODEL>
+
+const CATEGORY_SCHEMA_WITH_COUNT = BASE_MODEL_WITH_COUNT
+
+type CategoryWithCount = z.infer<typeof CATEGORY_SCHEMA_WITH_COUNT>
 
 const CREATE_CATEGORY_SCHEMA = z.object({
   name: z
@@ -25,9 +29,15 @@ const UPDATE_CATEGORY_SCHEMA = z.object({
 
 type UPDATE_CATEGORY_SCHEMA_TYPE = z.infer<typeof UPDATE_CATEGORY_SCHEMA>
 
-export { CATEGORY_MODEL, CREATE_CATEGORY_SCHEMA, UPDATE_CATEGORY_SCHEMA }
+export {
+  CATEGORY_MODEL,
+  CATEGORY_SCHEMA_WITH_COUNT,
+  CREATE_CATEGORY_SCHEMA,
+  UPDATE_CATEGORY_SCHEMA,
+}
 export type {
   Category,
+  CategoryWithCount,
   CREATE_CATEGORY_SCHEMA_TYPE,
   UPDATE_CATEGORY_SCHEMA_TYPE,
 }

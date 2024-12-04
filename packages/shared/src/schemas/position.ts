@@ -1,10 +1,14 @@
 import { z } from 'zod'
-import { BASE_MODEL } from './common.js'
+import { BASE_MODEL, BASE_MODEL_WITH_COUNT } from './common.js'
 import { ID_SCHEMA } from './index.js'
 
 const POSITION_SCHEMA = BASE_MODEL
 
 type Position = z.infer<typeof POSITION_SCHEMA>
+
+const POSITION_WITH_COUNT_SCHEMA = BASE_MODEL_WITH_COUNT
+
+type PositionWithCount = z.infer<typeof POSITION_WITH_COUNT_SCHEMA>
 
 const CREATE_POSITION_SCHEMA = z.object({
   name: z
@@ -30,12 +34,14 @@ type UPDATE_POSITION_SCHEMA_TYPE = z.infer<typeof UPDATE_POSITION_SCHEMA>
 
 export {
   POSITION_SCHEMA,
+  POSITION_WITH_COUNT_SCHEMA,
   CREATE_POSITION_SCHEMA,
   DELETE_POSITION_SCHEMA,
   UPDATE_POSITION_SCHEMA,
 }
 export type {
   Position,
+  PositionWithCount,
   CREATE_POSITION_SCHEMA_TYPE,
   DELETE_POSITION_SCHEMA_TYPE,
   UPDATE_POSITION_SCHEMA_TYPE,

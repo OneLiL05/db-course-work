@@ -1,14 +1,12 @@
 import { z } from 'zod'
-import { BASE_MODEL } from './common.js'
+import { BASE_MODEL, BASE_MODEL_WITH_COUNT } from './common.js'
 import { ID_SCHEMA } from './index.js'
 
 const CITY_MODEL = BASE_MODEL
 
 type City = z.infer<typeof CITY_MODEL>
 
-const CITY_MODEL_WITH_COUNT = CITY_MODEL.extend({
-  count: z.number(),
-})
+const CITY_MODEL_WITH_COUNT = BASE_MODEL_WITH_COUNT
 
 type CityWithCount = z.infer<typeof CITY_MODEL_WITH_COUNT>
 
