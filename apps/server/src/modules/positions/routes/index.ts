@@ -5,6 +5,7 @@ import {
   getPosition,
   getPositionJobs,
   getPositions,
+  getPositionsWithJobsCount,
   updatePosition,
 } from '../controllers/PositionController.js'
 import { Routes } from '@/interfaces/index.js'
@@ -12,6 +13,7 @@ import {
   BASE_MODEL_QUERY,
   CREATE_POSITION_SCHEMA,
   GET_BY_ID_SCHEMA,
+  POSITION_WITH_COUNT_SCHEMA,
 } from '@skill-swap/shared'
 
 export const getPositionsRoutes = (app: AppInstanse): Routes => ({
@@ -22,6 +24,17 @@ export const getPositionsRoutes = (app: AppInstanse): Routes => ({
       handler: getPositions,
       schema: {
         querystring: BASE_MODEL_QUERY,
+      },
+    },
+    {
+      method: 'GET',
+      url: 'positions/jobs/count',
+      handler: getPositionsWithJobsCount,
+      schema: {
+        querystring: BASE_MODEL_QUERY,
+        response: {
+          200: POSITION_WITH_COUNT_SCHEMA.array(),
+        },
       },
     },
     {

@@ -3,6 +3,7 @@ import {
   createCategory,
   deleteCategory,
   getCategories,
+  getCategoriesWithJobsCount,
   getCategory,
   getCategoryJobs,
   getCategoryJobsAvgSalary,
@@ -11,6 +12,7 @@ import {
 import { AppInstanse } from '@/types/index.js'
 import {
   BASE_MODEL_QUERY,
+  CATEGORY_SCHEMA_WITH_COUNT,
   CREATE_CATEGORY_SCHEMA,
   GET_BY_ID_SCHEMA,
   JOBS_AVG_SALARY_QUERY_SCHEMA,
@@ -24,6 +26,17 @@ export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
       handler: getCategories,
       schema: {
         querystring: BASE_MODEL_QUERY,
+      },
+    },
+    {
+      method: 'GET',
+      url: '/categories/jobs/count',
+      handler: getCategoriesWithJobsCount,
+      schema: {
+        querystring: BASE_MODEL_QUERY,
+        response: {
+          200: CATEGORY_SCHEMA_WITH_COUNT.array(),
+        },
       },
     },
     {

@@ -4,6 +4,7 @@ import {
   CREATE_CATEGORY_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
   JOBS_AVG_SALARY_QUERY_SCHEMA_TYPE,
+  JOB_FILTERS_SCHEMA_TYPE,
 } from '@skill-swap/shared'
 import { eq } from 'drizzle-orm'
 import { FastifyReply, FastifyRequest } from 'fastify'
@@ -17,6 +18,19 @@ export const getCategories = async (
   const categories = await categoryRepository.findMany(request.query)
 
   reply.status(200).send(categories)
+}
+
+export const getCategoriesWithJobsCount = async (
+  request: FastifyRequest<{ Querystring: BASE_MODEL_QUERY_TYPE }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { categoryRepository } = request.diScope.cradle
+
+  const categories = await categoryRepository.findManyWithJobsCount(
+    request.query,
+  )
+
+  return reply.status(200).send(categories)
 }
 
 export const getCategory = async (
@@ -38,7 +52,10 @@ export const getCategory = async (
 }
 
 export const getCategoryJobs = async (
-  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
+  request: FastifyRequest<{
+    Params: GET_BY_ID_SCHEMA_TYPE
+    Querystring: JOB_FILTERS_SCHEMA_TYPE
+  }>,
   reply: FastifyReply,
 ): Promise<void> => {
   const { id } = request.params
@@ -52,7 +69,10 @@ export const getCategoryJobs = async (
     return reply.status(status).send({ message })
   }
 
-  const jobs = await jobRepository.findJobsBy(eq(jobsView.categoryId, id))
+  const jobs = await jobRepository.findJobsBy({
+    where: eq(jobsView.categoryId, id),
+    query: request.query,
+  })
 
   return reply.status(200).send(jobs)
 }

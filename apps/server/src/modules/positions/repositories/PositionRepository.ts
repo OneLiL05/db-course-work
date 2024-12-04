@@ -3,6 +3,7 @@ import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_POSITION_SCHEMA_TYPE,
   Position,
+  PositionWithCount,
 } from '@skill-swap/shared'
 import { SQL, asc, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { IPositionRepository } from '../interfaces/index.js'
@@ -56,7 +57,7 @@ export class PositionRepository implements IPositionRepository {
 
   async findManyWithJobsCount(
     query: BASE_MODEL_QUERY_TYPE,
-  ): Promise<Position[]> {
+  ): Promise<PositionWithCount[]> {
     const { order, sortBy } = query
     const columns = getTableColumns(positions)
 

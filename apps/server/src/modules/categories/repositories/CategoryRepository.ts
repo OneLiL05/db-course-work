@@ -5,6 +5,7 @@ import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_CATEGORY_SCHEMA_TYPE,
   Category,
+  CategoryWithCount,
 } from '@skill-swap/shared'
 import { SQL, asc, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { ICategoryRepository } from '../interfaces/index.js'
@@ -56,7 +57,7 @@ export class CategoryRepository implements ICategoryRepository {
 
   async findManyWithJobsCount(
     query: BASE_MODEL_QUERY_TYPE,
-  ): Promise<Category[]> {
+  ): Promise<CategoryWithCount[]> {
     const { order, sortBy } = query
     const columns = getTableColumns(categories)
 

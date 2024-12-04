@@ -4,12 +4,15 @@ import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_CATEGORY_SCHEMA_TYPE,
   Category,
+  CategoryWithCount,
 } from '@skill-swap/shared'
 
 interface ICategoryRepository {
   findOne: (id: number) => Promise<Result<Category, HttpError>>
   findMany: (query: BASE_MODEL_QUERY_TYPE) => Promise<Category[]>
-  findManyWithJobsCount: (query: BASE_MODEL_QUERY_TYPE) => Promise<Category[]>
+  findManyWithJobsCount: (
+    query: BASE_MODEL_QUERY_TYPE,
+  ) => Promise<CategoryWithCount[]>
   createOne: (
     data: CREATE_CATEGORY_SCHEMA_TYPE,
   ) => Promise<Result<Category, HttpError>>
