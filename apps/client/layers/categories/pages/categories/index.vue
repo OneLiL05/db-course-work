@@ -32,7 +32,7 @@ const filteredCategories = computed(() => {
       <NuxtLink
         v-for="{ id, name, count } in filteredCategories"
         :key="id"
-        :to="`/category/${id}`"
+        :to="`/categories/${id}`"
         class="inline-flex w-full justify-between items-center p-4 border border-muted rounded-lg hover:border-white"
       >
         <p>{{ name }}</p>
