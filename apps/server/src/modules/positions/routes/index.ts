@@ -29,7 +29,7 @@ export const getPositionsRoutes = (app: AppInstanse): Routes => ({
     },
     {
       method: 'GET',
-      url: 'positions/jobs/count',
+      url: '/positions/jobs/count',
       handler: getPositionsWithJobsCount,
       schema: {
         querystring: BASE_MODEL_QUERY,
