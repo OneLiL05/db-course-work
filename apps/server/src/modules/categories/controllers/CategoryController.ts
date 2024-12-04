@@ -1,4 +1,4 @@
-import { jobs, jobsView } from '@skill-swap/db'
+import { jobs } from '@skill-swap/db'
 import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_CATEGORY_SCHEMA_TYPE,
@@ -69,12 +69,12 @@ export const getCategoryJobs = async (
     return reply.status(status).send({ message })
   }
 
-  const jobs = await jobRepository.findJobsBy({
-    where: eq(jobsView.categoryId, id),
+  const result = await jobRepository.findJobsBy({
+    where: eq(jobs.categoryId, id),
     query: request.query,
   })
 
-  return reply.status(200).send(jobs)
+  return reply.status(200).send(result)
 }
 
 export const getCategoryJobsAvgSalary = async (

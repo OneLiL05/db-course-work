@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
+import { jobs } from '@skill-swap/db'
 import {
   BASE_MODEL_QUERY_TYPE,
   CREATE_POSITION_SCHEMA_TYPE,
@@ -7,7 +7,7 @@ import {
   JOB_FILTERS_SCHEMA_TYPE,
 } from '@skill-swap/shared'
 import { eq } from 'drizzle-orm'
-import { jobs, jobsView } from '@skill-swap/db'
+import { FastifyReply, FastifyRequest } from 'fastify'
 
 export const getPositions = async (
   request: FastifyRequest<{ Querystring: BASE_MODEL_QUERY_TYPE }>,
@@ -69,12 +69,12 @@ export const getPositionJobs = async (
     return reply.status(status).send({ message })
   }
 
-  const jobs = await jobRepository.findJobsBy({
-    where: eq(jobsView.positionId, id),
+  const result = await jobRepository.findJobsBy({
+    where: eq(jobs.positionId, id),
     query: request.query,
   })
 
-  return reply.status(200).send(jobs)
+  return reply.status(200).send(result)
 }
 
 export const getPositionJobsAvgSalary = async (
