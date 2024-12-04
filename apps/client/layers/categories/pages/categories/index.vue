@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { buttonVariants } from '~/core/components/ui/button'
 
-const { data: citiesWithCount } = useCitiesWithJobsCount()
+const { data: categoriesWithCount } = useCategoriesWithJobsCount()
 
 const query = ref('')
 
-const filteredCities = computed(() => {
-  if (!citiesWithCount.value) return []
+const filteredCategories = computed(() => {
+  if (!categoriesWithCount.value) return []
 
-  return citiesWithCount.value.filter((city) => {
+  return categoriesWithCount.value.filter((category) => {
     const comparableQuery = query.value.trim().toLowerCase()
 
     if (!comparableQuery.length) return true
 
-    return city.name.toLowerCase().includes(comparableQuery)
+    return category.name.toLowerCase().includes(comparableQuery)
   })
 })
 </script>
@@ -26,18 +26,18 @@ const filteredCities = computed(() => {
         Back to home
       </NuxtLink>
     </div>
-    <Heading size="2">Search jobs by cities</Heading>
-    <Input v-model="query" placeholder="Search city..." />
+    <Heading size="2">Search jobs by categories</Heading>
+    <Input v-model="query" placeholder="Search category..." />
     <div class="grid grid-cols-3 gap-3">
       <NuxtLink
-        v-for="city in filteredCities"
-        :key="city.id"
-        :to="`/cities/${city.id}`"
+        v-for="{ id, name, count } in filteredCategories"
+        :key="id"
+        :to="`/category/${id}`"
         class="inline-flex w-full justify-between items-center p-4 border border-muted rounded-lg hover:border-white"
       >
-        <p>{{ city.name }}</p>
+        <p>{{ name }}</p>
         <p class="text-muted-foreground">
-          {{ city.count }}
+          {{ count }}
         </p>
       </NuxtLink>
     </div>

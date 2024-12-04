@@ -4,16 +4,16 @@ import { textVariants } from './ui/text'
 
 const links = [
   {
-    name: 'Home',
-    to: '/',
+    name: 'Categories',
+    to: '/categories',
   },
   {
     name: 'Cities',
     to: '/cities',
   },
   {
-    name: 'Companies',
-    to: '/',
+    name: 'Positions',
+    to: '/positions',
   },
 ]
 
@@ -23,7 +23,7 @@ const { isAuthentificated } = toRefs(authStore)
 
 <template>
   <header
-    class="inline-flex items-center w-full px-5 bg-primary-foreground h-16 [&_div]:inline-flex [&_div]:items-center [&_div]:gap-3"
+    class="inline-flex items-center w-full px-5 py-3 bg-primary-foreground [&_div]:inline-flex [&_div]:items-center [&_div]:gap-3"
   >
     <NuxtLink to="/" :class="textVariants({ size: '2' })">SkillSwap</NuxtLink>
     <div class="justify-center mx-auto">
