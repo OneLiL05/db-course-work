@@ -1,4 +1,4 @@
-import { jobsView } from '@skill-swap/db'
+import { jobs } from '@skill-swap/db'
 import {
   CREATE_COMPANY_SCHEMA_TYPE,
   CREATE_JOB_SCHEMA_TYPE,
@@ -51,9 +51,11 @@ export const getCompanyJobs = async (
     return reply.status(status).send({ message })
   }
 
-  const jobs = await jobRepository.findJobsBy(eq(jobsView.companyId, id))
+  const result = await jobRepository.findJobsBy({
+    where: eq(jobs.companyId, id),
+  })
 
-  return reply.status(200).send(jobs)
+  return reply.status(200).send(result)
 }
 
 export const getCompanyJobsCount = async (

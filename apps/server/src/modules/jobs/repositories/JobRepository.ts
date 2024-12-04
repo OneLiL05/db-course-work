@@ -68,106 +68,108 @@ export class JobRepository implements IJobRepository {
   }
 
   async findJobsBy({ where, query }: FindByArgs): Promise<Job[]> {
-    const {
-      employmentTypes,
-      salaryAmount,
-      salaryCurrency,
-      salaryPeriod,
-      suitableFor,
-      search,
-      period,
-    } = query
-
     const expressions: SQL[] = [where, eq(jobs.isHidden, false)]
 
-    if (employmentTypes && employmentTypes.length) {
-      if (employmentTypes.includes('full-time')) {
-        expressions.push(eq(jobs.isFulltime, true))
+    if (query) {
+      const {
+        employmentTypes,
+        salaryAmount,
+        salaryCurrency,
+        salaryPeriod,
+        suitableFor,
+        search,
+        period,
+      } = query
+
+      if (employmentTypes && employmentTypes.length) {
+        if (employmentTypes.includes('full-time')) {
+          expressions.push(eq(jobs.isFulltime, true))
+        }
+
+        if (employmentTypes.includes('part-time')) {
+          expressions.push(eq(jobs.isFulltime, false))
+        }
       }
 
-      if (employmentTypes.includes('part-time')) {
-        expressions.push(eq(jobs.isFulltime, false))
-      }
-    }
+      if (salaryAmount) {
+        if (salaryAmount.min) {
+          expressions.push(gte(jobSalaries.amount, salaryAmount.min.toString()))
+        }
 
-    if (salaryAmount) {
-      if (salaryAmount.min) {
-        expressions.push(gte(jobSalaries.amount, salaryAmount.min.toString()))
-      }
-
-      if (salaryAmount.max) {
-        expressions.push(lte(jobSalaries.amount, salaryAmount.max.toString()))
-      }
-    }
-
-    if (search) {
-      expressions.push(ilike(jobs.name, `%${search}%`))
-    }
-
-    if (period && period !== 'all-time') {
-      const currentDate = new Date()
-
-      if (period === 'day') {
-        const yesterday = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - 1,
-        )
-
-        expressions.push(between(jobs.createdAt, currentDate, yesterday))
+        if (salaryAmount.max) {
+          expressions.push(lte(jobSalaries.amount, salaryAmount.max.toString()))
+        }
       }
 
-      if (period === '7-days') {
-        const lastWeek = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - 7,
-        )
-
-        expressions.push(between(jobs.createdAt, currentDate, lastWeek))
+      if (search) {
+        expressions.push(ilike(jobs.name, `%${search}%`))
       }
 
-      if (period === '14-days') {
-        const twoWeeksAgo = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate() - 7,
-        )
+      if (period && period !== 'all-time') {
+        const currentDate = new Date()
 
-        expressions.push(between(jobs.createdAt, currentDate, twoWeeksAgo))
+        if (period === 'day') {
+          const yesterday = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate() - 1,
+          )
+
+          expressions.push(between(jobs.createdAt, currentDate, yesterday))
+        }
+
+        if (period === '7-days') {
+          const lastWeek = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate() - 7,
+          )
+
+          expressions.push(between(jobs.createdAt, currentDate, lastWeek))
+        }
+
+        if (period === '14-days') {
+          const twoWeeksAgo = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate() - 7,
+          )
+
+          expressions.push(between(jobs.createdAt, currentDate, twoWeeksAgo))
+        }
+
+        if (period === 'month') {
+          const lastMonth = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth() - 1,
+            currentDate.getDate(),
+          )
+
+          expressions.push(between(jobs.createdAt, currentDate, lastMonth))
+        }
       }
 
-      if (period === 'month') {
-        const lastMonth = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth() - 1,
-          currentDate.getDate(),
-        )
+      if (suitableFor && suitableFor.length) {
+        if (suitableFor.includes('remote')) {
+          expressions.push(eq(jobs.isRemote, true))
+        }
 
-        expressions.push(between(jobs.createdAt, currentDate, lastMonth))
-      }
-    }
+        if (suitableFor.includes('without-cv')) {
+          expressions.push(eq(jobs.isCvRequired, false))
+        }
 
-    if (suitableFor && suitableFor.length) {
-      if (suitableFor.includes('remote')) {
-        expressions.push(eq(jobs.isRemote, true))
+        if (suitableFor.includes('student')) {
+          expressions.push(eq(jobs.areStudentsAllowed, true))
+        }
       }
 
-      if (suitableFor.includes('without-cv')) {
-        expressions.push(eq(jobs.isCvRequired, false))
+      if (salaryCurrency && salaryCurrency.length) {
+        expressions.push(inArray(jobSalaries.currency, [...salaryCurrency]))
       }
 
-      if (suitableFor.includes('student')) {
-        expressions.push(eq(jobs.areStudentsAllowed, true))
+      if (salaryPeriod && salaryPeriod.length) {
+        expressions.push(inArray(jobSalaries.period, [...salaryPeriod]))
       }
-    }
-
-    if (salaryCurrency && salaryCurrency.length) {
-      expressions.push(inArray(jobSalaries.currency, [...salaryCurrency]))
-    }
-
-    if (salaryPeriod && salaryPeriod.length) {
-      expressions.push(inArray(jobSalaries.period, [...salaryPeriod]))
     }
 
     return this.db

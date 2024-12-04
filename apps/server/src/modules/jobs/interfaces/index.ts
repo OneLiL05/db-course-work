@@ -19,7 +19,7 @@ interface FindAvgSalaryArgs {
 
 interface FindByArgs {
   where: SQL
-  query: JOB_FILTERS_SCHEMA_TYPE
+  query?: JOB_FILTERS_SCHEMA_TYPE
 }
 
 interface IJobRepository {
