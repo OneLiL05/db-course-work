@@ -3,6 +3,7 @@ import {
   categories,
   cities,
   companies,
+  favouritedJobs,
   jobSalaries,
   jobSkills,
   jobs,
@@ -394,6 +395,18 @@ export class JobRepository implements IJobRepository {
         await tx.delete(jobSkills).where(inArray(jobSkills.id, mappedSkills))
       }
     })
+  }
+
+  async favouriteOne(id: number, userId: number): Promise<void> {
+    await this.db.insert(favouritedJobs).values({ jobId: id, userId })
+  }
+
+  async unfavouriteOne(id: number, userId: number): Promise<void> {
+    await this.db
+      .delete(favouritedJobs)
+      .where(
+        and(eq(favouritedJobs.jobId, id), eq(favouritedJobs.userId, userId)),
+      )
   }
 
   async deleteOne(id: number): Promise<void> {
