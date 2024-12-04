@@ -13,6 +13,7 @@ import {
   BASE_MODEL_QUERY,
   CREATE_POSITION_SCHEMA,
   GET_BY_ID_SCHEMA,
+  JOB_FILTERS_SCHEMA,
   POSITION_WITH_COUNT_SCHEMA,
 } from '@skill-swap/shared'
 
@@ -51,6 +52,7 @@ export const getPositionsRoutes = (app: AppInstanse): Routes => ({
       handler: getPositionJobs,
       schema: {
         params: GET_BY_ID_SCHEMA,
+        querystring: JOB_FILTERS_SCHEMA,
       },
     },
     {

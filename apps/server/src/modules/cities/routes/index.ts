@@ -16,6 +16,7 @@ import {
   CREATE_CITY_SCHEMA,
   GET_BY_ID_SCHEMA,
   JOBS_AVG_SALARY_QUERY_SCHEMA,
+  JOB_FILTERS_SCHEMA,
   MESSAGE_SCHEMA,
 } from '@skill-swap/shared'
 import { Routes } from '@/interfaces/index.js'
@@ -61,6 +62,7 @@ export const getCitiesRoutes = (app: AppInstanse): Routes => ({
       handler: getCityJobs,
       schema: {
         params: GET_BY_ID_SCHEMA,
+        querystring: JOB_FILTERS_SCHEMA,
       },
     },
     {

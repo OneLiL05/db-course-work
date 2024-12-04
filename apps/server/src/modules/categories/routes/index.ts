@@ -16,6 +16,7 @@ import {
   CREATE_CATEGORY_SCHEMA,
   GET_BY_ID_SCHEMA,
   JOBS_AVG_SALARY_QUERY_SCHEMA,
+  JOB_FILTERS_SCHEMA,
 } from '@skill-swap/shared'
 
 export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
@@ -62,6 +63,7 @@ export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
       handler: getCategoryJobs,
       schema: {
         params: GET_BY_ID_SCHEMA,
+        querystring: JOB_FILTERS_SCHEMA,
       },
     },
     {
