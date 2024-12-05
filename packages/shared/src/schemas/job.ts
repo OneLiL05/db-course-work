@@ -11,7 +11,7 @@ const SALARY_PERIOD_SCHEMA = z.enum(['one-time', 'weekly', 'monthly', 'yearly'])
 type SalaryPeriod = z.infer<typeof SALARY_PERIOD_SCHEMA>
 
 const JOB_SALARY_SCHEMA = z.object({
-  amount: z.number().min(100).max(9999999999),
+  amount: z.number().int().min(100).max(9999999999),
   currency: SALARY_CURRENCY_SCHEMA,
   period: SALARY_PERIOD_SCHEMA.default('monthly'),
 })
@@ -62,6 +62,14 @@ const JOB_SCHEMA = BASE_MODEL.extend({
 })
 
 type Job = z.infer<typeof JOB_SCHEMA>
+
+const FAVOURITED_JOB_SCHEMA = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  favouritedAt: z.date(),
+})
+
+type FavouritedJob = z.infer<typeof FAVOURITED_JOB_SCHEMA>
 
 const JOBS_AVG_SALARY_QUERY_SCHEMA = z.object({
   currency: SALARY_CURRENCY_SCHEMA.optional().default('USD'),
@@ -160,6 +168,7 @@ export type {
   UPDATE_JOB_SCHEMA_TYPE,
   JobSkill,
   JOB_FILTERS_SCHEMA_TYPE,
+  FavouritedJob,
 }
 export {
   JOB_SCHEMA,
@@ -170,4 +179,5 @@ export {
   JOB_AVG_SALARY_SCHEMA,
   UPDATE_JOB_SCHEMA,
   JOB_FILTERS_SCHEMA,
+  FAVOURITED_JOB_SCHEMA,
 }
