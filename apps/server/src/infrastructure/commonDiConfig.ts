@@ -6,6 +6,7 @@ import { Redis } from '@upstash/redis'
 import { CommonDependencies, ExternalDependencies } from '@/interfaces/index.js'
 import { SINGLETON_CONFIG } from '@/constants/config.js'
 import { db, queryClient } from '@skill-swap/db'
+import { Client, Storage } from 'node-appwrite'
 
 export const resolveCommonDiConfig = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -39,6 +40,18 @@ export const resolveCommonDiConfig = (
       token: config.redis.token,
     })
   }, SINGLETON_CONFIG),
+  storage: asFunction(({ config }: CommonDependencies) => {
+    const client = new Client()
+
+    client
+      .setEndpoint(config.appwrite.endpointUrl)
+      .setProject(config.appwrite.project)
+      .setKey(config.appwrite.apiKey)
+
+    const storage = new Storage(client)
+
+    return storage
+  }),
   config: asFunction(() => {
     return getConfig()
   }, SINGLETON_CONFIG),

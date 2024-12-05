@@ -1,5 +1,6 @@
 import { env } from '../env.js'
 import {
+  AppwriteConfig,
   AuthConfig,
   Config,
   DbConfig,
@@ -24,10 +25,17 @@ const getRedisConfig = (): RedisConfig => ({
   token: env.REDIS_PASSWORD,
 })
 
+const getAppwriteConfig = (): AppwriteConfig => ({
+  apiKey: env.APPWRITE_API_KEY,
+  endpointUrl: env.APPWRITE_ENDPOINT_URL,
+  project: env.APPWRITE_PROJECT,
+})
+
 const getConfig = (): Config => ({
   db: getDbConfig(),
   auth: getAuthConfig(),
   redis: getRedisConfig(),
+  appwrite: getAppwriteConfig(),
 })
 
 export { getConfig }

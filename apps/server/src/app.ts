@@ -4,6 +4,7 @@ import fastifyCookie from '@fastify/cookie'
 import fastifyCors from '@fastify/cors'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyJwt from '@fastify/jwt'
+import fastifyMultipart from '@fastify/multipart'
 import fastify from 'fastify'
 import {
   ZodTypeProvider,
@@ -106,6 +107,8 @@ export const getApp = async (): Promise<AppInstanse> => {
     timeWindow: 15 * 1000,
     allowList: ['127.0.0.1'],
   })
+
+  await app.register(fastifyMultipart, { attachFieldsToBody: true })
 
   registerDependenies(diContainer, { app })
 

@@ -21,14 +21,26 @@ export const getUserCompanies = async (
   request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
   reply: FastifyReply,
 ): Promise<void> => {
-  const { id, roles } = request.user
+  const { roles } = request.user
   const { companyRepository } = request.diScope.cradle
 
   if (!roles.includes('employer')) {
     return reply.status(200).send([])
   }
 
-  const companies = await companyRepository.findUserCompanies(id)
+  const companies = await companyRepository.findUserCompanies(request.params.id)
 
   return reply.status(200).send(companies)
+}
+
+export const getUserResumes = async (
+  request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { resumeRepository } = request.diScope.cradle
+
+  const resumes = await resumeRepository.findManyByUser(id)
+
+  return reply.status(200).send(resumes)
 }

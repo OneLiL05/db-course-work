@@ -11,6 +11,9 @@ const envSchema = z.object({
   REDIS_PASSWORD: z.string(),
   JWT_SECRET: z.string(),
   COOKIE_SECRET: z.string(),
+  APPWRITE_ENDPOINT_URL: z.string(),
+  APPWRITE_PROJECT: z.string(),
+  APPWRITE_API_KEY: z.string(),
 })
 
 const env = envSchema.parse(process.env)
