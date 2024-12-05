@@ -1,4 +1,14 @@
+import { Routes } from '@/interfaces/index.js'
 import { AppInstanse } from '@/types/index.js'
+import {
+  BASE_MODEL_QUERY,
+  CITY_MODEL,
+  CITY_MODEL_WITH_COUNT,
+  CREATE_CITY_SCHEMA,
+  GET_BY_ID_SCHEMA,
+  JOBS_AVG_SALARY_QUERY_SCHEMA,
+  MESSAGE_SCHEMA,
+} from '@skill-swap/shared'
 import {
   createCity,
   deleteCity,
@@ -9,17 +19,6 @@ import {
   getCityJobsAvgSalary,
   updateCity,
 } from '../controllers/CityController.js'
-import {
-  BASE_MODEL_QUERY,
-  CITY_MODEL,
-  CITY_MODEL_WITH_COUNT,
-  CREATE_CITY_SCHEMA,
-  GET_BY_ID_SCHEMA,
-  JOBS_AVG_SALARY_QUERY_SCHEMA,
-  JOB_FILTERS_SCHEMA,
-  MESSAGE_SCHEMA,
-} from '@skill-swap/shared'
-import { Routes } from '@/interfaces/index.js'
 
 export const getCitiesRoutes = (app: AppInstanse): Routes => ({
   routes: [
@@ -62,7 +61,7 @@ export const getCitiesRoutes = (app: AppInstanse): Routes => ({
       handler: getCityJobs,
       schema: {
         params: GET_BY_ID_SCHEMA,
-        querystring: JOB_FILTERS_SCHEMA,
+        // querystring: JOB_FILTERS_SCHEMA,
       },
     },
     {

@@ -15,6 +15,17 @@ export const getJobs = async (
   return reply.status(200).send(jobs)
 }
 
+export const getFavouritedJobs = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { jobRepository } = request.diScope.cradle
+
+  const favouritedJobs = await jobRepository.findFavourite(request.user.id)
+
+  return reply.status(200).send(favouritedJobs)
+}
+
 export const getJob = async (
   request: FastifyRequest<{ Params: GET_BY_ID_SCHEMA_TYPE }>,
   reply: FastifyReply,
@@ -75,7 +86,7 @@ export const favouriteJob = async (
 
   await jobRepository.favouriteOne(id, request.user.id)
 
-  return reply.status(200).send()
+  return reply.status(200).send(isExist.value)
 }
 
 export const unfavouriteJob = async (
@@ -97,7 +108,7 @@ export const unfavouriteJob = async (
 
   await jobRepository.unfavouriteOne(id, request.user.id)
 
-  return reply.status(200).send()
+  return reply.status(200).send(isExist.value)
 }
 
 export const deleteJob = async (

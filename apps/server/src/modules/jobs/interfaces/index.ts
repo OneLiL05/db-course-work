@@ -25,6 +25,9 @@ interface FindByArgs {
 interface IJobRepository {
   findMany: () => Promise<Job[]>
   findOne: (id: number) => Promise<Result<Job, HttpError>>
+  findFavourite: (
+    userId: number,
+  ) => Promise<{ id: number; name: string; favouritedAt: Date }[]>
   favouriteOne: (id: number, userId: number) => Promise<void>
   unfavouriteOne: (id: number, userId: number) => Promise<void>
   findLatestCount: (companyId: number) => Promise<{ count: number } | null>

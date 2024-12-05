@@ -2,6 +2,7 @@ import { Routes } from '@/interfaces/index.js'
 import {
   deleteJob,
   favouriteJob,
+  getFavouritedJobs,
   getJob,
   getJobs,
   unfavouriteJob,
@@ -16,6 +17,12 @@ export const getJobsRoutes = (app: AppInstanse): Routes => ({
       method: 'GET',
       url: '/jobs',
       handler: getJobs,
+    },
+    {
+      method: 'GET',
+      url: '/jobs/favourited',
+      handler: getFavouritedJobs,
+      preHandler: [app.authentificate],
     },
     {
       method: 'GET',

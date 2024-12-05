@@ -1,4 +1,12 @@
 import { Routes } from '@/interfaces/index.js'
+import { AppInstanse } from '@/types/index.js'
+import {
+  BASE_MODEL_QUERY,
+  CATEGORY_SCHEMA_WITH_COUNT,
+  CREATE_CATEGORY_SCHEMA,
+  GET_BY_ID_SCHEMA,
+  JOB_FILTERS_SCHEMA,
+} from '@skill-swap/shared'
 import {
   createCategory,
   deleteCategory,
@@ -9,15 +17,6 @@ import {
   getCategoryJobsAvgSalary,
   updateCategory,
 } from '../controllers/CategoryController.js'
-import { AppInstanse } from '@/types/index.js'
-import {
-  BASE_MODEL_QUERY,
-  CATEGORY_SCHEMA_WITH_COUNT,
-  CREATE_CATEGORY_SCHEMA,
-  GET_BY_ID_SCHEMA,
-  JOBS_AVG_SALARY_QUERY_SCHEMA,
-  JOB_FILTERS_SCHEMA,
-} from '@skill-swap/shared'
 
 export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
   routes: [
@@ -54,7 +53,7 @@ export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
       handler: getCategoryJobsAvgSalary,
       schema: {
         params: GET_BY_ID_SCHEMA,
-        querysting: JOBS_AVG_SALARY_QUERY_SCHEMA,
+        // querysting: JOBS_AVG_SALARY_QUERY_SCHEMA,
       },
     },
     {

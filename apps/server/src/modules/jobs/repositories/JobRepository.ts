@@ -1,3 +1,5 @@
+import { HttpError } from '@/interfaces/common.js'
+import { Failure, Result, Success } from '@/utils/result.js'
 import {
   DatabaseClient,
   categories,
@@ -15,9 +17,9 @@ import {
   skills,
 } from '@skill-swap/db'
 import {
+  AvgSalary,
   CREATE_JOB_SCHEMA_TYPE,
   Job,
-  AvgSalary,
   UPDATE_JOB_SCHEMA_TYPE,
 } from '@skill-swap/shared'
 import {
@@ -39,8 +41,6 @@ import {
   IJobRepository,
 } from '../interfaces/index.js'
 import { JobsInjectableDependencies } from '../types/index.js'
-import { Failure, Result, Success } from '@/utils/result.js'
-import { HttpError } from '@/interfaces/common.js'
 
 export class JobRepository implements IJobRepository {
   private readonly db: DatabaseClient
@@ -311,6 +311,24 @@ export class JobRepository implements IJobRepository {
     if (!jobsCount) return null
 
     return { count: jobsCount.count }
+  }
+
+  async findFavourite(
+    userId: number,
+  ): Promise<{ id: number; name: string; favouritedAt: Date }[]> {
+    return this.db
+      .select({
+        id: jobs.id,
+        name: jobs.name,
+        favouritedAt: favouritedJobs.favouritedAt,
+      })
+      .from(jobs)
+      .leftJoin(favouritedJobs, eq(favouritedJobs.jobId, jobs.id))
+      .where(eq(favouritedJobs.userId, userId)) as unknown as {
+      id: number
+      name: string
+      favouritedAt: Date
+    }[]
   }
 
   async createOne(
