@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { buttonVariants } from '~/core/components/ui/button'
-import { Spinner } from '~/core/components/ui/spinner'
 
 useHead({
   title: 'My companies',
@@ -11,7 +10,17 @@ const query = ref('')
 const { user } = useAuthStore()
 const { data: companies, status } = useUserCompanies()
 
-console.log(companies.value)
+const filteredCities = computed(() => {
+  if (!companies.value) return []
+
+  return companies.value.filter((company) => {
+    const comparableQuery = query.value.trim().toLowerCase()
+
+    if (!comparableQuery.length) return true
+
+    return company.name.toLowerCase().includes(comparableQuery)
+  })
+})
 </script>
 
 <template>
@@ -45,7 +54,7 @@ console.log(companies.value)
     <template v-if="companies">
       <section class="flex flex-col w-full gap-4">
         <div
-          v-for="company in companies"
+          v-for="company in filteredCities"
           :key="company.id"
           class="inline-flex w-full items-center justify-between bg-transparent border border-muted rounded-xl p-4"
         >

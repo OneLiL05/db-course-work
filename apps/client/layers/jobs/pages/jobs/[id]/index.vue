@@ -88,7 +88,7 @@ onMounted(() => {
           </NuxtLink>
           <NuxtLink
             class="inline-flex gap-2 items-center"
-            :to="`/positions/${job?.category.id}`"
+            :to="`/categories/${job?.category.id}`"
           >
             <Icon
               class="size-4 text-muted-foreground"

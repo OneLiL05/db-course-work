@@ -28,7 +28,7 @@ const filteredPositions = computed(() => {
     </div>
     <Heading size="2">Search jobs by positions</Heading>
     <Input v-model="query" placeholder="Search position..." />
-    <div class="grid grid-cols-3 gap-3">
+    <div class="grid grid-cols-3 gap-3 pb-5">
       <NuxtLink
         v-for="{ id, name, count } in filteredPositions"
         :key="id"

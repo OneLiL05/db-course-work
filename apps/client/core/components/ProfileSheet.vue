@@ -23,7 +23,7 @@ const items = [
   {
     name: 'Your favourited jobs',
     icon: 'lucide:heart',
-    to: '/',
+    to: `/${user.value?.id}/favourited-jobs`,
   },
   {
     name: 'Your companies',
