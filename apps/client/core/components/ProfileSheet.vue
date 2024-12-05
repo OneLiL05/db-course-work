@@ -66,6 +66,17 @@ const items = [
             Admin panel
           </NuxtLink>
         </SheetClose>
+        <div class="border-b border-muted" />
+        <SheetClose @click="authStore.signout" as-child>
+          <NuxtLink
+            to="/"
+            :class="buttonVariants({ variant: 'ghost', size: 'sm' })"
+            class="w-full !justify-start gap-3"
+          >
+            <Icon class="size-4 text-muted-foreground" name="lucide:log-out" />
+            Sign out
+          </NuxtLink>
+        </SheetClose>
       </div>
     </SheetContent>
   </Sheet>

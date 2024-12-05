@@ -14,9 +14,9 @@ const createdAt = computed(() =>
   }),
 )
 
-onMounted(() => {
-  console.log(job.value)
-})
+const store = useAuthStore()
+
+const { isAuthentificated } = toRefs(store)
 </script>
 
 <template>
@@ -25,7 +25,7 @@ onMounted(() => {
       class="flex flex-col mx-auto w-[800px] border border-muted rounded-lg p-5 gap-4"
     >
       <div class="inline-flex justify-between w-full">
-        <div class="inline-flex gap-3">
+        <div v-if="isAuthentificated" class="inline-flex gap-3">
           <Button>
             <Icon name="lucide:sparkles" />
             Apply

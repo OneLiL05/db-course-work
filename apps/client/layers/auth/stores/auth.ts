@@ -6,9 +6,14 @@ export const useAuthStore = defineStore(
     const token = ref<string | null>(null)
     const user = ref<JwtPayload | null>(null)
 
-    const isAuthentificated = computed(() => !!token && !!user)
+    const isAuthentificated = computed(() => !!token.value && !!user.value)
 
-    return { token, isAuthentificated, user }
+    const signout = () => {
+      user.value = null
+      token.value = null
+    }
+
+    return { token, isAuthentificated, user, signout }
   },
   { persist: true },
 )
