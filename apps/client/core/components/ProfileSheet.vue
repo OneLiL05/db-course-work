@@ -13,7 +13,7 @@ const items = [
   {
     name: 'Your resumes',
     icon: 'lucide:file',
-    to: '/',
+    to: `/${user.value?.id}/resumes`,
   },
   {
     name: 'Your applications',
