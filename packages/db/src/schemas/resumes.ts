@@ -7,6 +7,8 @@ import { applications } from './applications.js'
 export const resumes = pgTable('resumes', {
   ...baseSchemaAttrs,
   path: varchar().notNull(),
+  name: varchar().notNull(),
+  fileId: varchar().notNull(),
   userId: integer('user_id')
     .notNull()
     .references(() => users.id),
