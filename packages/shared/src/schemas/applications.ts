@@ -63,13 +63,13 @@ type CREATE_APPLICATION_SCHEMA_TYPE = z.infer<typeof CREATE_APPLICATION_SCHEMA>
 
 const UPDATE_APPLICATION_SCHEMA = z.object({
   stageId: z.number(),
+  close: z.boolean().default(false),
 })
 
 type UPDATE_APPLICATION_SCHEMA_TYPE = z.infer<typeof UPDATE_APPLICATION_SCHEMA>
 
 const APPLICATION_FILTERS_SCHEMA = z.object({
   stage: APPLICATION_STAGES_SCHEMA.optional(),
-  close: z.boolean().default(false),
 })
 
 type APPLICATION_FILTERS_SCHEMA_TYPE = z.infer<
