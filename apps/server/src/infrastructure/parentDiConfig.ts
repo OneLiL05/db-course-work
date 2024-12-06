@@ -24,6 +24,8 @@ import { ResumesModuleDependencies } from '@/modules/resumes/interfaces/index.js
 import { resolveResumesModule } from '@/modules/resumes/index.js'
 import { ApplicationsModuleDependencies } from '@/modules/applications/interfaces/index.js'
 import { resolveApplicationsModule } from '@/modules/applications/index.js'
+import { EmployeesModuleDependencies } from '@/modules/employees/interfaces/index.js'
+import { resolveEmployeesModule } from '@/modules/employees/index.js'
 
 type Dependencies = CommonDependencies &
   AuthModuleDependecies &
@@ -35,7 +37,8 @@ type Dependencies = CommonDependencies &
   JobsModuleDependencies &
   SkillsModuleDependencies &
   ResumesModuleDependencies &
-  ApplicationsModuleDependencies
+  ApplicationsModuleDependencies &
+  EmployeesModuleDependencies
 
 type DiCOnfig = NameAndRegistrationPair<Dependencies>
 
@@ -55,6 +58,7 @@ export const registerDependenies = (
     ...resolveSkillsModule(),
     ...resolveResumesModule(),
     ...resolveApplicationsModule(),
+    ...resolveEmployeesModule(),
   }
 
   diContainer.register(diConfig)

@@ -11,6 +11,7 @@ import { getUsersRoutes } from './users/routes/index.js'
 import { getSkillsRoutes } from './skills/routes/index.js'
 import { getResumesRoutes } from './resumes/routes/index.js'
 import { getApplicationsRoutes } from './applications/routes/index.js'
+import { getEmployeesRoutes } from './employees/routes/index.js'
 
 export const getRoutes = (app: AppInstanse): Routes => {
   const { routes: baseRoutes } = getBaseRoutes()
@@ -24,6 +25,7 @@ export const getRoutes = (app: AppInstanse): Routes => {
   const { routes: skillsRoutes } = getSkillsRoutes(app)
   const { routes: resumeRoutes } = getResumesRoutes(app)
   const { routes: applicationRoutes } = getApplicationsRoutes(app)
+  const { routes: employeeRoutes } = getEmployeesRoutes(app)
 
   return {
     routes: [
@@ -38,6 +40,7 @@ export const getRoutes = (app: AppInstanse): Routes => {
       ...skillsRoutes,
       ...resumeRoutes,
       ...applicationRoutes,
+      ...employeeRoutes,
     ],
   }
 }
