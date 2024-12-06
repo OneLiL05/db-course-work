@@ -2,6 +2,8 @@
 import type { CompanyApplication } from '@skill-swap/shared'
 
 defineProps<{ application: CompanyApplication }>()
+
+const { generateReport } = useCompanyApplicationPdf()
 </script>
 
 <template>
@@ -19,6 +21,9 @@ defineProps<{ application: CompanyApplication }>()
       </DropdownMenuItem>
       <DropdownMenuItem>
         <NuxtLink :to="`/${application.applierId}`">View applier</NuxtLink>
+      </DropdownMenuItem>
+      <DropdownMenuItem @click="generateReport(application)">
+        Print
       </DropdownMenuItem>
       <DropdownMenuItem as-child>
         <EditApplicationDialog :application />
