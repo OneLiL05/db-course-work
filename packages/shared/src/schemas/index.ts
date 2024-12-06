@@ -15,6 +15,7 @@ type GET_BY_ID_SCHEMA_TYPE = z.infer<typeof GET_BY_ID_SCHEMA>
 export { ID_SCHEMA, GET_BY_ID_SCHEMA, MESSAGE_SCHEMA }
 export type { GET_BY_ID_SCHEMA_TYPE }
 
+export * from './applications.js'
 export * from './auth.js'
 export * from './category.js'
 export * from './city.js'
