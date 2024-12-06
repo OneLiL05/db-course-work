@@ -29,11 +29,15 @@ const { handleSubmit, values, errors, setFieldError } = useForm({
 })
 
 const onSubmit = handleSubmit(async (data) => {
-  mutateAsync({
-    ...data,
-    removeSkills: skillsToRemove.value,
-    addSkills: selectedSkills.value,
-  })
+  if (!existedSkills.value.length && !selectedSkills.value.length) {
+    setFieldError('addSkills', `There should be at least one skill`)
+  } else {
+    mutateAsync({
+      ...data,
+      removeSkills: skillsToRemove.value,
+      addSkills: selectedSkills.value,
+    })
+  }
 })
 
 const isDisabled = computed(() => {
@@ -223,18 +227,13 @@ const removeExisted = (skill: JobSkill) => {
           @remove-selected="removeSkill"
           @remove-existed="removeExisted"
         />
-        <!-- <AddSkillForm
-        :selected-skills="selectedSkills"
-        @add="addSkill"
-        @remove="removeSkill"
-      />
-      <p v-if="errors.skills" class="text-sm font-medium text-destructive">
-        {{ errors.skills }}
-      </p> -->
+        <p v-if="errors.addSkills" class="text-sm font-medium text-destructive">
+          {{ errors.addSkills }}
+        </p>
       </div>
       <div class="inline-flex w-full gap-4">
         <Button type="submit" :disabled="isPending || isDisabled">
-          Create
+          {{ isPending ? 'Editing...' : 'Edit' }}
         </Button>
       </div>
     </form>
