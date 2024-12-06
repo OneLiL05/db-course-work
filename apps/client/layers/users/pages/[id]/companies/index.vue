@@ -67,7 +67,7 @@ const filteredCities = computed(() => {
             <p>{{ company.name }}</p>
           </div>
           <NuxtLink
-            :to="`/companies/${company.id}/settings`"
+            :to="`/companies/${company.id}/settings/jobs`"
             class="!size-8"
             :class="buttonVariants({ variant: 'outline', size: 'icon' })"
           >
