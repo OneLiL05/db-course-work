@@ -12,7 +12,7 @@ export const applications = pgTable('applications', {
   appliedAt: timestamp('applied_at', { withTimezone: true })
     .notNull()
     .defaultNow(),
-  coverLetter: text().notNull(),
+  coverLetter: text('cover_letter').notNull(),
   jobId: integer('job_id')
     .notNull()
     .references(() => jobs.id, { onDelete: 'restrict', onUpdate: 'cascade' }),

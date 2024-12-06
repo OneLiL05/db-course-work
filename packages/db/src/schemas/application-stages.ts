@@ -12,7 +12,7 @@ export const applicationStages = pgTable(
   (table) => ({
     nameCheck: check(
       'application_stage_name_check',
-      sql`${table.name} in ('New', 'HR Review', 'Interview', 'Offer')`,
+      sql`${table.name} in ('New', 'HR Review', 'Interview', 'Offer', 'Declined')`,
     ),
   }),
 )
