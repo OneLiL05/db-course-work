@@ -17,7 +17,7 @@ export class UserRepository implements IUserRepository {
       .select()
       .from(users)
       .innerJoin(userRoles, eq(users.id, userRoles.userId))
-      .innerJoin(roles, eq(roles.id, userRoles.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
       .where(eq(users.id, id))
 
     const user = result.at(0)
@@ -35,7 +35,7 @@ export class UserRepository implements IUserRepository {
       .select()
       .from(users)
       .innerJoin(userRoles, eq(users.id, userRoles.userId))
-      .innerJoin(roles, eq(roles.id, userRoles.id))
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
       .where(eq(users.email, email))
 
     const user = result.at(0)
@@ -58,11 +58,11 @@ export class UserRepository implements IUserRepository {
         .values(data)
         .returning({ ...rest })
 
-      const user = result.at(0) as ReturnedUser
+      const returnedUser = result.at(0) as ReturnedUser
 
-      await this.db.insert(userRoles).values({ userId: user.id, roleId: 3 })
+      await tx.insert(userRoles).values({ userId: returnedUser.id, roleId: 3 })
 
-      return user
+      return returnedUser
     })
 
     return user
