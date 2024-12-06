@@ -3,6 +3,8 @@ import type { Job } from '@skill-swap/shared'
 import { buttonVariants } from '~/core/components/ui/button'
 
 defineProps<{ job: Job }>()
+
+const { generateJobReportPdf } = useJobPdf()
 </script>
 <template>
   <DropdownMenu>
@@ -31,6 +33,9 @@ defineProps<{ job: Job }>()
         >
           Edit
         </NuxtLink>
+      </DropdownMenuItem>
+      <DropdownMenuItem @click="generateJobReportPdf(job)">
+        Print
       </DropdownMenuItem>
       <DropdownMenuItem as-child>
         <DeleteJobDialog :job />

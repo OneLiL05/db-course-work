@@ -43,7 +43,7 @@ const { isAuthentificated } = toRefs(store)
             Favourite
           </Button>
         </div>
-        <JobDropdown />
+        <JobDropdown :job="job!" />
       </div>
       <Alert v-if="job?.isCvRequired">
         <AlertTitle>CV is required!</AlertTitle>

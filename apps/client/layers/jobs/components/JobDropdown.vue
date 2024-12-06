@@ -1,4 +1,10 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import type { Job } from '@skill-swap/shared'
+
+const props = defineProps<{ job: Job }>()
+
+const { generateJobReportPdf } = useJobPdf()
+</script>
 
 <template>
   <DropdownMenu>
@@ -13,7 +19,7 @@
         <Icon name="lucide:file-text" />
         Find similar
       </DropdownMenuItem>
-      <DropdownMenuItem>
+      <DropdownMenuItem @click="generateJobReportPdf(job)">
         <Icon name="lucide:printer" />
         Print
       </DropdownMenuItem>
