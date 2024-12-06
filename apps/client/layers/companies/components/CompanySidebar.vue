@@ -11,8 +11,13 @@ const links = [
   },
   {
     name: 'Applications',
-    icon: 'lucide:users-round',
+    icon: 'lucide:user-round-search',
     to: `/companies/${id.value}/settings/applications`,
+  },
+  {
+    name: 'Employees',
+    icon: 'lucide:users-round',
+    to: `/companies/${id.value}/settings/employees`,
   },
   {
     name: 'Administrators',

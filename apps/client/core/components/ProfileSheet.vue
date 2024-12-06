@@ -54,18 +54,19 @@ const items = [
             {{ name }}
           </NuxtLink>
         </SheetClose>
-        <div class="border-b border-muted" />
-        <SheetClose as-child>
-          <NuxtLink
-            v-if="user?.roles.includes('admin')"
-            to="/admin"
-            :class="buttonVariants({ variant: 'ghost', size: 'sm' })"
-            class="w-full !justify-start gap-3"
-          >
-            <Icon class="size-4 text-muted-foreground" name="lucide:crown" />
-            Admin panel
-          </NuxtLink>
-        </SheetClose>
+        <template v-if="user?.roles.includes('admin')">
+          <div class="border-b border-muted" />
+          <SheetClose as-child>
+            <NuxtLink
+              to="/admin/cities"
+              :class="buttonVariants({ variant: 'ghost', size: 'sm' })"
+              class="w-full !justify-start gap-3"
+            >
+              <Icon class="size-4 text-muted-foreground" name="lucide:crown" />
+              Admin panel
+            </NuxtLink>
+          </SheetClose>
+        </template>
         <div class="border-b border-muted" />
         <SheetClose @click="authStore.signout" as-child>
           <NuxtLink
