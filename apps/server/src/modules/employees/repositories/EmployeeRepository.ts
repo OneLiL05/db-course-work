@@ -54,7 +54,8 @@ export class EmployeeRepository implements IEmployeeRepository {
 
   async deleteOne(id: number): Promise<Employee> {
     const result = await this.db
-      .delete(employees)
+      .update(employees)
+      .set({ firedAt: new Date() })
       .where(eq(employees.id, id))
       .returning()
 
