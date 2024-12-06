@@ -37,7 +37,6 @@ const { isAuthentificated } = toRefs(authStore)
       </NuxtLink>
     </div>
     <div class="justify-end">
-      <!-- <ThemeSwitcher /> -->
       <template v-if="!isAuthentificated">
         <NuxtLink to="/login" :class="buttonVariants({ variant: 'outline' })">
           Login
