@@ -1,10 +1,9 @@
+import { relations } from 'drizzle-orm'
 import { boolean, pgTable, text, varchar } from 'drizzle-orm/pg-core'
 import { baseSchemaAttrs } from '../utils.js'
-import { relations } from 'drizzle-orm'
-import { jobs } from './jobs.js'
-import { employees } from './employees.js'
 import { applications } from './applications.js'
 import { companyAdmins } from './company-admins.js'
+import { jobs } from './jobs.js'
 
 export const companies = pgTable('companies', {
   ...baseSchemaAttrs,
@@ -17,7 +16,6 @@ export const companies = pgTable('companies', {
 
 export const companiesRelations = relations(companies, ({ many }) => ({
   jobs: many(jobs),
-  employees: many(employees),
   applications: many(applications),
   admins: many(companyAdmins),
 }))

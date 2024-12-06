@@ -1,9 +1,8 @@
+import { relations } from 'drizzle-orm'
 import { integer, pgTable, timestamp } from 'drizzle-orm/pg-core'
 import { baseSchemaAttrs } from '../utils.js'
-import { users } from './users.js'
 import { jobs } from './jobs.js'
-import { relations } from 'drizzle-orm'
-import { companies } from './companies.js'
+import { users } from './users.js'
 
 const { id } = baseSchemaAttrs
 
@@ -19,12 +18,6 @@ export const employees = pgTable('employees', {
   jobId: integer('job_id')
     .notNull()
     .references(() => jobs.id, { onDelete: 'restrict', onUpdate: 'restrict' }),
-  companyId: integer('company_id')
-    .notNull()
-    .references(() => companies.id, {
-      onDelete: 'restrict',
-      onUpdate: 'cascade',
-    }),
 })
 
 export const employeesRelations = relations(employees, ({ one }) => ({
@@ -35,9 +28,5 @@ export const employeesRelations = relations(employees, ({ one }) => ({
   job: one(jobs, {
     fields: [employees.jobId],
     references: [jobs.id],
-  }),
-  company: one(companies, {
-    fields: [employees.companyId],
-    references: [companies.id],
   }),
 }))
