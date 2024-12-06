@@ -6,7 +6,7 @@ import {
   updateResume,
 } from '../controllers/ResumeController.js'
 
-export const getResumeRoutes = (app: AppInstanse): Routes => ({
+export const getResumesRoutes = (app: AppInstanse): Routes => ({
   routes: [
     {
       method: 'POST',

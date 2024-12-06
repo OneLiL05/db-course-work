@@ -1,9 +1,9 @@
 import { BaseDiConfig, InjectableDependencies } from '@/types/index.js'
-import { ResumeModuleDependencies } from '../interfaces/index.js'
+import { ResumesModuleDependencies } from '../interfaces/index.js'
 
 type ResumeInjectableDependencies =
-  InjectableDependencies<ResumeModuleDependencies>
+  InjectableDependencies<ResumesModuleDependencies>
 
-type ResumeDiConfig = BaseDiConfig<ResumeModuleDependencies>
+type ResumeDiConfig = BaseDiConfig<ResumesModuleDependencies>
 
 export type { ResumeInjectableDependencies, ResumeDiConfig }

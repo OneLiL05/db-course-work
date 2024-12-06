@@ -1,4 +1,7 @@
-import { GET_BY_ID_SCHEMA_TYPE } from '@skill-swap/shared'
+import {
+  APPLICATION_FILTERS_SCHEMA_TYPE,
+  GET_BY_ID_SCHEMA_TYPE,
+} from '@skill-swap/shared'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 export const getUser = async (
@@ -43,4 +46,22 @@ export const getUserResumes = async (
   const resumes = await resumeRepository.findManyByUser(id)
 
   return reply.status(200).send(resumes)
+}
+
+export const getUserApplications = async (
+  request: FastifyRequest<{
+    Params: GET_BY_ID_SCHEMA_TYPE
+    Querystring?: APPLICATION_FILTERS_SCHEMA_TYPE
+  }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { applicationRepository } = request.diScope.cradle
+
+  const applications = await applicationRepository.findManyByUser(
+    id,
+    request.query,
+  )
+
+  return reply.status(200).send(applications)
 }

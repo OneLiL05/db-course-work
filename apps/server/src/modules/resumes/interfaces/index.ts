@@ -19,8 +19,8 @@ interface IResumeRepository {
   isCreator: (id: number, userId: number) => Promise<boolean>
 }
 
-interface ResumeModuleDependencies {
+interface ResumesModuleDependencies {
   resumeRepository: IResumeRepository
 }
 
-export type { IResumeRepository, ResumeModuleDependencies }
+export type { IResumeRepository, ResumesModuleDependencies }

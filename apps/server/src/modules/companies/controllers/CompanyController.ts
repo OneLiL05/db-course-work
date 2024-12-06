@@ -1,5 +1,6 @@
 import { jobs } from '@skill-swap/db'
 import {
+  APPLICATION_FILTERS_SCHEMA_TYPE,
   CREATE_COMPANY_SCHEMA_TYPE,
   CREATE_JOB_SCHEMA_TYPE,
   GET_BY_ID_SCHEMA_TYPE,
@@ -116,6 +117,32 @@ export const getCompanyAdmins = async (
   const admins = await companyRepository.findAdmins(id)
 
   return reply.status(200).send(admins)
+}
+
+export const getCompanyApplications = async (
+  request: FastifyRequest<{
+    Params: GET_BY_ID_SCHEMA_TYPE
+    Querystring: APPLICATION_FILTERS_SCHEMA_TYPE
+  }>,
+  reply: FastifyReply,
+) => {
+  const { id } = request.params
+  const { applicationRepository, companyRepository } = request.diScope.cradle
+
+  const isExist = await companyRepository.findOne(id)
+
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
+  }
+
+  const applications = await applicationRepository.findManyByCompany(
+    id,
+    request.query,
+  )
+
+  return reply.status(200).send(applications)
 }
 
 export const createCompany = async (
