@@ -34,10 +34,10 @@ const { isAuthentificated } = toRefs(store)
         ]"
       >
         <div v-if="isAuthentificated" class="inline-flex gap-3">
-          <Button>
+          <NuxtLink :class="buttonVariants()" :to="`/jobs/${id}/apply`">
             <Icon name="lucide:sparkles" />
             Apply
-          </Button>
+          </NuxtLink>
           <Button variant="ghost">
             <Icon name="lucide:heart" />
             Favourite

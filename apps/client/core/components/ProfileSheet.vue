@@ -18,7 +18,7 @@ const items = [
   {
     name: 'Your applications',
     icon: 'lucide:briefcase-business',
-    to: '/',
+    to: `/${user.value?.id}/applications`,
   },
   {
     name: 'Your favourited jobs',
