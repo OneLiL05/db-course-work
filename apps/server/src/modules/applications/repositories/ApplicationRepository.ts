@@ -29,11 +29,19 @@ export class ApplicationRepository implements IApplicationRepository {
     this.db = db.client
   }
 
-  async findOne(id: number): Promise<Result<Application, HttpError>> {
+  async findOne(
+    id: number,
+  ): Promise<Result<Application & { userId: number }, HttpError>> {
+    const columns = getTableColumns(applications)
+
     const result = await this.db
-      .select()
+      .select({
+        ...columns,
+        userId: resumes.userId,
+      })
       .from(applications)
-      .where(eq(applicationStages.id, id))
+      .leftJoin(resumes, eq(applications.resumeId, resumes.id))
+      .where(eq(applications.id, id))
 
     const application = result.at(0)
 
@@ -44,7 +52,7 @@ export class ApplicationRepository implements IApplicationRepository {
       })
     }
 
-    return Success(application)
+    return Success(application as Application & { userId: number })
   }
 
   async findManyByUser(

@@ -37,6 +37,7 @@ interface IJobRepository {
   createOne: (companyId: number, data: CREATE_JOB_SCHEMA_TYPE) => Promise<void>
   deleteOne: (id: number) => Promise<void>
   updateOne: (id: number, data: UPDATE_JOB_SCHEMA_TYPE) => Promise<void>
+  closeOne: (id: number) => Promise<void>
 }
 
 interface JobsModuleDependencies {

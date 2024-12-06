@@ -35,7 +35,27 @@ export const updateApplication = async (
   reply: FastifyReply,
 ): Promise<void> => {
   const { id } = request.params
-  const { applicationRepository } = request.diScope.cradle
+  const { applicationRepository, jobRepository, employeeRepository } =
+    request.diScope.cradle
+
+  const isExist = await applicationRepository.findOne(id)
+
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
+  }
+
+  if (request.body.close) {
+    await jobRepository.closeOne(isExist.value.jobId)
+  }
+
+  if (request.body.stageId === 4) {
+    await employeeRepository.createOne({
+      jobId: isExist.value.jobId,
+      userId: isExist.value.userId,
+    })
+  }
 
   await applicationRepository.updateOne(id, request.body)
 

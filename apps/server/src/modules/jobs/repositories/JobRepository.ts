@@ -433,4 +433,8 @@ export class JobRepository implements IJobRepository {
       .set({ isHidden: true, isActive: false })
       .where(eq(jobs.id, id))
   }
+
+  async closeOne(id: number) {
+    await this.db.update(jobs).set({ isActive: false }).where(eq(jobs.id, id))
+  }
 }

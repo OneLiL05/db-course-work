@@ -11,7 +11,9 @@ import {
 } from '@skill-swap/shared'
 
 interface IApplicationRepository {
-  findOne: (id: number) => Promise<Result<Application, HttpError>>
+  findOne: (
+    id: number,
+  ) => Promise<Result<Application & { userId: number }, HttpError>>
   findStages: () => Promise<ApplicationStage[]>
   findManyByUser: (
     userId: number,

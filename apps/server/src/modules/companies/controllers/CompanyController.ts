@@ -145,6 +145,29 @@ export const getCompanyApplications = async (
   return reply.status(200).send(applications)
 }
 
+export const getCompanyEmployees = async (
+  request: FastifyRequest<{
+    Params: GET_BY_ID_SCHEMA_TYPE
+    Querystring: APPLICATION_FILTERS_SCHEMA_TYPE
+  }>,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { id } = request.params
+  const { companyRepository, employeeRepository } = request.diScope.cradle
+
+  const isExist = await companyRepository.findOne(id)
+
+  if (!isExist.success) {
+    const { status, message } = isExist.error
+
+    return reply.status(status).send({ message })
+  }
+
+  const employees = await employeeRepository.findManyByCompany(id)
+
+  return reply.status(200).send(employees)
+}
+
 export const createCompany = async (
   request: FastifyRequest<{ Body: CREATE_COMPANY_SCHEMA_TYPE }>,
   reply: FastifyReply,
