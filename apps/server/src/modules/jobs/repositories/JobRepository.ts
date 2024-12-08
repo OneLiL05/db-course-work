@@ -29,10 +29,8 @@ import {
   count,
   eq,
   getTableColumns,
-  gte,
   ilike,
   inArray,
-  lte,
   sql,
 } from 'drizzle-orm'
 import {
@@ -94,12 +92,11 @@ export class JobRepository implements IJobRepository {
       }
 
       if (minAmount) {
-        console.log(minAmount)
-        expressions.push(gte(jobSalaries.amount, minAmount.toString()))
+        expressions.push(sql`${jobSalaries.amount} >= ${minAmount}`)
       }
 
       if (maxAmount) {
-        expressions.push(lte(jobSalaries.amount, maxAmount.toString()))
+        expressions.push(sql`${jobSalaries.amount} <= ${maxAmount}`)
       }
 
       if (search) {
