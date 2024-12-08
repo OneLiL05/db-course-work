@@ -138,20 +138,8 @@ const JOB_FILTERS_SCHEMA = z.object({
   suitableFor: z.array(z.string()).optional(),
   salaryPeriod: z.array(SALARY_PERIOD_SCHEMA).optional(),
   salaryCurrency: z.array(SALARY_CURRENCY_SCHEMA).optional(),
-  salaryAmount: z
-    .object({
-      min: z.number().int().min(1).optional(),
-      max: z.number().int().max(9999999999).optional(),
-    })
-    .superRefine((value, ctx) => {
-      if (value && value.max && value.min && value.min > value.max) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Min value can't be more than max one`,
-        })
-      }
-    })
-    .optional(),
+  minAmount: z.number().int().min(1).optional(),
+  maxAmount: z.number().int().max(9999999999).optional(),
   search: z.string().optional(),
   period: JOBS_FILTER_PERIOD_SCHEMA.optional(),
 })
