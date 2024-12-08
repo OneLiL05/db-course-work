@@ -74,7 +74,8 @@ export class JobRepository implements IJobRepository {
     if (query) {
       const {
         employmentTypes,
-        salaryAmount,
+        minAmount,
+        maxAmount,
         salaryCurrency,
         salaryPeriod,
         suitableFor,
@@ -92,14 +93,13 @@ export class JobRepository implements IJobRepository {
         }
       }
 
-      if (salaryAmount) {
-        if (salaryAmount.min) {
-          expressions.push(gte(jobSalaries.amount, salaryAmount.min.toString()))
-        }
+      if (minAmount) {
+        console.log(minAmount)
+        expressions.push(gte(jobSalaries.amount, minAmount.toString()))
+      }
 
-        if (salaryAmount.max) {
-          expressions.push(lte(jobSalaries.amount, salaryAmount.max.toString()))
-        }
+      if (maxAmount) {
+        expressions.push(lte(jobSalaries.amount, maxAmount.toString()))
       }
 
       if (search) {
@@ -116,7 +116,7 @@ export class JobRepository implements IJobRepository {
             currentDate.getDate() - 1,
           )
 
-          expressions.push(between(jobs.createdAt, currentDate, yesterday))
+          expressions.push(between(jobs.createdAt, yesterday, currentDate))
         }
 
         if (period === '7-days') {
@@ -126,7 +126,7 @@ export class JobRepository implements IJobRepository {
             currentDate.getDate() - 7,
           )
 
-          expressions.push(between(jobs.createdAt, currentDate, lastWeek))
+          expressions.push(between(jobs.createdAt, lastWeek, currentDate))
         }
 
         if (period === '14-days') {
@@ -136,7 +136,7 @@ export class JobRepository implements IJobRepository {
             currentDate.getDate() - 7,
           )
 
-          expressions.push(between(jobs.createdAt, currentDate, twoWeeksAgo))
+          expressions.push(between(jobs.createdAt, twoWeeksAgo, currentDate))
         }
 
         if (period === 'month') {
@@ -146,7 +146,7 @@ export class JobRepository implements IJobRepository {
             currentDate.getDate(),
           )
 
-          expressions.push(between(jobs.createdAt, currentDate, lastMonth))
+          expressions.push(between(jobs.createdAt, lastMonth, currentDate))
         }
       }
 
