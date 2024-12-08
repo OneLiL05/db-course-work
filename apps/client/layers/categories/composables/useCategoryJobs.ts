@@ -10,15 +10,7 @@ export const useCategoryJobs = (
     queryKey: ['categories', id, 'jobs', params],
     queryFn: async () => {
       const result = await axiosClient.get<Job[]>(`/categories/${id}/jobs`, {
-        params: {
-          employmentTypes: params.value?.employmentTypes,
-          salaryPeriod: params.value?.salaryPeriod,
-          salaryCurrency: params.value?.salaryCurrency,
-          salaryAmount: params.value?.salaryAmount,
-          suitableFor: params.value?.suitableFor,
-          search: params.value?.search,
-          period: params.value?.period,
-        },
+        params: params.value,
         paramsSerializer: {
           indexes: null,
         },

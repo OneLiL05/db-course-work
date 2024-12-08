@@ -10,15 +10,7 @@ export const useCityJobs = (
     queryKey: ['cities', id, 'jobs', params],
     queryFn: async () => {
       const result = await axiosClient.get<Job[]>(`/cities/${id}/jobs`, {
-        params: {
-          employmentTypes: params.value?.employmentTypes,
-          salaryPeriod: params.value?.salaryPeriod,
-          salaryCurrency: params.value?.salaryCurrency,
-          salaryAmount: params.value?.salaryAmount,
-          suitableFor: params.value?.suitableFor,
-          search: params.value?.search,
-          period: params.value?.period,
-        },
+        params: params.value,
         paramsSerializer: {
           indexes: null,
         },

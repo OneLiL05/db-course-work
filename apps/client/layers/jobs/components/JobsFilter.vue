@@ -11,6 +11,7 @@ import {
   SALARY_PERIODS,
   SUITABLE_FOR,
 } from '../constants'
+import { z } from 'zod'
 
 const emits = defineEmits<{
   (
@@ -22,7 +23,21 @@ const emits = defineEmits<{
 
 const { handleSubmit, handleReset, values } = useForm({
   validationSchema: toTypedSchema(
-    JOB_FILTERS_SCHEMA.omit({ search: true, period: true }),
+    JOB_FILTERS_SCHEMA.omit({ search: true, period: true }).superRefine(
+      (value, ctx) => {
+        if (
+          value &&
+          value.maxAmount &&
+          value.minAmount &&
+          value.minAmount > value.maxAmount
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Min value can't be more than max one`,
+          })
+        }
+      },
+    ),
   ),
   initialValues: {
     employmentTypes: [],
@@ -44,8 +59,8 @@ const onReset = () => {
 const isDisabled = computed(() => {
   return (
     !values.employmentTypes?.length &&
-    !values.salaryAmount?.max &&
-    !values.salaryAmount?.min &&
+    !values?.maxAmount &&
+    !values?.minAmount &&
     !values.salaryCurrency?.length &&
     !values.salaryPeriod?.length &&
     !values.suitableFor?.length
@@ -176,7 +191,7 @@ const isDisabled = computed(() => {
         <div class="mb-2">
           <FormLabel class="text-base">Salary currency:</FormLabel>
         </div>
-        <FormField v-slot="{ componentField }" name="salaryAmount.min">
+        <FormField v-slot="{ componentField }" name="minAmount">
           <FormItem class="flex flex-row items-start space-x-3 space-y-0">
             <FormControl>
               <Input placeholder="Min" type="number" v-bind="componentField" />
@@ -184,7 +199,7 @@ const isDisabled = computed(() => {
           </FormItem>
           <FormMessage />
         </FormField>
-        <FormField v-slot="{ componentField }" name="salaryAmount.max">
+        <FormField v-slot="{ componentField }" name="maxAmount">
           <FormItem class="flex flex-row items-start space-x-3 space-y-0">
             <FormControl>
               <Input placeholder="Max" type="number" v-bind="componentField" />
