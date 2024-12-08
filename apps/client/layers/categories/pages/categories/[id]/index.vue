@@ -17,7 +17,8 @@ const resetFilters = () => {
   searchParams.value = {
     ...searchParams.value,
     employmentTypes: undefined,
-    salaryAmount: undefined,
+    minAmount: undefined,
+    maxAmount: undefined,
     salaryCurrency: undefined,
     salaryPeriod: undefined,
   }
