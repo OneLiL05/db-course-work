@@ -6,6 +6,8 @@ import {
   companies,
   companyAdmins,
   companyRoles,
+  employees,
+  jobs,
   users,
 } from '@skill-swap/db'
 import {
@@ -142,15 +144,26 @@ export class CompanyRepository implements ICompanyRepository {
   }
 
   async deleteOne(id: number): Promise<Company> {
-    const result = await this.db
-      .update(companies)
-      .set({ isDeleted: true })
-      .where(eq(companies.id, id))
-      .returning()
+    const result = await this.db.transaction(async (tx) => {
+      const result = await tx
+        .update(companies)
+        .set({ isDeleted: true })
+        .where(eq(companies.id, id))
+        .returning()
 
-    const company = result.at(0) as Company
+      const company = result.at(0) as Company
 
-    return company
+      await tx
+        .update(jobs)
+        .set({ isActive: false, isHidden: true })
+        .where(and(eq(jobs.isActive, true), eq(jobs.companyId, company.id)))
+
+      await tx.update(employees).set({ firedAt: new Date() })
+
+      return company
+    })
+
+    return result
   }
 
   async isOwner(id: number, user: JwtPayload): Promise<boolean> {
