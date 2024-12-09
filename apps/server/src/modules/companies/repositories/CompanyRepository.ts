@@ -160,6 +160,10 @@ export class CompanyRepository implements ICompanyRepository {
 
       await tx.update(employees).set({ firedAt: new Date() })
 
+      await tx
+        .delete(companyAdmins)
+        .where(eq(companyAdmins.companyId, company.id))
+
       return company
     })
 
