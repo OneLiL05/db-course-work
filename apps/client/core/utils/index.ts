@@ -31,7 +31,7 @@ const formatSalary = (salary: {
   return Intl.NumberFormat(locale, {
     style: 'currency',
     currency: salary.currency,
-    maximumSignificantDigits: 1,
+    maximumFractionDigits: 0,
   }).format(salary.amount)
 }
 
