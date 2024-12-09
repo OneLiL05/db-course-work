@@ -105,6 +105,17 @@ export const getPositionJobsAvgSalary = async (
   return reply.status(200).send(avg)
 }
 
+export const getTopPositions = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { positionRepository } = request.diScope.cradle
+
+  const positions = await positionRepository.findTopByJobs()
+
+  return reply.status(200).send(positions)
+}
+
 export const createPosition = async (
   request: FastifyRequest<{ Body: CREATE_POSITION_SCHEMA_TYPE }>,
   reply: FastifyReply,

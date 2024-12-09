@@ -5,7 +5,7 @@ import {
   Position,
   PositionWithCount,
 } from '@skill-swap/shared'
-import { SQL, asc, desc, eq, getTableColumns, sql } from 'drizzle-orm'
+import { SQL, asc, count, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { IPositionRepository } from '../interfaces/index.js'
 import { PositionsInjectableDependencies } from '../types/index.js'
 import { Failure, Result, Success } from '@/utils/result.js'
@@ -82,6 +82,19 @@ export class PositionRepository implements IPositionRepository {
       .leftJoin(jobs, eq(jobs.positionId, positions.id))
       .orderBy(...expressions)
       .groupBy(positions.id)
+  }
+
+  async findTopByJobs(): Promise<PositionWithCount[]> {
+    const columns = getTableColumns(positions)
+
+    return this.db
+      .select({ ...columns, count: sql<number>`cast(count(*) as int)` })
+      .from(jobs)
+      .leftJoin(positions, eq(jobs.positionId, positions.id))
+      .where(eq(jobs.isActive, true))
+      .groupBy(positions.id)
+      .orderBy(desc(count()))
+      .limit(5) as unknown as PositionWithCount[]
   }
 
   async createOne({

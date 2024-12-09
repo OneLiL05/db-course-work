@@ -13,6 +13,7 @@ import {
   getPositionJobs,
   getPositions,
   getPositionsWithJobsCount,
+  getTopPositions,
   updatePosition,
 } from '../controllers/PositionController.js'
 
@@ -53,6 +54,11 @@ export const getPositionsRoutes = (app: AppInstanse): Routes => ({
         params: GET_BY_ID_SCHEMA,
         // querystring: JOB_FILTERS_SCHEMA,
       },
+    },
+    {
+      method: 'GET',
+      url: '/positions/top',
+      handler: getTopPositions,
     },
     {
       method: 'POST',
