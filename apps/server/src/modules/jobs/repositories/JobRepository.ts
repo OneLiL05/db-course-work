@@ -167,11 +167,17 @@ export class JobRepository implements IJobRepository {
       }
 
       if (salaryCurrency && salaryCurrency.length) {
-        expressions.push(inArray(jobSalaries.currency, [...salaryCurrency]))
+        const arr =
+          typeof salaryCurrency === 'string' ? [salaryCurrency] : salaryCurrency
+
+        expressions.push(inArray(jobSalaries.currency, arr))
       }
 
       if (salaryPeriod && salaryPeriod.length) {
-        expressions.push(inArray(jobSalaries.period, [...salaryPeriod]))
+        const arr =
+          typeof salaryPeriod === 'string' ? [salaryPeriod] : salaryPeriod
+
+        expressions.push(inArray(jobSalaries.period, arr))
       }
     }
 
