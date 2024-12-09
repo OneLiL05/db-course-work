@@ -27,6 +27,7 @@ import {
   and,
   between,
   count,
+  desc,
   eq,
   getTableColumns,
   ilike,
@@ -67,7 +68,11 @@ export class JobRepository implements IJobRepository {
   }
 
   async findJobsBy({ where, query }: FindByArgs): Promise<Job[]> {
-    const expressions: SQL[] = [where, eq(jobs.isHidden, false)]
+    const expressions: SQL[] = [
+      where,
+      eq(jobs.isHidden, false),
+      eq(jobs.isActive, true),
+    ]
 
     if (query) {
       const {
@@ -233,7 +238,8 @@ export class JobRepository implements IJobRepository {
         cities.name,
         categories.id,
         categories.name,
-      ) as unknown as Job[]
+      )
+      .orderBy(desc(jobs.createdAt)) as unknown as Job[]
   }
 
   async findAvgSalaryBy({
@@ -388,13 +394,22 @@ export class JobRepository implements IJobRepository {
   }
 
   async updateOne(id: number, data: UPDATE_JOB_SCHEMA_TYPE): Promise<void> {
-    const { addSkills, removeSkills, ...rest } = data
+    const { addSkills, removeSkills, salary, ...rest } = data
 
     await this.db.transaction(async (tx) => {
       await tx
         .update(jobs)
         .set({ ...rest })
         .where(eq(jobs.id, id))
+
+      await tx
+        .update(jobSalaries)
+        .set({
+          amount: salary.amount.toString(),
+          period: salary.period,
+          currency: salary.currency,
+        })
+        .where(eq(jobSalaries.jobId, id))
 
       if (addSkills.length) {
         const mappedSkills = addSkills.map(({ skillId, skillLevelId }) => {
