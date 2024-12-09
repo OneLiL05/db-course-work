@@ -20,15 +20,19 @@ const onClick = () => {
     favourite(props.job.id)
   }
 }
+
+const salary = computed(() => {
+  return `${formatSalary(props.job.salary)}/${props.job.salary.period}`
+})
 </script>
 
 <template>
   <div
-    class="flex flex-col w-full border border-muted p-4 box-border rounded-lg gap-1"
+    class="flex flex-col w-full border border-muted p-4 box-border rounded-lg gap-1 dark:hover:border-white dark:hover:bg-primary-foreground"
   >
-    <NuxtLink :to="`/jobs/${job.id}`" class="font-bold text-xl">{{
-      job.name
-    }}</NuxtLink>
+    <NuxtLink :to="`/jobs/${job.id}`" class="font-bold text-xl">
+      {{ job.name }}
+    </NuxtLink>
     <div class="inline-flex w-full gap-2">
       <p>{{ job.company.name }}</p>
       |
@@ -37,7 +41,14 @@ const onClick = () => {
       <p>{{ job.position.name }}</p>
     </div>
     <p class="text-muted-foreground">{{ job.description }}</p>
-    <div class="inline-flex w-full justify-end items-center">
+    <p>{{ salary }}</p>
+    <div class="inline-flex w-full justify-between items-center">
+      <div class="inline-flex gap-3">
+        <Badge v-if="job.isFulltime">Full-time</Badge>
+        <Badge v-if="job.isRemote">Remote</Badge>
+        <Badge v-if="job.isCvRequired">CV required</Badge>
+        <Badge v-if="job.areStudentsAllowed">Students allowed</Badge>
+      </div>
       <Button
         v-if="isAuthentificated"
         variant="ghost"
