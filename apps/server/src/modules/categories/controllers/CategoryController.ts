@@ -105,6 +105,17 @@ export const getCategoryJobsAvgSalary = async (
   return reply.status(200).send(avg)
 }
 
+export const getTopCategories = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { categoryRepository } = request.diScope.cradle
+
+  const categories = await categoryRepository.findTopByJobs()
+
+  return reply.status(200).send(categories)
+}
+
 export const createCategory = async (
   request: FastifyRequest<{ Body: CREATE_CATEGORY_SCHEMA_TYPE }>,
   reply: FastifyReply,

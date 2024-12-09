@@ -14,6 +14,7 @@ import {
   getCategory,
   getCategoryJobs,
   getCategoryJobsAvgSalary,
+  getTopCategories,
   updateCategory,
 } from '../controllers/CategoryController.js'
 
@@ -63,6 +64,11 @@ export const getCategoriesRoutes = (app: AppInstanse): Routes => ({
         params: GET_BY_ID_SCHEMA,
         // querystring: JOB_FILTERS_SCHEMA,
       },
+    },
+    {
+      method: 'GET',
+      url: '/categories/top',
+      handler: getTopCategories,
     },
     {
       method: 'POST',

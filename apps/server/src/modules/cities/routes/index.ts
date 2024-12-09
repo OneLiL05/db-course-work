@@ -17,6 +17,7 @@ import {
   getCity,
   getCityJobs,
   getCityJobsAvgSalary,
+  getTopCities,
   updateCity,
 } from '../controllers/CityController.js'
 
@@ -72,6 +73,11 @@ export const getCitiesRoutes = (app: AppInstanse): Routes => ({
         params: GET_BY_ID_SCHEMA,
         querystring: JOBS_AVG_SALARY_QUERY_SCHEMA,
       },
+    },
+    {
+      method: 'GET',
+      url: '/cities/top',
+      handler: getTopCities,
     },
     {
       method: 'POST',

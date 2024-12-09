@@ -7,7 +7,7 @@ import {
   City,
   CityWithCount,
 } from '@skill-swap/shared'
-import { SQL, asc, desc, eq, getTableColumns, sql } from 'drizzle-orm'
+import { SQL, asc, count, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import postgres from 'postgres'
 import { ICityRepository } from '../interfaces/index.js'
 import { CitiesInjectableDependencies } from '../types/index.js'
@@ -79,6 +79,19 @@ export class CityRepository implements ICityRepository {
       .leftJoin(jobs, eq(jobs.cityId, cities.id))
       .orderBy(...expressions)
       .groupBy(cities.id)
+  }
+
+  async findTopByJobs(): Promise<CityWithCount[]> {
+    const columns = getTableColumns(cities)
+
+    return this.db
+      .select({ ...columns, count: sql<number>`cast(count(*) as int)` })
+      .from(jobs)
+      .leftJoin(cities, eq(jobs.cityId, cities.id))
+      .where(eq(jobs.isActive, true))
+      .groupBy(cities.id)
+      .orderBy(desc(count()))
+      .limit(5) as unknown as CityWithCount[]
   }
 
   async createOne({

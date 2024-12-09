@@ -1,5 +1,4 @@
 import { HttpError } from '@/interfaces/common.js'
-import { SqlClient } from '@/types/index.js'
 import { Failure, Result, Success } from '@/utils/result.js'
 import {
   DatabaseClient,
@@ -22,11 +21,9 @@ import { ICompanyRepository } from '../interfaces/index.js'
 import { CompaniesInjectableDependencies } from '../types/index.js'
 
 export class CompanyRepository implements ICompanyRepository {
-  private readonly sql: SqlClient
   private readonly db: DatabaseClient
 
-  constructor({ sql, db }: CompaniesInjectableDependencies) {
-    this.sql = sql
+  constructor({ db }: CompaniesInjectableDependencies) {
     this.db = db.client
   }
 
@@ -159,10 +156,6 @@ export class CompanyRepository implements ICompanyRepository {
         .where(and(eq(jobs.isActive, true), eq(jobs.companyId, company.id)))
 
       await tx.update(employees).set({ firedAt: new Date() })
-
-      await tx
-        .delete(companyAdmins)
-        .where(eq(companyAdmins.companyId, company.id))
 
       return company
     })

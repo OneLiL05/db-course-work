@@ -13,6 +13,7 @@ interface ICategoryRepository {
   findManyWithJobsCount: (
     query: BASE_MODEL_QUERY_TYPE,
   ) => Promise<CategoryWithCount[]>
+  findTopByJobs: () => Promise<CategoryWithCount[]>
   createOne: (
     data: CREATE_CATEGORY_SCHEMA_TYPE,
   ) => Promise<Result<Category, HttpError>>

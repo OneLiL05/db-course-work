@@ -105,6 +105,17 @@ export const getCityJobsAvgSalary = async (
   return reply.status(200).send(avg)
 }
 
+export const getTopCities = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> => {
+  const { cityRepository } = request.diScope.cradle
+
+  const cities = await cityRepository.findTopByJobs()
+
+  return reply.status(200).send(cities)
+}
+
 export const createCity = async (
   request: FastifyRequest<{ Body: CREATE_CITY_SCHEMA_TYPE }>,
   reply: FastifyReply,

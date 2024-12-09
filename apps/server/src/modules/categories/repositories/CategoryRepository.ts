@@ -7,7 +7,7 @@ import {
   Category,
   CategoryWithCount,
 } from '@skill-swap/shared'
-import { SQL, asc, desc, eq, getTableColumns, sql } from 'drizzle-orm'
+import { SQL, asc, count, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { ICategoryRepository } from '../interfaces/index.js'
 import { CategoriesInjectableDependencies } from '../types/index.js'
 import postgres from 'postgres'
@@ -82,6 +82,19 @@ export class CategoryRepository implements ICategoryRepository {
       .leftJoin(jobs, eq(jobs.categoryId, categories.id))
       .orderBy(...expressions)
       .groupBy(categories.id)
+  }
+
+  async findTopByJobs(): Promise<CategoryWithCount[]> {
+    const columns = getTableColumns(categories)
+
+    return this.db
+      .select({ ...columns, count: sql<number>`cast(count(*) as int)` })
+      .from(jobs)
+      .leftJoin(categories, eq(jobs.categoryId, categories.id))
+      .where(eq(jobs.isActive, true))
+      .groupBy(categories.id)
+      .orderBy(desc(count()))
+      .limit(5) as unknown as CategoryWithCount[]
   }
 
   async createOne({

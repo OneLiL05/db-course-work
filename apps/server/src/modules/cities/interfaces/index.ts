@@ -13,6 +13,7 @@ interface ICityRepository {
   findManyWithJobsCount: (
     query: BASE_MODEL_QUERY_TYPE,
   ) => Promise<CityWithCount[]>
+  findTopByJobs: () => Promise<CityWithCount[]>
   createOne: (data: CREATE_CITY_SCHEMA_TYPE) => Promise<Result<City, HttpError>>
   deleteOne: (id: number) => Promise<Result<City, HttpError>>
   updateOne: (
