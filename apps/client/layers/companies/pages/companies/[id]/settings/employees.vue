@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import type { ApplicationStages } from '@skill-swap/shared'
-
 definePageMeta({
   layout: 'employer',
 })

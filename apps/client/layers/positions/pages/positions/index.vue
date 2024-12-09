@@ -2,6 +2,7 @@
 import { buttonVariants } from '~/core/components/ui/button'
 
 const { data: positionsWithCount } = usePositionsWithJobsCount()
+const { data: topPositions } = useTopPositions()
 
 const query = ref('')
 
@@ -21,9 +22,23 @@ const filteredPositions = computed(() => {
 <template>
   <section class="flex flex-col size-full w-[800px] mx-auto py-5 gap-4">
     <div class="inline-flex">
-      <NuxtLink :class="buttonVariants({ variant: 'ghost' })">
+      <NuxtLink to="/" :class="buttonVariants({ variant: 'ghost' })">
         <Icon name="lucide:chevron-left" />
         Back to home
+      </NuxtLink>
+    </div>
+    <Heading size="2">Top positions by jobs</Heading>
+    <div class="grid grid-cols-3 gap-3 pb-5">
+      <NuxtLink
+        v-for="{ id, name, count } in topPositions"
+        :key="id"
+        :to="`/positions/${id}`"
+        class="inline-flex w-full justify-between items-center p-4 border border-muted rounded-lg hover:border-white"
+      >
+        <p>{{ name }}</p>
+        <p class="text-muted-foreground">
+          {{ count }}
+        </p>
       </NuxtLink>
     </div>
     <Heading size="2">Search jobs by positions</Heading>
